@@ -31,9 +31,9 @@ export default function AuthForm() {
     e.preventDefault();
 
     if (isLogin) {
-      void login(cred);
+      login(cred);
     } else {
-      void register(cred);
+      register(cred);
     }
   };
   return (

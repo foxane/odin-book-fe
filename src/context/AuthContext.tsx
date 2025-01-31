@@ -1,65 +1,59 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import api from "../services/api";
-import { AxiosError, AxiosResponse } from "axios";
+import authService from "../services/auth";
 
+const TOKEN = localStorage.getItem("token");
 const AuthContext = createContext<IAuthContext>({
   user: null,
-  login: async () => {},
-  register: async () => {},
+  login: () => {},
+  register: () => {},
   logout: () => {},
   error: null,
   loading: false,
 });
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const token = localStorage.getItem("token");
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<AuthError | null>(null);
+  const [error, setError] = useState<IAuthError | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const login = async (cred: Credentials) => {
+  const login = (cred: Credentials) => {
     setLoading(true);
     setError(null);
-    try {
-      const { data } = await api.axios.post<{ token: string; user: User }>(
-        "/auth/login",
-        cred,
-      );
-
-      setUser(data.user);
-      api.setToken(data.token);
-    } catch (err: unknown) {
-      if (err instanceof AxiosError) {
-        if (err.response) {
-          const data = err.response.data as AuthError;
-          setError(data);
-        } else {
-          setError({ message: err.message });
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
+    authService
+      .login(cred)
+      .then((user) => setUser(user))
+      .catch((err: unknown) => setError(err as IAuthError))
+      .finally(() => setLoading(false));
   };
 
-  const register = async () => {};
-  const logout = () => {};
+  const register = (cred: Credentials) => {
+    setLoading(true);
+    setError(null);
+    authService
+      .register(cred)
+      .then((user) => setUser(user))
+      .catch((err: unknown) => setError(err as IAuthError))
+      .finally(() => setLoading(false));
+  };
 
-  // First load login
+  const logout = () => {
+    setUser(null);
+    authService.logout();
+  };
+
+  /**
+   * Initial load login
+   */
   useEffect(() => {
-    if (!token) return;
+    if (!TOKEN) return;
+    setLoading(true);
 
-    api.axios
-      .get("/auth/me")
-      .then((res: AxiosResponse<User>) => {
-        console.log(res.data);
-        setUser(res.data);
-      })
-      .catch((err: unknown) => {
-        console.log(err);
-        localStorage.removeItem("token");
-      });
-  }, [token]);
+    authService
+      .getUserInfo()
+      .then((user) => setUser(user))
+      .catch((err: unknown) => setError(err as IAuthError))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <AuthContext.Provider

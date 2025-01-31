@@ -11,16 +11,21 @@ interface User {
   role: "GUEST" | "USER" | "ADMIN";
 }
 
-interface AuthError {
-  message: string;
-  errorDetails?: string[];
-}
-
 interface IAuthContext {
   user: User | null;
-  login: (cred: Credentials) => Promise<void>;
-  register: (cred: Credentials) => Promise<void>;
+  login: (cred: Credentials) => void;
+  register: (cred: Credentials) => void;
   logout: () => void;
-  error: AuthError | null;
+  error: IAuthError | null;
   loading: boolean;
+}
+
+interface AuthResponse {
+  token: string;
+  user: User;
+}
+
+interface IAuthError {
+  message: string;
+  errorDetails?: string[];
 }

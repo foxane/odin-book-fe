@@ -7,10 +7,21 @@ class ApiService {
       baseURL,
       headers: { "Content-Type": "application/json" },
     });
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      this.setToken(token);
+    }
   }
 
-  setToken(token: string) {
-    this.axios.defaults.headers.Authorization = token;
+  setToken(token: string | null) {
+    if (token) {
+      this.axios.defaults.headers.Authorization = `Bearer ${token}`;
+      localStorage.setItem("token", token);
+    } else {
+      delete this.axios.defaults.headers.Authorization;
+      localStorage.removeItem("token");
+    }
   }
 }
 
