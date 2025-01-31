@@ -8,14 +8,18 @@ const AuthContext = createContext<IAuthContext>({
   register: async () => {},
   logout: () => {},
   error: null,
+  loading: false,
 });
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<AuthError | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const login = async (cred: Credentials) => {
+    setLoading(true);
+    setError(null);
     try {
       const { data } = await api.axios.post<{ token: string; user: User }>(
         "/auth/login",
@@ -33,6 +37,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
           setError({ message: err.message });
         }
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +62,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [token]);
 
   return (
-    <AuthContext.Provider value={{ user, error, login, logout, register }}>
+    <AuthContext.Provider
+      value={{ user, error, loading, login, logout, register }}
+    >
       {children}
     </AuthContext.Provider>
   );
