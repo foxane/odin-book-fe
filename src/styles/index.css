@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./animate-plugn.css";
 
 @plugin "daisyui" {
   themes:

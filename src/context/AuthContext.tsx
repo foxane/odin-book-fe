@@ -14,7 +14,7 @@ const AuthContext = createContext<IAuthContext>({
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<IAuthError | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const login = (cred: Credentials) => {
     setLoading(true);
@@ -45,7 +45,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
    * Initial load login
    */
   useEffect(() => {
-    if (!TOKEN) return;
+    if (!TOKEN) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
 
     authService
