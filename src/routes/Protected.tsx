@@ -17,7 +17,7 @@ export default function ProtectRoute({ page }: Props) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsTimeout(true);
-    }, 1000 * 5);
+    }, 1000 * 10);
 
     return () => clearTimeout(timer);
   }, []);

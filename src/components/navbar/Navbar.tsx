@@ -1,15 +1,10 @@
 import { SquirrelIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/Avatar";
-import { Dropdown, DropdownTrigger } from "../ui/Dropdown";
-import UserMenu from "./UserMenu";
+import UserMenu from "./user-menu/UserMenu";
 
 export default function Navbar() {
-  const { user } = useAuth();
-
   return (
-    <header className="sticky top-0 navbar min-h-14 w-full border-b backdrop-blur-sm">
+    <header className="sticky top-0 navbar w-full border-b border-neutral bg-base-300/20 backdrop-blur-xs">
       <div className="navbar-start">
         <h1>
           <Link to={"/"} className="flex items-center gap-2 font-serif text-xl">
@@ -20,20 +15,7 @@ export default function Navbar() {
       </div>
 
       <div className="navbar-end">
-        {user && (
-          <Dropdown className="dropdown-end">
-            <DropdownTrigger>
-              <Avatar>
-                <AvatarImage src={user.avatar ?? undefined} />
-                <AvatarFallback className="bg-primary text-primary-content">
-                  ND
-                </AvatarFallback>
-              </Avatar>
-            </DropdownTrigger>
-
-            <UserMenu user={user} />
-          </Dropdown>
-        )}
+        <UserMenu />
       </div>
     </header>
   );
