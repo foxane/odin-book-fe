@@ -4,13 +4,18 @@ import { Link, useSearchParams } from "react-router-dom";
 
 import useAuth from "../hooks/useAuth";
 import OAuthBtn from "../components/OAuthBtn";
-import InputField from "../components/common/InputField";
+import InputField from "../components/ui/InputField";
 import ThemeBtn from "./ThemeBtn";
+import { twMerge } from "tailwind-merge";
 
-export default function AuthForm() {
+export default function AuthForm({
+  className = "",
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   const [params] = useSearchParams();
   const { error, loading, login, register } = useAuth();
   const isLogin = params.get("login") === "true";
+  const redirect = params.get("redirect") ?? "";
 
   const [cred, setCred] = useState<Credentials>({
     email: "",
@@ -37,7 +42,13 @@ export default function AuthForm() {
     }
   };
   return (
-    <div className="card w-[30rem] gap-3 p-5 shadow-2xl">
+    <div
+      className={twMerge(
+        "card w-full max-w-[30rem] gap-3 p-5 shadow-2xl",
+        className,
+      )}
+      {...props}
+    >
       <ThemeBtn className="absolute right-5 z-10" />
 
       <h1 className="card-title font-serif text-2xl">
@@ -47,7 +58,7 @@ export default function AuthForm() {
       <p className="mb-2 label">{isLogin ? "Login" : "Register"} to Twittard</p>
 
       {error && (
-        <div className="alert-soft alert alert-vertical alert-error">
+        <div className="alert-soft my-2 alert alert-vertical alert-error">
           <p className="card-title">{error.message}</p>
           {error.errorDetails && (
             <ul>
@@ -99,22 +110,36 @@ export default function AuthForm() {
           disabled={loading}
           className="btn relative btn-block btn-primary"
         >
-          {loading && <span className="loading absolute left-[7.5rem]" />}
-          {isLogin ? "Login" : "Register"}
+          {loading ? (
+            <span className="loading left-[7.5rem]" />
+          ) : isLogin ? (
+            "Login"
+          ) : (
+            "Register"
+          )}
         </button>
 
-        <p className="text-sm">
-          {isLogin ? "Don't have an account?" : "Alredy have an account?"}
-          {isLogin ? (
-            <Link className="ms-2 link" to={"/auth?login=false"}>
-              Register
-            </Link>
-          ) : (
-            <Link className="ms-2 link" to={"/auth?login=true"}>
-              Login
-            </Link>
-          )}
-        </p>
+        <div className="text-sm">
+          <p>
+            {isLogin ? "Don't have an account?" : "Alredy have an account?"}
+            {isLogin ? (
+              <Link
+                className="ms-2 link"
+                to={`/auth?login=false&redirect=${redirect}`}
+              >
+                Register
+              </Link>
+            ) : (
+              <Link
+                className="ms-2 link"
+                to={`/auth?login=true&redirect=${redirect}`}
+              >
+                Login
+              </Link>
+            )}
+          </p>
+          <p className="link">Fotgot password?</p>
+        </div>
       </form>
 
       <div className="divider text-sm">OR</div>

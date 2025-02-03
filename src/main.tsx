@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import "./styles/index.css";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { RouterProvider } from "react-router-dom";
-import routes from "./routes.tsx";
+import routes from "./routes/routes.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 
 createRoot(document.getElementById("root") as HTMLDivElement).render(

@@ -1,14 +1,25 @@
-import useAuth from "../hooks/useAuth";
+// import { useEffect, useState } from "react";
+// import PostInput from "../components/PostInput";
+// import postService from "../services/post";
+// import PostCard from "../components/PostCard";
 
 export default function IndexPage() {
-  const { user, logout } = useAuth();
+  // const [posts, setPosts] = useState<Post[] | null>(null);
+
+  // useEffect(() => {
+  //   postService
+  //     .getAllPost()
+  //     .then((posts) => setPosts(posts))
+  //     .catch((err: unknown) => console.log(err));
+  // });
 
   return (
-    <div>
-      <h1>Welcome {user?.name}</h1>
-      <button className="btn btn-sm font-bold btn-warning" onClick={logout}>
-        Logout
-      </button>
+    <div className="h-screen">
+      {/* <PostInput /> */}
+
+      {/* {posts?.map((el) => <PostCard key={el.id} post={el} />)} */}
+
+      <p>Feed</p>
     </div>
   );
 }

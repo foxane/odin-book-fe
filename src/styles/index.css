@@ -4,5 +4,8 @@
 @plugin "daisyui" {
   themes:
     light --default,
-    dark;
+    dark --prefersdark;
 }
+
+/* Enable Tawilding darK: modifier */
+@variant dark (&:where([data-theme=dark], [data-theme=dark] *));
