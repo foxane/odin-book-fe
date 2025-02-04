@@ -6,12 +6,17 @@ import { AuthProvider } from "./context/AuthContext.tsx";
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes/routes.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root") as HTMLDivElement).render(
   <StrictMode>
     <ThemeProvider>
       <AuthProvider>
-        <RouterProvider router={routes} />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={routes} />
+        </QueryClientProvider>
       </AuthProvider>
     </ThemeProvider>
 

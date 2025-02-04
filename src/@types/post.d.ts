@@ -7,6 +7,7 @@ interface Post {
   _count: {
     likedBy: number;
   };
+  pending?: boolean; // Pending is frontend only to apply pending state on optimistic update
 }
 
 interface PostPayload {
