@@ -4,7 +4,7 @@ import UserMenu from "./user-menu/UserMenu";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 navbar w-full border-b border-neutral bg-base-300/20 backdrop-blur-xs">
+    <header className="sticky top-0 navbar w-full border-b border-neutral bg-base-300/60 backdrop-blur-xs">
       <div className="navbar-start">
         <h1>
           <Link to={"/"} className="flex items-center gap-2 font-serif text-xl">
