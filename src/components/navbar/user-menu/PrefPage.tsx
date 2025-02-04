@@ -20,7 +20,7 @@ export default function PrefMenu({ move }: { move: Move }) {
 
       <button className="btn justify-start btn-ghost" onClick={toggleTheme}>
         <label className="swap swap-rotate">
-          <input type="checkbox" checked={isDark} />
+          <input type="checkbox" checked={isDark} readOnly />
 
           <MoonIcon className="swap-off" />
           <SunIcon className="swap-on" />
