@@ -8,7 +8,7 @@ export default function Footer({
   return (
     <footer
       className={twMerge(
-        "flex w-full items-center justify-center gap-2 border-t border-neutral bg-base-300 p-3",
+        "flex w-full items-center justify-center gap-2 border-t border-neutral bg-base-200 p-3",
         className,
       )}
       {...props}

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainMenu from "./MainPage";
 import PrefMenu from "./PrefPage";
-import { Dropdown, DropdownTrigger } from "../../ui/Dropdown";
+import { Dropdown, DropdownContent, DropdownTrigger } from "../../ui/Dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/Avatar";
 import useAuth from "../../../hooks/useAuth";
 
@@ -11,6 +11,10 @@ export default function UserMenu() {
   const [open, setOpen] = useState(false);
 
   const move = (page: Pages = "main") => setPage(page);
+
+  useEffect(() => {
+    if (!open) setPage("main"); // Go back to main when closed
+  }, [open]);
 
   return (
     <Dropdown className={"dropdown-open dropdown-end"}>
@@ -28,10 +32,10 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <>
+        <DropdownContent className="mt-3.5 border border-gray-300 dark:border-gray-600">
           {page === "main" && <MainMenu move={move} />}
           {page === "pref" && <PrefMenu move={move} />}
-        </>
+        </DropdownContent>
       )}
     </Dropdown>
   );

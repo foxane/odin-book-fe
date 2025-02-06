@@ -1,5 +1,4 @@
 import { ChevronLeft, MoonIcon, SunIcon } from "lucide-react";
-import { DropdownContent } from "../../ui/Dropdown";
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
 
@@ -7,7 +6,7 @@ export default function PrefMenu({ move }: { move: Move }) {
   const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <DropdownContent>
+    <>
       <button
         className="group btn justify-start btn-ghost"
         onClick={() => move("main")}
@@ -27,6 +26,6 @@ export default function PrefMenu({ move }: { move: Move }) {
         </label>
         {isDark ? "Light Mode" : "Take me to the dark side"}
       </button>
-    </DropdownContent>
+    </>
   );
 }

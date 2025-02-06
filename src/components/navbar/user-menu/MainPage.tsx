@@ -1,6 +1,5 @@
 import { ChevronRightIcon, LogOutIcon, Settings2Icon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/Avatar";
-import { DropdownContent } from "../../ui/Dropdown";
 import useAuth from "../../../hooks/useAuth";
 
 export default function MainMenu({ move }: { move: Move }) {
@@ -10,42 +9,40 @@ export default function MainMenu({ move }: { move: Move }) {
 
   return (
     <>
-      <DropdownContent>
-        <button className="btn justify-start py-4 btn-ghost">
-          <Avatar>
-            <AvatarImage src={user.avatar ?? undefined} alt={user.name} />
-            <AvatarFallback className="bg-primary text-primary-content">
-              ND
-            </AvatarFallback>
-          </Avatar>
+      <button className="btn justify-start py-4 btn-ghost">
+        <Avatar>
+          <AvatarImage src={user.avatar ?? undefined} alt={user.name} />
+          <AvatarFallback className="bg-primary text-primary-content">
+            ND
+          </AvatarFallback>
+        </Avatar>
 
-          <p className="text-lg">{user.name}</p>
-        </button>
+        <p className="text-lg">{user.name}</p>
+      </button>
 
-        <div className="divider h-1" />
+      <div className="divider h-1" />
 
-        <button
-          className="btn justify-start btn-ghost"
-          onClick={() => move("pref")}
-        >
-          <Settings2Icon />
-          Preferences
-          <ChevronRightIcon className="ms-auto" />
-        </button>
+      <button
+        className="btn justify-start btn-ghost"
+        onClick={() => move("pref")}
+      >
+        <Settings2Icon />
+        Preferences
+        <ChevronRightIcon className="ms-auto" />
+      </button>
 
-        <button
-          className="btn justify-start btn-ghost"
-          onClick={() => {
-            const modal = document.getElementById(
-              "logout_modal",
-            ) as HTMLDialogElement;
-            modal.showModal();
-          }}
-        >
-          <LogOutIcon />
-          Log Out
-        </button>
-      </DropdownContent>
+      <button
+        className="btn justify-start btn-ghost"
+        onClick={() => {
+          const modal = document.getElementById(
+            "logout_modal",
+          ) as HTMLDialogElement;
+          modal.showModal();
+        }}
+      >
+        <LogOutIcon />
+        Log Out
+      </button>
 
       <dialog id="logout_modal" className="modal">
         <div className="modal-box">
