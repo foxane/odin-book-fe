@@ -11,10 +11,10 @@ export const createPost = async (p: PostPayload) => {
   return data;
 };
 
-export const likePost = async (id: number, like: boolean) => {
-  const endpoint = `/posts/${id.toString()}/like`;
+export const likePost = async (p: Post) => {
+  const endpoint = `/posts/${p.id.toString()}/like`;
 
-  if (like) await api.axios.post(endpoint);
+  if (p.isLiked) await api.axios.post(endpoint);
   else await api.axios.delete(endpoint);
 };
 
