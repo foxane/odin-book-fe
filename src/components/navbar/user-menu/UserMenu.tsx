@@ -32,10 +32,16 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <DropdownContent className="mt-3.5 border border-gray-300 dark:border-gray-600">
-          {page === "main" && <MainMenu move={move} />}
-          {page === "pref" && <PrefMenu move={move} />}
-        </DropdownContent>
+        <>
+          <DropdownContent className="mt-3.5 border border-gray-300 dark:border-gray-600">
+            {page === "main" && <MainMenu move={move} />}
+            {page === "pref" && <PrefMenu move={move} />}
+          </DropdownContent>
+          <div
+            className="fixed top-0 left-0 h-screen w-full bg-base-300 opacity-20"
+            onClick={() => setOpen(false)}
+          />
+        </>
       )}
     </Dropdown>
   );

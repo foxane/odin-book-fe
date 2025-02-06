@@ -2,11 +2,11 @@ import { useState } from "react";
 import { SquirrelIcon } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 
-import useAuth from "../hooks/useAuth";
-import OAuthBtn from "../components/OAuthBtn";
-import InputField from "../components/ui/InputField";
 import ThemeBtn from "./ThemeBtn";
 import { twMerge } from "tailwind-merge";
+import useAuth from "../../hooks/useAuth";
+import InputField from "../../components/ui/InputField";
+import OAuthBtn from "./OAuthBtn";
 
 export default function AuthForm({
   className = "",

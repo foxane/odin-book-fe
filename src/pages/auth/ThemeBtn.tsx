@@ -1,7 +1,7 @@
 import { useContext } from "react";
 
-import { ThemeContext } from "../context/ThemeContext";
 import { SunIcon, MoonIcon } from "lucide-react";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function ThemeBtn({
   className,

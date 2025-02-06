@@ -1,9 +1,9 @@
 import { Navigate, useSearchParams } from "react-router-dom";
 
-import AuthForm from "../components/AuthForm";
-import useAuth from "../hooks/useAuth";
-import Hero from "../components/Hero";
-import Footer from "../components/Footer";
+import AuthForm from "./AuthForm";
+import useAuth from "../../hooks/useAuth";
+import Hero from "./Hero";
+import Footer from "../../components/Footer";
 
 export default function AuthPage() {
   const { user } = useAuth();

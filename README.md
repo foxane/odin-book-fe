@@ -1,7 +1,4 @@
 # TODOS
 
 - Post
-  - List all post
-  - Create post
-  - Style post
-  - Like and comment post
+  - Create Feed component : Create list of post component
