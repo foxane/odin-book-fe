@@ -1,4 +1,7 @@
 # TODOS
 
 - Post
-  - Create Feed component : Create list of post component
+  - Feed component
+  - Create post
+  - Update post
+  - Like post

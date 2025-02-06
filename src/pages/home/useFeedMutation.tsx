@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as service from "../services/post";
-import useAuth from "./useAuth";
-import { addPTag, DummyPost } from "../lib/utils";
+import * as service from "../../services/post";
+import useAuth from "../../hooks/useAuth";
+import { DummyPost } from "../../components/post/DummyPost";
+import { addPTag } from "../../lib/utils";
 
-export default function usePostMutation(queryKey: readonly unknown[]) {
+export default function useFeedMutation(queryKey: readonly unknown[]) {
   const { user } = useAuth();
   const client = useQueryClient();
   if (!user) throw new Error("useAuth is used outside of AuthProider!");
@@ -31,13 +32,13 @@ export default function usePostMutation(queryKey: readonly unknown[]) {
     mutationFn: service.updatePost,
     onMutate: async (payload) => {
       const prev = await getPrevData();
-      client.setQueryData(queryKey, (old: Post[] | Post | undefined) => {
+      client.setQueryData(queryKey, (old: Post[] | undefined) => {
         if (!old) return old;
-        if (Array.isArray(old))
-          return old.map((el) =>
-            el.id === payload.id ? { ...el, text: addPTag(payload.text) } : el,
-          );
-        return payload;
+        return old.map((el) =>
+          el.id === payload.id
+            ? { ...el, text: addPTag(payload.text), status: "update" }
+            : el,
+        );
       });
       return { prev };
     },
@@ -50,10 +51,11 @@ export default function usePostMutation(queryKey: readonly unknown[]) {
     mutationFn: service.deletePost,
     onMutate: async (id) => {
       const prev = await getPrevData();
-      client.setQueryData(queryKey, (old: Post[] | Post | undefined) => {
+      client.setQueryData(queryKey, (old: Post[] | undefined) => {
         if (!old) return old;
-        if (Array.isArray(old)) return old.filter((el) => el.id !== id);
-        return old;
+        return old.map((el) =>
+          el.id === id ? { ...el, status: "delete", isPending: true } : el,
+        );
       });
       return { prev };
     },
@@ -67,23 +69,16 @@ export default function usePostMutation(queryKey: readonly unknown[]) {
     onMutate: async (post) => {
       const prev = await getPrevData();
       const likeCount = post._count.likedBy + (post.isLiked ? -1 : 1);
-      client.setQueryData(queryKey, (old: Post[] | Post | undefined) => {
+      client.setQueryData(queryKey, (old: Post[] | undefined) => {
         if (!old) return old;
-        if (Array.isArray(old))
-          return old.map((el) =>
-            el.id === post.id
-              ? /**
-                 * Inversing isLiked to make sure spamming like
-                 * dont go overflow
-                 */
-                { ...el, isLiked: !el.isLiked, _count: { likedBy: likeCount } }
-              : el,
-          );
-        return {
-          ...post,
-          isLiked: !post.isLiked,
-          _count: { likedBy: likeCount },
-        };
+        return old.map((el) =>
+          el.id === post.id
+            ? /**
+               * Inversing isLiked to make sure subsequent like mutation counted correctly
+               */
+              { ...el, isLiked: !el.isLiked, _count: { likedBy: likeCount } }
+            : el,
+        );
       });
       return { prev };
     },

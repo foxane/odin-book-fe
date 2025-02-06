@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import MainMenu from "./MainPage";
 import PrefMenu from "./PrefPage";
 import { Dropdown, DropdownContent, DropdownTrigger } from "../../ui/Dropdown";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/Avatar";
-import useAuth from "../../../hooks/useAuth";
+import UserAvatar from "../../ui/UserAvatar";
 
 export default function UserMenu() {
-  const { user } = useAuth();
   const [page, setPage] = useState<Pages>("main");
   const [open, setOpen] = useState(false);
 
@@ -22,12 +20,7 @@ export default function UserMenu() {
       {/* Wrapper to make it clickable */}
       <button onClick={() => setOpen(!open)}>
         <DropdownTrigger>
-          <Avatar>
-            <AvatarImage src={user?.avatar ?? undefined} />
-            <AvatarFallback className="bg-primary text-primary-content">
-              RTD
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar />
         </DropdownTrigger>
       </button>
 

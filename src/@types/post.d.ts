@@ -8,7 +8,12 @@ interface Post {
   _count: {
     likedBy: number;
   };
-  isPending?: boolean; // Pending is frontend only to apply pending state on optimistic update
+
+  /**
+   * Frontend only props
+   */
+  isPending?: boolean; // Mutation state
+  status?: "create" | "update" | "delete"; // Mutation action
 }
 
 interface PostPayload {

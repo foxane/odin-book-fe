@@ -5,13 +5,11 @@ import Navbar from "./components/navbar/Navbar";
 
 function App() {
   return (
-    <div>
+    <div className="flex min-h-dvh flex-col">
       <Navbar />
-
-      <main>
+      <div className="flex-1">
         <Outlet />
-      </main>
-
+      </div>
       <Footer />
     </div>
   );

@@ -1,23 +1,16 @@
 import { ChevronRightIcon, LogOutIcon, Settings2Icon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/Avatar";
 import useAuth from "../../../hooks/useAuth";
+import UserAvatar from "../../ui/UserAvatar";
 
 export default function MainMenu({ move }: { move: Move }) {
   const { user, logout } = useAuth();
 
-  if (!user) return <i></i>;
-
   return (
     <>
       <button className="btn justify-start py-4 btn-ghost">
-        <Avatar>
-          <AvatarImage src={user.avatar ?? undefined} alt={user.name} />
-          <AvatarFallback className="bg-primary text-primary-content">
-            ND
-          </AvatarFallback>
-        </Avatar>
+        <UserAvatar />
 
-        <p className="text-lg">{user.name}</p>
+        <p className="text-lg">{user?.name}</p>
       </button>
 
       <div className="divider h-1" />
