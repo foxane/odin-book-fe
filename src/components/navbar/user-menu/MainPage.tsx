@@ -8,7 +8,7 @@ export default function MainMenu({ move }: { move: Move }) {
   return (
     <>
       <button className="btn justify-start py-4 btn-ghost">
-        <UserAvatar />
+        <UserAvatar user={user!} />
 
         <p className="text-lg">{user?.name}</p>
       </button>

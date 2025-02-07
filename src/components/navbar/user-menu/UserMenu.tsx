@@ -3,10 +3,12 @@ import MainMenu from "./MainPage";
 import PrefMenu from "./PrefPage";
 import { Dropdown, DropdownContent, DropdownTrigger } from "../../ui/Dropdown";
 import UserAvatar from "../../ui/UserAvatar";
+import useAuth from "../../../hooks/useAuth";
 
 export default function UserMenu() {
   const [page, setPage] = useState<Pages>("main");
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   const move = (page: Pages = "main") => setPage(page);
 
@@ -20,7 +22,7 @@ export default function UserMenu() {
       {/* Wrapper to make it clickable */}
       <button onClick={() => setOpen(!open)}>
         <DropdownTrigger>
-          <UserAvatar />
+          {user ? <UserAvatar user={user} /> : <span className="loading" />}
         </DropdownTrigger>
       </button>
 

@@ -27,7 +27,7 @@ export default function ProtectRoute({ page }: Props) {
    */
   if (loading) {
     return (
-      <div className="absolute top-0 left-0 flex h-dvh w-screen flex-col items-center justify-center bg-base-100 px-10">
+      <div className="absolute top-0 left-0 z-50 flex h-dvh w-screen flex-col items-center justify-center bg-base-100 px-10">
         <p className="inline-flex items-center gap-2 font-serif text-4xl">
           Twittard
           <SquirrelIcon size={40} strokeWidth={1} className="animate-bounce" />

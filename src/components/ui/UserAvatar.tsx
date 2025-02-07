@@ -1,12 +1,9 @@
-import useAuth from "../../hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "./Avatar";
 
-export default function UserAvatar() {
-  const { user } = useAuth();
-
+export default function UserAvatar({ user }: { user: User }) {
   return (
-    <Avatar>
-      <AvatarImage src={user?.avatar ?? undefined} />
+    <Avatar className="z-0">
+      <AvatarImage src={user.avatar ?? undefined} />
       <AvatarFallback className="bg-primary text-primary-content">
         RTD
       </AvatarFallback>
