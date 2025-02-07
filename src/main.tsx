@@ -33,7 +33,7 @@ createRoot(document.getElementById("root") as HTMLDivElement).render(
 );
 
 // Initialize eruda
-if (import.meta.env.DEV) {
+/* if (import.meta.env.DEV) {
   import("eruda")
     .then((eruda) => {
       console.log(eruda);
@@ -44,3 +44,4 @@ if (import.meta.env.DEV) {
       console.log(err);
     });
 }
+ */

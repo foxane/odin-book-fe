@@ -36,7 +36,12 @@ export default function useFeedMutation(queryKey: readonly unknown[]) {
         if (!old) return old;
         return old.map((el) =>
           el.id === payload.id
-            ? { ...el, text: addPTag(payload.text), status: "update" }
+            ? {
+                ...el,
+                text: addPTag(payload.text),
+                status: "update",
+                isPending: true,
+              }
             : el,
         );
       });
@@ -49,12 +54,14 @@ export default function useFeedMutation(queryKey: readonly unknown[]) {
 
   const deletePost = useMutation({
     mutationFn: service.deletePost,
-    onMutate: async (id) => {
+    onMutate: async (toDelete) => {
       const prev = await getPrevData();
       client.setQueryData(queryKey, (old: Post[] | undefined) => {
         if (!old) return old;
         return old.map((el) =>
-          el.id === id ? { ...el, status: "delete", isPending: true } : el,
+          el.id === toDelete.id
+            ? { ...el, status: "delete", isPending: true }
+            : el,
         );
       });
       return { prev };

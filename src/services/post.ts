@@ -2,7 +2,7 @@ import { removePTag } from "../lib/utils";
 import api from "./api";
 
 export const getAllPost = async () => {
-  const { data } = await api.axios.get<Post[]>("/posts?sort=date");
+  const { data } = await api.axios.get<Post[]>("/posts?sort=date&cursor=50");
   return data;
 };
 
@@ -14,8 +14,8 @@ export const createPost = async (p: PostPayload) => {
 export const likePost = async (p: Post) => {
   const endpoint = `/posts/${p.id.toString()}/like`;
 
-  if (p.isLiked) await api.axios.post(endpoint);
-  else await api.axios.delete(endpoint);
+  if (p.isLiked) await api.axios.delete(endpoint);
+  else await api.axios.post(endpoint);
 };
 
 export const updatePost = async (payload: Post) => {
@@ -26,6 +26,6 @@ export const updatePost = async (payload: Post) => {
   return data;
 };
 
-export const deletePost = async (id: number) => {
-  await api.axios.delete(`/posts/${id.toString()}`);
+export const deletePost = async (post: Post) => {
+  await api.axios.delete(`/posts/${post.id.toString()}`);
 };
