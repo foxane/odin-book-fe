@@ -2,9 +2,12 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getFeed } from "../../services/post";
 import PostCard from "../../components/post/PostCard";
 import { useFeedMutations } from "./useFeedMutation";
+import PostForm from "../../components/post/PostForm";
 
 function Feed() {
-  const { likePost, deletePost, updatePost } = useFeedMutations(["posts"]);
+  const { likePost, deletePost, updatePost, createPost } = useFeedMutations([
+    "posts",
+  ]);
   const query = useInfiniteQuery({
     queryKey: ["posts"],
     initialPageParam: "",
@@ -20,6 +23,8 @@ function Feed() {
   return (
     <div>
       <section className="space-y-5 p-3">
+        <PostForm submit={createPost.mutate} />
+
         {posts.map((el) => (
           <PostCard
             className="mx-auto"
