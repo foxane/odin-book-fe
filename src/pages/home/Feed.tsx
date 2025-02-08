@@ -3,11 +3,16 @@ import { getFeed } from "../../services/post";
 import PostCard from "../../components/post/PostCard";
 import { useFeedMutations } from "./useFeedMutation";
 import PostForm from "../../components/post/PostForm";
+import { useEffect, useRef, useState } from "react";
+import { useIntersection } from "../../hooks/useIntersection";
 
 function Feed() {
   const { likePost, deletePost, updatePost, createPost } = useFeedMutations([
     "posts",
   ]);
+  /**
+   * TODO: Optimize the query
+   */
   const query = useInfiniteQuery({
     queryKey: ["posts"],
     initialPageParam: "",
@@ -19,6 +24,27 @@ function Feed() {
   });
 
   const posts = query.data?.pages.flat() ?? [];
+
+  /**
+   * Autofetching logic
+   */
+  const endRef = useRef<HTMLDivElement>(null);
+  const isEnd = useIntersection(endRef, "100px");
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setHasScrolled(true);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!isEnd || !hasScrolled || query.isFetchingNextPage || query.isPending) {
+      return;
+    } else if (query.hasNextPage) {
+      void query.fetchNextPage();
+    }
+  }, [isEnd, query, hasScrolled]);
 
   return (
     <div>
@@ -38,14 +64,19 @@ function Feed() {
           />
         ))}
 
-        <button
-          className="btn"
-          onClick={() => {
-            void query.fetchNextPage();
-          }}
-        >
-          Load more
-        </button>
+        {query.isFetchingNextPage && (
+          <span className="animate-pulse">Loading more post...</span>
+        )}
+
+        {query.isLoading && (
+          <span className="animate-pulse">Loading post...</span>
+        )}
+
+        {!query.hasNextPage && !query.isPending && (
+          <span>You reach the end!</span>
+        )}
+
+        <div ref={endRef} />
       </section>
     </div>
   );

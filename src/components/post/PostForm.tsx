@@ -35,9 +35,7 @@ export default function PostForm({ submit, ...props }: Props) {
           <textarea
             ref={textRef}
             placeholder="Whats on your mind?"
-            className={twMerge(
-              "textarea w-full resize-none rounded-none border-0 border-b-4 border-primary",
-            )}
+            className="textarea w-full resize-none rounded-none border-0 border-b-4 border-primary"
             value={text}
             onChange={handleChange}
           />

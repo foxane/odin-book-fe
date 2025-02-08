@@ -32,12 +32,6 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
   const [modal, setModal] = useState<ModalType>(null);
   const [dropdown, setDropdown] = useState(false);
 
-  const closeModal = () => {
-    setTimeout(() => {
-      setModal(null);
-    }, 300);
-  };
-
   const openModal = (a: ModalType) => {
     setDropdown(false);
     setModal(a);
@@ -126,7 +120,7 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
       {/* Outside of domtree (modals, dropdown, etc) */}
       {modal === "update" && (
         <UpdatePostModal
-          onClose={closeModal}
+          onClose={() => setModal(null)}
           post={post}
           submit={action.update}
         />
@@ -134,7 +128,7 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
 
       {modal === "delete" && (
         <DeletePostModal
-          onClose={closeModal}
+          onClose={() => setModal(null)}
           post={post}
           submit={action.delete}
         />
