@@ -6,11 +6,14 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   submit: (p: PostPayload) => void;
 }
 
+const CHAR_LIMIT = 300;
+
 export default function PostForm({ submit, ...props }: Props) {
   const textRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, setText] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (e.target.value.length > CHAR_LIMIT) return;
     setText(e.target.value);
   };
 
@@ -21,9 +24,14 @@ export default function PostForm({ submit, ...props }: Props) {
 
   useEffect(() => {
     if (!textRef.current) return;
+    const { style } = textRef.current;
 
-    textRef.current.style.height = "auto";
-    textRef.current.style.height = `${textRef.current.scrollHeight.toString()}px`;
+    // Height autosize
+    style.height = "auto";
+    style.height = `${textRef.current.scrollHeight.toString()}px`;
+
+    if (text.length >= CHAR_LIMIT) style.borderColor = "red";
+    else style.borderColor = "";
   }, [text]);
 
   return (
@@ -31,7 +39,7 @@ export default function PostForm({ submit, ...props }: Props) {
       className={twMerge("mx-auto max-w-xl bg-base-100 p-3", props.className)}
     >
       <div className="card space-y-4">
-        <div>
+        <div className="relative">
           <textarea
             ref={textRef}
             placeholder="Whats on your mind?"
@@ -39,6 +47,10 @@ export default function PostForm({ submit, ...props }: Props) {
             value={text}
             onChange={handleChange}
           />
+
+          <span className="absolute right-2 bottom-2 label text-sm">
+            {text.length}/{CHAR_LIMIT}
+          </span>
 
           <div className="tooltip absolute tooltip-left top-2 right-2 z-[2]">
             <InfoIcon opacity={0.6} size={20} />

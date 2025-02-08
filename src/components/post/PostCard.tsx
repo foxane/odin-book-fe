@@ -99,7 +99,7 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
 
       <div className="card-actions">
         <button
-          className="btn tooltip flex flex-1 btn-sm btn-ghost"
+          className="btn tooltip flex justify-start btn-sm btn-ghost"
           data-tip="Like post"
           onClick={() => action.like(post)}
         >
@@ -110,7 +110,7 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
         </button>
 
         <button
-          className="btn tooltip flex flex-1 btn-sm btn-ghost"
+          className="btn tooltip flex btn-square btn-sm btn-ghost"
           data-tip="Show comment"
         >
           <MessageSquare />

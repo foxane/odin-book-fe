@@ -29,7 +29,7 @@ function Feed() {
    * Autofetching logic
    */
   const endRef = useRef<HTMLDivElement>(null);
-  const isEnd = useIntersection(endRef, "100px");
+  const isEnd = useIntersection(endRef, "500px");
   const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
