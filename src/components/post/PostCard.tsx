@@ -37,6 +37,7 @@ const PostCard = ({ post, action, ...props }: Props) => {
       <div className="card-title">
         <UserAvatar user={post.user} />
         <p>{post.user.name}</p>
+        <p className="text-xs">{post.id}</p>
       </div>
 
       <div className="card-body">

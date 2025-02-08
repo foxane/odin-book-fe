@@ -2,7 +2,7 @@ import { removePTag } from "../lib/utils";
 import api from "./api";
 
 export const getAllPost = async () => {
-  const { data } = await api.axios.get<Post[]>("/posts?sort=date&cursor=50");
+  const { data } = await api.axios.get<Post[]>("/posts");
   return data;
 };
 
@@ -28,4 +28,9 @@ export const updatePost = async (payload: Post) => {
 
 export const deletePost = async (post: Post) => {
   await api.axios.delete(`/posts/${post.id.toString()}`);
+};
+
+export const getFeed = async (cursor: string) => {
+  const { data } = await api.axios.get<Post[]>(`/posts?cursor=${cursor}`);
+  return data;
 };
