@@ -18,7 +18,7 @@ export default function AuthPage() {
    * Can we take a moment to appreciete this sexiness? Thank you 💗
    */
   return (
-    <div className="flex min-h-svh flex-col">
+    <div className="flex min-h-svh flex-col bg-base-200">
       <div className="grid h-full flex-1 place-items-center lg:grid-cols-2">
         <Hero className="hidden h-full lg:card" />
         <AuthForm className="mx-auto shadow-md lg:shadow-2xl dark:shadow-2xl" />

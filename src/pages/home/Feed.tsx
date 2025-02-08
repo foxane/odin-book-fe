@@ -19,26 +19,29 @@ function Feed() {
 
   return (
     <div>
-      {posts.map((el) => (
-        <PostCard
-          post={el}
-          key={el.id}
-          action={{
-            update: updatePost.mutate,
-            like: likePost.mutate,
-            delete: deletePost.mutate,
-          }}
-        />
-      ))}
+      <section className="space-y-5 p-3">
+        {posts.map((el) => (
+          <PostCard
+            className="mx-auto"
+            post={el}
+            key={el.id}
+            action={{
+              update: updatePost.mutate,
+              like: likePost.mutate,
+              delete: deletePost.mutate,
+            }}
+          />
+        ))}
 
-      <button
-        className="btn"
-        onClick={() => {
-          void query.fetchNextPage();
-        }}
-      >
-        Load more
-      </button>
+        <button
+          className="btn"
+          onClick={() => {
+            void query.fetchNextPage();
+          }}
+        >
+          Load more
+        </button>
+      </section>
     </div>
   );
 }

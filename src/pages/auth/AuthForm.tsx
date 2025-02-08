@@ -44,7 +44,7 @@ export default function AuthForm({
   return (
     <div
       className={twMerge(
-        "card w-full max-w-[30rem] gap-3 p-5 shadow-2xl",
+        "card w-full max-w-[30rem] gap-3 bg-base-100 p-5 shadow-2xl",
         className,
       )}
       {...props}

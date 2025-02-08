@@ -1,3 +1,5 @@
+import { format, formatDistanceToNow } from "date-fns";
+
 export const addPTag = (s: string) =>
   s
     .split("\n")
@@ -6,3 +8,21 @@ export const addPTag = (s: string) =>
 
 export const removePTag = (s: string) =>
   s.replace(/<p>/g, "").replace(/<\/p>/g, "\n");
+
+export const formatDate = (t: Date | string): string => {
+  const time = new Date(t);
+  const now = new Date();
+  const diffInDays =
+    (now.getTime() - new Date(time).getTime()) / (1000 * 60 * 60 * 24);
+
+  if (diffInDays < 7)
+    return formatDistanceToNow(time, {
+      addSuffix: true,
+    });
+  else return format(time, "d MMMM yyyy");
+};
+
+export const getTime = (t: Date | string) =>
+  new Date(t).getHours().toString() +
+  " : " +
+  new Date().getMinutes().toString();

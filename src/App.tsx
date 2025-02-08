@@ -5,7 +5,7 @@ import Navbar from "./components/navbar/Navbar";
 
 function App() {
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col bg-base-200">
       <Navbar />
       <div className="flex-1">
         <Outlet />

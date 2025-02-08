@@ -24,7 +24,10 @@ export function UpdatePostModal({ post, onClose, submit }: Props) {
       <button className="btn btn-primary" onClick={handleSubmit}>
         Submit
       </button>
-      <button onClick={onClose}>Cancel</button>
+
+      <form method="dialog">
+        <button onClick={onClose}>Cancel</button>
+      </form>
     </Modal>
   );
 }
@@ -41,7 +44,10 @@ export function DeletePostModal({ post, onClose, submit }: Props) {
       <button className="btn-danger btn" onClick={handleSubmit}>
         Delete
       </button>
-      <button onClick={onClose}>Cancel</button>
+
+      <form method="dialog">
+        <button onClick={onClose}>Cancel</button>
+      </form>
     </Modal>
   );
 }

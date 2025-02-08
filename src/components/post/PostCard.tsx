@@ -1,43 +1,102 @@
 import { twMerge } from "tailwind-merge";
 import UserAvatar from "../ui/UserAvatar";
-import { HeartIcon, MessageSquare } from "lucide-react";
+import {
+  EllipsisVerticalIcon,
+  FlagIcon,
+  HeartIcon,
+  MessageSquare,
+  PencilIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { useState } from "react";
 import { DeletePostModal, UpdatePostModal } from "./PostModal";
+import { Dropdown, DropdownContent, DropdownTrigger } from "../ui/Dropdown";
+import useAuth from "../../hooks/useAuth";
+import { formatDate } from "../../lib/utils";
+
+interface PostAction {
+  like: (post: Post) => void;
+  update: (post: Post) => void;
+  delete: (post: Post) => void;
+}
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   post: Post;
-  action: {
-    like: (post: Post) => void;
-    update: (post: Post) => void;
-    delete: (post: Post) => void;
-  };
+  action: PostAction;
 }
 
-const PostCard = ({ post, action, ...props }: Props) => {
-  const [modal, setModal] = useState<"delete" | "update" | null>(null);
+type ModalType = "delete" | "update" | null;
 
-  /**
-   * Wait to show fadeout
-   */
+const PostCard = ({ post, action, className, ...props }: Props) => {
+  const { user } = useAuth();
+  const [modal, setModal] = useState<ModalType>(null);
+  const [dropdown, setDropdown] = useState(false);
+
   const closeModal = () => {
     setTimeout(() => {
       setModal(null);
     }, 300);
   };
 
+  const openModal = (a: ModalType) => {
+    setDropdown(false);
+    setModal(a);
+  };
+
   return (
     <div
       className={twMerge(
-        "p-2",
+        "max-w-xl rounded bg-base-100 p-2 shadow-md",
+        className,
         post.isPending && "animate-pulse",
-        props.className,
       )}
       {...props}
     >
       <div className="card-title">
-        <UserAvatar user={post.user} />
-        <p>{post.user.name}</p>
-        <p className="text-xs">{post.id}</p>
+        <UserAvatar user={post.user} className="h-8 w-8 text-sm" />
+        <p className="text-base font-semibold">{post.user.name}</p>
+        <p className="space-x-1 text-xs font-normal">
+          <span>{formatDate(post.createdAt)}</span>
+        </p>
+
+        <Dropdown className="dropdown-open dropdown-end ms-auto">
+          <button
+            className="btn btn-square btn-ghost"
+            onClick={() => setDropdown(!dropdown)}
+          >
+            <DropdownTrigger>
+              <EllipsisVerticalIcon />
+            </DropdownTrigger>
+          </button>
+
+          {dropdown && (
+            <>
+              <DropdownContent className="w-32 gap-1 border border-base-300 bg-base-100 py-4">
+                <button
+                  disabled={!!user && user.id !== post.user.id}
+                  className="btn flex btn-block justify-start btn-sm btn-ghost"
+                  onClick={() => openModal("update")}
+                >
+                  <PencilIcon size={18} /> Edit
+                </button>
+                <button className="btn flex btn-block justify-start btn-sm btn-ghost">
+                  <FlagIcon size={18} /> Report
+                </button>
+                <button
+                  disabled={!!user && user.id !== post.user.id}
+                  className="btn flex btn-block justify-start btn-sm btn-ghost"
+                  onClick={() => openModal("delete")}
+                >
+                  <Trash2Icon size={18} /> Delete
+                </button>
+              </DropdownContent>
+              <div
+                className="fixed top-0 left-0 z-50 h-screen w-full bg-base-300 opacity-20"
+                onClick={() => setDropdown(false)}
+              />
+            </>
+          )}
+        </Dropdown>
       </div>
 
       <div className="card-body">
@@ -46,7 +105,7 @@ const PostCard = ({ post, action, ...props }: Props) => {
 
       <div className="card-actions">
         <button
-          className="btn tooltip flex btn-ghost"
+          className="btn tooltip flex flex-1 btn-sm btn-ghost"
           data-tip="Like post"
           onClick={() => action.like(post)}
         >
@@ -56,16 +115,11 @@ const PostCard = ({ post, action, ...props }: Props) => {
           {post._count.likedBy}
         </button>
 
-        <button className="btn tooltip btn-ghost" data-tip="Show comment">
+        <button
+          className="btn tooltip flex flex-1 btn-sm btn-ghost"
+          data-tip="Show comment"
+        >
           <MessageSquare />
-        </button>
-
-        <button className="btn" onClick={() => setModal("update")}>
-          Update
-        </button>
-
-        <button className="btn" onClick={() => setModal("delete")}>
-          Delete
         </button>
       </div>
 
