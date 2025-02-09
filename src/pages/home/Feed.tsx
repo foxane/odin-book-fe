@@ -65,9 +65,9 @@ function Feed() {
             post={el}
             key={el.id}
             action={{
-              update: updatePost.mutate,
-              like: likePost.mutate,
-              delete: deletePost.mutate,
+              update: updatePost.mutate as MutateFn,
+              like: likePost.mutate as MutateFn,
+              delete: deletePost.mutate as MutateFn,
             }}
           />
         ))}

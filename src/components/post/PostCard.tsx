@@ -9,21 +9,15 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { useState } from "react";
-import { DeletePostModal, UpdatePostModal } from "./PostModal";
 import { Dropdown, DropdownContent, DropdownTrigger } from "../ui/Dropdown";
 import useAuth from "../../hooks/useAuth";
 import { formatDate } from "../../lib/utils";
 import CommentFeed from "../comment/CommentFeed";
-
-interface PostAction {
-  like: (post: Post) => void;
-  update: (post: Post) => void;
-  delete: (post: Post) => void;
-}
+import { DeleteModal, UpdateModal } from "../ui/Modal";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   post: Post;
-  action: PostAction;
+  action: PostAndCommentAction;
 }
 
 type ModalType = "delete" | "update" | null;
@@ -125,17 +119,17 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
 
       {/* Outside of domtree (modals, dropdown, etc) */}
       {modal === "update" && (
-        <UpdatePostModal
+        <UpdateModal
           onClose={() => setModal(null)}
-          post={post}
+          res={post}
           submit={action.update}
         />
       )}
 
       {modal === "delete" && (
-        <DeletePostModal
+        <DeleteModal
           onClose={() => setModal(null)}
-          post={post}
+          res={post}
           submit={action.delete}
         />
       )}

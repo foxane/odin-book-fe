@@ -1,16 +1,12 @@
 import { twMerge } from "tailwind-merge";
 import { useState } from "react";
-import { DeletePostModal, UpdatePostModal } from "../post/PostModal";
 import UserAvatar from "../ui/UserAvatar";
 import { formatDate } from "../../lib/utils";
+import { DeleteModal, UpdateModal } from "../ui/Modal";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   comment: IComment;
-  action: {
-    update: (c: IComment) => void;
-    delete: (c: IComment) => void;
-    like: (c: IComment) => void;
-  };
+  action: PostAndCommentAction;
 }
 
 export default function CommentCard({
@@ -52,17 +48,17 @@ export default function CommentCard({
       </button>
 
       {modal === "delete" && (
-        <DeletePostModal
+        <DeleteModal
           onClose={() => setModal(null)}
-          post={comment}
+          res={comment}
           submit={action.delete}
         />
       )}
 
       {modal === "update" && (
-        <UpdatePostModal
+        <UpdateModal
           onClose={() => setModal(null)}
-          post={comment}
+          res={comment}
           submit={action.update}
         />
       )}

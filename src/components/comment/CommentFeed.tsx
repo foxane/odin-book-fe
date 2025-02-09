@@ -22,9 +22,9 @@ export default function CommentFeed({ post, className, ...props }: Props) {
    * Action passed to CommentCard
    */
   const action = {
-    update: update.mutate,
-    delete: remove.mutate,
-    like: like.mutate,
+    update: update.mutate as MutateFn,
+    delete: remove.mutate as MutateFn,
+    like: like.mutate as MutateFn,
   };
 
   return (

@@ -20,3 +20,11 @@ interface Post {
 interface PostPayload {
   text: string;
 }
+
+interface PostAndCommentAction {
+  update: (c: Post | IComment) => void;
+  delete: (c: Post | IComment) => void;
+  like: (c: Post | IComment) => void;
+}
+
+type MutateFn = (c: Post | IComment) => void;
