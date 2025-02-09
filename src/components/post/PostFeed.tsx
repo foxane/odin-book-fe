@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getFeed } from "../../services/post";
 import PostCard from "../../components/post/PostCard";
-import { useFeedMutations } from "./useFeedMutation";
+import { useFeedMutations } from "./usePostMutation";
 import PostForm from "../../components/post/PostForm";
 import { useEffect, useRef, useState } from "react";
 import { useIntersection } from "../../hooks/useIntersection";
