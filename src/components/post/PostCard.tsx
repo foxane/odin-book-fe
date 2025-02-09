@@ -13,6 +13,7 @@ import { DeletePostModal, UpdatePostModal } from "./PostModal";
 import { Dropdown, DropdownContent, DropdownTrigger } from "../ui/Dropdown";
 import useAuth from "../../hooks/useAuth";
 import { formatDate } from "../../lib/utils";
+import CommentFeed from "../comment/CommentFeed";
 
 interface PostAction {
   like: (post: Post) => void;
@@ -31,6 +32,7 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
   const { user } = useAuth();
   const [modal, setModal] = useState<ModalType>(null);
   const [dropdown, setDropdown] = useState(false);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
 
   const openModal = (a: ModalType) => {
     setDropdown(false);
@@ -99,7 +101,7 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
 
       <div className="card-actions">
         <button
-          className="btn tooltip flex justify-start btn-sm btn-ghost"
+          className="btn tooltip flex justify-start btn-ghost"
           data-tip="Like post"
           onClick={() => action.like(post)}
         >
@@ -110,12 +112,16 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
         </button>
 
         <button
-          className="btn tooltip flex btn-square btn-sm btn-ghost"
+          onClick={() => setIsCommentOpen(!isCommentOpen)}
+          className="btn tooltip flex justify-start btn-ghost"
           data-tip="Show comment"
         >
           <MessageSquare />
+          {post._count.comment}
         </button>
       </div>
+
+      {isCommentOpen && <CommentFeed post={post} />}
 
       {/* Outside of domtree (modals, dropdown, etc) */}
       {modal === "update" && (

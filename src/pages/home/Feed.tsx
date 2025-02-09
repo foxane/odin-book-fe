@@ -52,6 +52,13 @@ function Feed() {
       <section className="space-y-5 p-3">
         <PostForm submit={createPost.mutate} />
 
+        {query.isPending && (
+          <p className="animate-pulse text-center">
+            <span className="loading me-2 loading-xs" />
+            Loading post...
+          </p>
+        )}
+
         {posts.map((el) => (
           <PostCard
             className="mx-auto"

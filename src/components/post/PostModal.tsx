@@ -4,6 +4,9 @@ import { removePTag } from "../../lib/utils";
 import { AlertOctagonIcon, NotebookPenIcon } from "lucide-react";
 import Textarea from "../ui/Textarea";
 
+/* TODO: Refactor these modal to be usable for both 
+comment and post (they already are, just separate the file) */
+
 interface Props {
   post: Post;
   submit: (post: Post) => void;

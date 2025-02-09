@@ -7,6 +7,7 @@ interface Post {
   isLiked: boolean;
   _count: {
     likedBy: number;
+    comment: number;
   };
 
   /**

@@ -7,6 +7,7 @@ export class DummyPost implements Post {
   isLiked = false;
   _count = {
     likedBy: 0,
+    comment: 0,
   };
 
   isPending?: boolean = true;

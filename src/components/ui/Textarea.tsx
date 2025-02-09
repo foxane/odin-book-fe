@@ -1,3 +1,4 @@
+import { InfoIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -7,7 +8,13 @@ interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxLength?: number;
 }
 
-function Textarea({ className, value, handleChange, maxLength = 300 }: Props) {
+function Textarea({
+  className,
+  value,
+  handleChange,
+  maxLength = 300,
+  ...props
+}: Props) {
   const textRef = useRef<HTMLTextAreaElement | null>(null);
 
   const _handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -28,15 +35,31 @@ function Textarea({ className, value, handleChange, maxLength = 300 }: Props) {
   }, [value, maxLength]);
 
   return (
-    <textarea
-      ref={textRef}
-      value={value}
-      onChange={_handleChange}
-      className={twMerge(
-        "textarea w-full resize-none rounded-none border-0 border-b-4 border-primary",
-        className,
-      )}
-    />
+    <>
+      <textarea
+        ref={textRef}
+        value={value}
+        onChange={_handleChange}
+        className={twMerge(
+          "textarea w-full resize-none rounded-none border-0 border-b-4 border-primary",
+          className,
+        )}
+        {...props}
+      ></textarea>
+
+      <span className="absolute right-2 bottom-2 label text-sm">
+        {value.length}/{maxLength}
+      </span>
+
+      <div className="tooltip absolute tooltip-left top-2 right-2 z-[2]">
+        <InfoIcon opacity={0.6} size={20} />
+        <div className="tooltip-content flex flex-col p-2 text-xs">
+          <span>
+            You can use &lt;b&gt; and &lt;i&gt; to make text bold and italic
+          </span>
+        </div>
+      </div>
+    </>
   );
 }
 
