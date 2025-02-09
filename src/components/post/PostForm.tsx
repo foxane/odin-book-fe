@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { CheckCircle, ImageIcon, InfoIcon } from "lucide-react";
+import Textarea from "../ui/Textarea";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   submit: (p: PostPayload) => void;
@@ -9,30 +10,12 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 const CHAR_LIMIT = 300;
 
 export default function PostForm({ submit, ...props }: Props) {
-  const textRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, setText] = useState("");
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (e.target.value.length > CHAR_LIMIT) return;
-    setText(e.target.value);
-  };
 
   const handleSubmit = () => {
     setText("");
     submit({ text });
   };
-
-  useEffect(() => {
-    if (!textRef.current) return;
-    const { style } = textRef.current;
-
-    // Height autosize
-    style.height = "auto";
-    style.height = `${textRef.current.scrollHeight.toString()}px`;
-
-    if (text.length >= CHAR_LIMIT) style.borderColor = "red";
-    else style.borderColor = "";
-  }, [text]);
 
   return (
     <div
@@ -40,12 +23,10 @@ export default function PostForm({ submit, ...props }: Props) {
     >
       <div className="card space-y-4">
         <div className="relative">
-          <textarea
-            ref={textRef}
-            placeholder="Whats on your mind?"
-            className="textarea w-full resize-none rounded-none border-0 border-b-4 border-primary"
+          <Textarea
+            handleChange={setText}
             value={text}
-            onChange={handleChange}
+            placeholder="Whats on your mind?"
           />
 
           <span className="absolute right-2 bottom-2 label text-sm">

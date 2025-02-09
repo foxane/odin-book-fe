@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Modal from "../ui/Modal";
 import { removePTag } from "../../lib/utils";
 import { AlertOctagonIcon, NotebookPenIcon } from "lucide-react";
+import Textarea from "../ui/Textarea";
 
 interface Props {
   post: Post;
@@ -10,7 +11,6 @@ interface Props {
 }
 
 export function UpdatePostModal({ post, onClose, submit }: Props) {
-  const textRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, setText] = useState(removePTag(post.text));
 
   const handleSubmit = () => {
@@ -19,13 +19,6 @@ export function UpdatePostModal({ post, onClose, submit }: Props) {
     onClose();
   };
 
-  useEffect(() => {
-    if (!textRef.current) return;
-
-    textRef.current.style.height = "auto";
-    textRef.current.style.height = `${textRef.current.scrollHeight.toString()}px`;
-  }, [text]);
-
   return (
     <Modal visible={true} onClose={onClose}>
       <div className="space-y-5">
@@ -33,13 +26,7 @@ export function UpdatePostModal({ post, onClose, submit }: Props) {
           <NotebookPenIcon />
           Update post
         </p>
-        <textarea
-          ref={textRef}
-          placeholder="Whats on your mind?"
-          className="textarea w-full resize-none border-0 border-b-4 border-primary bg-base-200/40"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+        <Textarea handleChange={setText} value={text} />
 
         <div className="flex justify-end gap-2">
           <button className="btn btn-neutral" onClick={onClose}>

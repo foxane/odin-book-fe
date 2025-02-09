@@ -12,6 +12,7 @@ function Feed() {
   ]);
   /**
    * TODO: Optimize the query
+   * Infinite query doesn't play nice with optimistic update, i wonder what to do...
    */
   const query = useInfiniteQuery({
     queryKey: ["posts"],
@@ -63,18 +64,6 @@ function Feed() {
             }}
           />
         ))}
-
-        {query.isFetchingNextPage && (
-          <span className="animate-pulse">Loading more post...</span>
-        )}
-
-        {query.isLoading && (
-          <span className="animate-pulse">Loading post...</span>
-        )}
-
-        {!query.hasNextPage && !query.isPending && (
-          <span>You reach the end!</span>
-        )}
 
         <div ref={endRef} />
       </section>
