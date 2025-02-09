@@ -1,39 +1,45 @@
 import { twMerge } from "tailwind-merge";
-import {
-  deleteComment,
-  likeComment,
-  updateComment,
-} from "../../services/comment";
 import { useState } from "react";
 import { DeletePostModal, UpdatePostModal } from "../post/PostModal";
+import UserAvatar from "../ui/UserAvatar";
+import { formatDate } from "../../lib/utils";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   comment: IComment;
+  action: {
+    update: (c: IComment) => void;
+    delete: (c: IComment) => void;
+    like: (c: IComment) => void;
+  };
 }
 
-export default function CommentCard({ comment, className, ...props }: Props) {
+export default function CommentCard({
+  action,
+  comment,
+  className,
+  ...props
+}: Props) {
   const [modal, setModal] = useState<"update" | "delete" | null>(null);
 
-  const handleLike = async () => {
-    await likeComment(comment);
-  };
-
-  const handleDelete = (c: Post) => {
-    deleteComment(c as IComment)
-      .then(() => console.log("Deleted"))
-      .catch((err: unknown) => console.log(err));
-  };
-
-  const handleUpdate = (c: Post) => {
-    updateComment(c as IComment)
-      .then(() => console.log("Updated"))
-      .catch((err: unknown) => console.log(err));
-  };
-
   return (
-    <div className={twMerge("", className)} {...props}>
+    <div
+      className={twMerge(
+        "border p-5",
+        className,
+        comment.isPending && "animate-pulse",
+      )}
+      {...props}
+    >
+      <div className="card-title">
+        <UserAvatar user={comment.user} />
+        <p>{formatDate(comment.createdAt)}</p>
+        <p>{comment.isPending}</p>
+        <p>{comment.status}</p>
+      </div>
+
       <div dangerouslySetInnerHTML={{ __html: comment.text }} />
-      <button onClick={() => void handleLike()} className="btn">
+
+      <button onClick={() => action.like(comment)} className="btn">
         Like {comment._count.likedBy}
       </button>
 
@@ -49,7 +55,7 @@ export default function CommentCard({ comment, className, ...props }: Props) {
         <DeletePostModal
           onClose={() => setModal(null)}
           post={comment}
-          submit={handleDelete}
+          submit={action.delete}
         />
       )}
 
@@ -57,7 +63,7 @@ export default function CommentCard({ comment, className, ...props }: Props) {
         <UpdatePostModal
           onClose={() => setModal(null)}
           post={comment}
-          submit={handleUpdate}
+          submit={action.update}
         />
       )}
     </div>

@@ -11,6 +11,7 @@ export default function PostForm({ submit, ...props }: Props) {
   const [text, setText] = useState("");
 
   const handleSubmit = () => {
+    if (text.length < 3) return;
     setText("");
     submit({ text });
   };

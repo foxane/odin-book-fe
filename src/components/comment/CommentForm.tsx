@@ -1,29 +1,24 @@
 import { useState } from "react";
 import Textarea from "../ui/Textarea";
-import type { UseQueryResult } from "@tanstack/react-query";
-import { createComment } from "../../services/comment";
 import { twMerge } from "tailwind-merge";
 
 interface Props {
   post: Post;
-  query: UseQueryResult<IComment[]>;
+  submit: ({ c, p }: { c: CommentPayload; p: Post }) => void;
 }
 
-export default function CommentForm({ post, query }: Props) {
+export default function CommentForm({ post, submit }: Props) {
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    setLoading(true);
+  const handleSubmit = () => {
+    if (text.length < 3) return;
+    submit({ c: { text }, p: post });
     setText("");
-    await createComment({ text }, post);
-    await query.refetch();
-    setLoading(false);
   };
 
   return (
-    <div className="flex items-end gap-4">
-      <div className="relative flex-1">
+    <div className="grid grid-cols-5 items-end gap-2">
+      <div className="relative col-span-4 flex-1">
         <Textarea
           value={text}
           handleChange={setText}
@@ -32,12 +27,11 @@ export default function CommentForm({ post, query }: Props) {
       </div>
 
       <button
-        disabled={loading}
-        onClick={() => void handleSubmit()}
-        className={twMerge("btn btn-primary", loading && "loading")}
-      >
-        Submit
-      </button>
+        onClick={handleSubmit}
+        className={twMerge(
+          "btn flex justify-center btn-primary disabled:bg-primary",
+        )}
+      ></button>
     </div>
   );
 }
