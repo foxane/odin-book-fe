@@ -19,7 +19,7 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("is-dark", isDark ? "true" : "light mode sucker");
     document.documentElement.setAttribute(
       "data-theme",
-      isDark ? "dark" : "light",
+      isDark ? "dark" : "garden",
     );
   }, [isDark]);
 

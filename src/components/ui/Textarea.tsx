@@ -41,7 +41,7 @@ function Textarea({
         value={value}
         onChange={_handleChange}
         className={twMerge(
-          "textarea w-full resize-none rounded-none border-0 border-b-4 border-primary",
+          "textarea w-full resize-none rounded border-0 border-b-4 border-primary ring ring-base-300",
           className,
         )}
         {...props}

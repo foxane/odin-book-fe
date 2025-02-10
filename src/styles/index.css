@@ -4,7 +4,8 @@
 @plugin "daisyui" {
   themes:
     light --default,
-    dark --prefersdark;
+    dark --prefersdark,
+    garden;
 }
 
 /* Enable Tawilding darK: modifier */

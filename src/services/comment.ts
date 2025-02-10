@@ -9,8 +9,10 @@ const base = (i: IComment | Post) => {
   return `/posts/${postId}/comments`;
 };
 
-export const getCommentByPost = async (post: Post) => {
-  const { data } = await api.axios.get<IComment[]>(base(post));
+export const getCommentByPost = async (post: Post, cursor?: number) => {
+  const { data } = await api.axios.get<IComment[]>(
+    `${base(post)}?cursor=${cursor ?? ""}`,
+  );
   return data;
 };
 
@@ -21,6 +23,7 @@ export const createComment = async (c: CommentPayload, p: Post) => {
 
 export const likeComment = async (c: IComment) => {
   const endpoint = `${base(c)}/${c.id}/like`;
+  console.log("Like called ", c);
 
   if (c.isLiked) await api.axios.delete(endpoint);
   else await api.axios.post(endpoint);

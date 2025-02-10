@@ -1,15 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { twMerge } from "tailwind-merge";
 import { getCommentByPost } from "../../services/comment";
-import CommentCard from "./CommentCard";
 import CommentForm from "./CommentForm";
 import useCommentMutation from "./useCommentMutation";
+import { useState } from "react";
+import CommentCard from "./CommentCard";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   post: Post;
 }
 
 export default function CommentFeed({ post, className, ...props }: Props) {
+  const [commentForm, setCommentForm] = useState(false);
   const QUERY_KEY = ["comments", { postId: post.id }];
   const query = useQuery({
     queryKey: QUERY_KEY,
@@ -28,13 +30,25 @@ export default function CommentFeed({ post, className, ...props }: Props) {
   };
 
   return (
-    <div className={twMerge("pb-3", className)} {...props}>
-      <div className="divider">Comments</div>
+    <div className={twMerge("", className)} {...props}>
+      <div className="divider"></div>
 
-      <CommentForm post={post} submit={create.mutate} />
+      {commentForm ? (
+        <CommentForm
+          post={post}
+          submit={create.mutate}
+          cancel={() => setCommentForm(false)}
+        />
+      ) : (
+        <input
+          placeholder="Create comment"
+          className="input w-full rounded-xl"
+          readOnly
+          onClick={() => setCommentForm(true)}
+        />
+      )}
 
-      <section className="space-y-2">
-        {/* <p>{createComment.variables?.c.text}</p> */}
+      <section className="space-y-3 rounded pt-5">
         {query.data?.map((el) => (
           <CommentCard action={action} comment={el} key={el.id} />
         ))}
@@ -45,6 +59,7 @@ export default function CommentFeed({ post, className, ...props }: Props) {
             Loading comment...
           </p>
         )}
+
         {query.isFetched && query.data?.length === 0 && (
           <p className="flex items-center justify-center pt-6">No comment</p>
         )}

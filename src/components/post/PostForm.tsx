@@ -18,7 +18,10 @@ export default function PostForm({ submit, ...props }: Props) {
 
   return (
     <div
-      className={twMerge("mx-auto max-w-xl bg-base-100 p-3", props.className)}
+      className={twMerge(
+        "mx-auto max-w-xl border border-gray-300 bg-base-100 p-3 dark:border-0",
+        props.className,
+      )}
     >
       <div className="card space-y-4">
         <div className="relative">
