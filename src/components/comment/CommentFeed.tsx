@@ -48,20 +48,20 @@ export default function CommentFeed({ post, className, ...props }: Props) {
         />
       )}
 
-      <section className="space-y-3 rounded pt-5">
+      <section className="space-y-3 rounded py-5">
         {query.data?.map((el) => (
           <CommentCard action={action} comment={el} key={el.id} />
         ))}
 
         {query.isPending && (
-          <p className="animate-pulse pt-6 text-center">
+          <p className="animate-pulse text-center">
             <span className="loading me-2 loading-sm" />
             Loading comment...
           </p>
         )}
 
         {query.isFetched && query.data?.length === 0 && (
-          <p className="flex items-center justify-center pt-6">No comment</p>
+          <p className="flex items-center justify-center">No comment</p>
         )}
       </section>
     </div>

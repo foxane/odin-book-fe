@@ -1,4 +1,4 @@
-import { SquirrelIcon } from "lucide-react";
+import { SearchIcon, SquirrelIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import UserMenu from "./user-menu/UserMenu";
 
@@ -14,7 +14,15 @@ export default function Navbar() {
         </h1>
       </div>
 
-      <div className="navbar-end">
+      <div className="navbar-end space-x-1">
+        <label className="hidden sm:input">
+          <SearchIcon className="opacity-50" />
+          <input placeholder="Search..." />
+        </label>
+        <button className="btn btn-circle btn-ghost sm:hidden">
+          <SearchIcon />
+        </button>
+
         <UserMenu />
       </div>
     </header>

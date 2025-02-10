@@ -37,7 +37,7 @@ const PostCard = ({ post, action, className, ...props }: Props) => {
     <>
       <div
         className={twMerge(
-          "card max-w-xl bg-base-100 px-4 py-2 shadow-md dark:border-0",
+          "card bg-base-100 px-4 py-2 shadow-md dark:border-0",
           className,
           post.isPending && "animate-pulse",
         )}

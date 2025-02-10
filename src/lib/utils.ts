@@ -1,4 +1,5 @@
 import { format, formatDistanceToNow } from "date-fns";
+import JOKES from "../assets/jokes.json";
 
 export const addPTag = (s: string) =>
   s
@@ -26,3 +27,6 @@ export const getTime = (t: Date | string) =>
   new Date(t).getHours().toString() +
   " : " +
   new Date().getMinutes().toString();
+
+export const getJoke = () =>
+  JOKES[Math.floor(Math.random() * JOKES.length) + 1];

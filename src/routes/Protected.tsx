@@ -2,7 +2,7 @@ import { Link, Navigate, useLocation } from "react-router-dom";
 import { SquirrelIcon } from "lucide-react";
 
 import useAuth from "../hooks/useAuth";
-import { getJoke } from "../lib/joke";
+import { getJoke } from "../lib/utils";
 import { useEffect, useState } from "react";
 
 interface Props {

@@ -24,7 +24,7 @@ const DropdownContent = (props: React.HTMLAttributes<HTMLDivElement>) => {
     <div
       tabIndex={0}
       className={twMerge(
-        "dropdown-content menu mt-3 w-80 rounded-md bg-base-200 px-1 py-5 shadow-2xl",
+        "dropdown-content card w-80 bg-base-100 p-1 shadow-2xl",
         props.className,
       )}
     >

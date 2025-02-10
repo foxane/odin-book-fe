@@ -64,10 +64,12 @@ function CommentCard({ action, comment, className, ...props }: Props) {
 
         {/* ============ FOOTER ========== */}
         <div className="flex items-center justify-end">
-          <button className="btn btn-sm btn-ghost">
+          <button
+            className="btn btn-sm btn-ghost"
+            onClick={() => action.like(comment)}
+          >
             <HeartIcon
               size={16}
-              onClick={() => action.like(comment)}
               className={twMerge(
                 comment.isLiked && "fill-primary stroke-primary",
               )}

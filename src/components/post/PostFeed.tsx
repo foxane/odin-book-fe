@@ -48,33 +48,31 @@ function Feed() {
   }, [isEnd, query, hasScrolled]);
 
   return (
-    <div>
-      <section className="space-y-5 p-3">
-        <PostForm submit={createPost.mutate} />
+    <section className="max-w-2xl space-y-5 p-3">
+      <PostForm submit={createPost.mutate} />
 
-        {query.isPending && (
-          <p className="animate-pulse text-center">
-            <span className="loading me-2 loading-xs" />
-            Loading post...
-          </p>
-        )}
+      {query.isPending && (
+        <p className="animate-pulse text-center">
+          <span className="loading me-2 loading-xs" />
+          Loading post...
+        </p>
+      )}
 
-        {posts.map((el) => (
-          <PostCard
-            className="mx-auto"
-            post={el}
-            key={el.id}
-            action={{
-              update: updatePost.mutate as MutateFn,
-              like: likePost.mutate as MutateFn,
-              delete: deletePost.mutate as MutateFn,
-            }}
-          />
-        ))}
+      {posts.map((el) => (
+        <PostCard
+          className="mx-auto"
+          post={el}
+          key={el.id}
+          action={{
+            update: updatePost.mutate as MutateFn,
+            like: likePost.mutate as MutateFn,
+            delete: deletePost.mutate as MutateFn,
+          }}
+        />
+      ))}
 
-        <div ref={endRef} />
-      </section>
-    </div>
+      <div ref={endRef} />
+    </section>
   );
 }
 

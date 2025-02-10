@@ -28,7 +28,7 @@ export default function UserMenu() {
 
       {open && (
         <>
-          <DropdownContent className="mt-3.5 border border-gray-300 dark:border-gray-600">
+          <DropdownContent className="mt-4 p-4">
             {page === "main" && <MainMenu move={move} />}
             {page === "pref" && <PrefMenu move={move} />}
           </DropdownContent>

@@ -23,7 +23,6 @@ export const createComment = async (c: CommentPayload, p: Post) => {
 
 export const likeComment = async (c: IComment) => {
   const endpoint = `${base(c)}/${c.id}/like`;
-  console.log("Like called ", c);
 
   if (c.isLiked) await api.axios.delete(endpoint);
   else await api.axios.post(endpoint);
