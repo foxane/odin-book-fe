@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as service from "../../services/post";
 import useAuth from "../../hooks/useAuth";
 import { DummyPost } from "../../components/post/DummyPost";
-import { addPTag } from "../../lib/utils";
+import { addPTag } from "../../utils/helper";
+import { postService } from "../../utils/services";
 
-export const useFeedMutations = (queryKey: readonly unknown[]) => {
+export const usePostMutations = (queryKey: readonly unknown[]) => {
   const { user } = useAuth();
   const client = useQueryClient();
   if (!user) throw new Error("useAuth is used outside of AuthProider!");
@@ -16,8 +16,8 @@ export const useFeedMutations = (queryKey: readonly unknown[]) => {
     );
   };
 
-  const createPost = useMutation({
-    mutationFn: service.createPost,
+  const createMutation = useMutation({
+    mutationFn: postService.create,
     onMutate: async (payload) => {
       const prev = await getPrevData();
       if (!prev) return;
@@ -38,8 +38,8 @@ export const useFeedMutations = (queryKey: readonly unknown[]) => {
       ctx?.prev && client.setQueryData(queryKey, ctx.prev),
   });
 
-  const updatePost = useMutation({
-    mutationFn: service.updatePost,
+  const updateMutation = useMutation({
+    mutationFn: postService.update,
     onMutate: async (payload) => {
       const prev = await getPrevData();
       if (!prev) return;
@@ -67,8 +67,8 @@ export const useFeedMutations = (queryKey: readonly unknown[]) => {
       ctx?.prev && client.setQueryData(queryKey, ctx.prev),
   });
 
-  const deletePost = useMutation({
-    mutationFn: service.deletePost,
+  const deleteNutation = useMutation({
+    mutationFn: postService.delete,
     onMutate: async (toDelete) => {
       const prev = await getPrevData();
       if (!prev) return;
@@ -91,8 +91,8 @@ export const useFeedMutations = (queryKey: readonly unknown[]) => {
       ctx?.prev && client.setQueryData(queryKey, ctx.prev),
   });
 
-  const likePost = useMutation({
-    mutationFn: service.likePost,
+  const likeMutation = useMutation({
+    mutationFn: postService.like,
     onMutate: async (post) => {
       const prev = await getPrevData();
       if (!prev) return;
@@ -117,5 +117,10 @@ export const useFeedMutations = (queryKey: readonly unknown[]) => {
       ctx?.prev && client.setQueryData(queryKey, ctx.prev),
   });
 
-  return { createPost, updatePost, deletePost, likePost };
+  return {
+    create: createMutation.mutate,
+    update: updateMutation.mutate,
+    delete: deleteNutation.mutate,
+    like: likeMutation.mutate,
+  };
 };

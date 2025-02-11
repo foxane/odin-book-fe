@@ -3,7 +3,6 @@ import { Navigate, useSearchParams } from "react-router-dom";
 import AuthForm from "./AuthForm";
 import useAuth from "../../hooks/useAuth";
 import Hero from "./Hero";
-import Footer from "../../components/Footer";
 
 export default function AuthPage() {
   const { user } = useAuth();
@@ -18,12 +17,11 @@ export default function AuthPage() {
    * Can we take a moment to appreciete this sexiness? Thank you 💗
    */
   return (
-    <div className="flex min-h-svh flex-col bg-base-200">
+    <div className="bg-base-200 flex min-h-svh flex-col">
       <div className="grid h-full flex-1 place-items-center lg:grid-cols-2">
-        <Hero className="hidden h-full lg:card" />
+        <Hero className="lg:card hidden h-full" />
         <AuthForm className="mx-auto shadow-md lg:shadow-2xl dark:shadow-2xl" />
       </div>
-      <Footer />
     </div>
   );
 }

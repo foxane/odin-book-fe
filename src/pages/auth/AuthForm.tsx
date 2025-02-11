@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { SquirrelIcon } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 import ThemeBtn from "./ThemeBtn";
-import { twMerge } from "tailwind-merge";
 import useAuth from "../../hooks/useAuth";
-import InputField from "../../components/ui/InputField";
+import InputField from "./InputField";
 import OAuthBtn from "./OAuthBtn";
 
 export default function AuthForm({
@@ -44,7 +44,7 @@ export default function AuthForm({
   return (
     <div
       className={twMerge(
-        "card w-full max-w-[30rem] gap-3 bg-base-100 p-5 shadow-2xl",
+        "card bg-base-100 w-full max-w-[30rem] gap-3 p-5 shadow-2xl",
         className,
       )}
       {...props}
@@ -55,10 +55,10 @@ export default function AuthForm({
         <SquirrelIcon className="stroke-accent" />
         Twittard
       </h1>
-      <p className="mb-2 label">{isLogin ? "Login" : "Register"} to Twittard</p>
+      <p className="label mb-2">{isLogin ? "Login" : "Register"} to Twittard</p>
 
       {error && (
-        <div className="alert-soft my-2 alert alert-vertical alert-error">
+        <div className="alert-soft alert alert-vertical alert-error my-2">
           <p className="card-title">{error.message}</p>
           {error.errorDetails && (
             <ul>
@@ -108,7 +108,7 @@ export default function AuthForm({
 
         <button
           disabled={loading}
-          className="btn relative btn-block btn-primary"
+          className="btn btn-block btn-primary relative"
         >
           {loading ? (
             <span className="loading left-[7.5rem]" />
@@ -124,14 +124,14 @@ export default function AuthForm({
             {isLogin ? "Don't have an account?" : "Alredy have an account?"}
             {isLogin ? (
               <Link
-                className="ms-2 link"
+                className="link ms-2"
                 to={`/auth?login=false&redirect=${redirect}`}
               >
                 Register
               </Link>
             ) : (
               <Link
-                className="ms-2 link"
+                className="link ms-2"
                 to={`/auth?login=true&redirect=${redirect}`}
               >
                 Login

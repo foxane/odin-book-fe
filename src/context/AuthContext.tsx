@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import authService from "../services/auth";
+import { authService } from "../utils/services";
 
 const TOKEN = localStorage.getItem("token");
 const AuthContext = createContext<IAuthContext>({
@@ -13,7 +13,7 @@ const AuthContext = createContext<IAuthContext>({
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<IAuthError | null>(null);
+  const [error, setError] = useState<AuthError | null>(null);
   const [loading, setLoading] = useState(true);
 
   const login = (cred: Credentials) => {
@@ -22,7 +22,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     authService
       .login(cred)
       .then((user) => setUser(user))
-      .catch((err: unknown) => setError(err as IAuthError))
+      .catch((err: unknown) => setError(err as AuthError))
       .finally(() => setLoading(false));
   };
 
@@ -32,7 +32,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     authService
       .register(cred)
       .then((user) => setUser(user))
-      .catch((err: unknown) => setError(err as IAuthError))
+      .catch((err: unknown) => setError(err as AuthError))
       .finally(() => setLoading(false));
   };
 
@@ -55,7 +55,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     authService
       .getUserInfo()
       .then((user) => setUser(user))
-      .catch((err: unknown) => setError(err as IAuthError))
+      .catch((err: unknown) => setError(err as AuthError))
       .finally(() => setLoading(false));
   }, []);
 

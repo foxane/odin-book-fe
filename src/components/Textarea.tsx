@@ -41,17 +41,17 @@ function Textarea({
         value={value}
         onChange={_handleChange}
         className={twMerge(
-          "textarea w-full resize-none rounded border-0 border-b-4 border-primary ring ring-base-300",
+          "textarea border-primary ring-base-content/30 w-full resize-none rounded border-0 border-b-4 ring",
           className,
         )}
         {...props}
       ></textarea>
 
-      <span className="absolute right-2 bottom-2 label text-sm">
+      <span className="label absolute bottom-2 right-2 text-sm">
         {value.length}/{maxLength}
       </span>
 
-      <div className="tooltip absolute tooltip-left top-2 right-2 z-[2]">
+      <div className="tooltip tooltip-left absolute right-2 top-2 z-[2]">
         <InfoIcon opacity={0.6} size={20} />
         <div className="tooltip-content flex flex-col p-2 text-xs">
           <span>

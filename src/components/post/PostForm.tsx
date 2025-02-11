@@ -1,13 +1,12 @@
-import { twMerge } from "tailwind-merge";
 import { useState } from "react";
 import { CheckCircle, ImageIcon } from "lucide-react";
-import Textarea from "../ui/Textarea";
+import Textarea from "../Textarea";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+interface Props {
   submit: (p: PostPayload) => void;
 }
 
-export default function PostForm({ submit, ...props }: Props) {
+export default function PostForm({ submit }: Props) {
   const [text, setText] = useState("");
 
   const handleSubmit = () => {
@@ -17,12 +16,7 @@ export default function PostForm({ submit, ...props }: Props) {
   };
 
   return (
-    <div
-      className={twMerge(
-        "card mx-auto border border-gray-300 bg-base-100 p-3 dark:border-0",
-        props.className,
-      )}
-    >
+    <div className="card bg-base-100 border border-gray-300 p-3 dark:border-0">
       <div className="card space-y-4">
         <div className="relative">
           <Textarea
@@ -48,7 +42,7 @@ export default function PostForm({ submit, ...props }: Props) {
           </button>
 
           <button
-            className="btn ms-auto btn-sm btn-primary"
+            className="btn btn-sm btn-primary ms-auto"
             onClick={handleSubmit}
           >
             Submit

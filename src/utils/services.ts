@@ -1,5 +1,36 @@
-import { AxiosError } from "axios";
-import api from "./api";
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import axiosBase, { AxiosInstance, AxiosError } from "axios";
+import { removePTag } from "./helper";
+
+/**
+ * Class to setup axios config
+ */
+class ApiService {
+  axios: AxiosInstance;
+  constructor(baseURL: string) {
+    this.axios = axiosBase.create({
+      baseURL,
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      this.setToken(token);
+    }
+  }
+
+  setToken(token: string | null) {
+    if (token) {
+      this.axios.defaults.headers.Authorization = `Bearer ${token}`;
+      localStorage.setItem("token", token);
+    } else {
+      delete this.axios.defaults.headers.Authorization;
+      localStorage.removeItem("token");
+    }
+  }
+}
+
+const api = new ApiService(import.meta.env.VITE_API_URL);
 
 class AuthError extends Error {
   errorDetails?: string[];
@@ -73,5 +104,37 @@ class AuthService {
   }
 }
 
-const authService = new AuthService();
-export default authService;
+export const authService = new AuthService();
+
+export const postService = {
+  getMany: async (cursor?: string) => {
+    const { data } = await api.axios.get<Post[]>(
+      `/posts?cursor=${cursor ?? ""}`,
+    );
+    return data;
+  },
+
+  create: async (p: PostPayload) => {
+    const { data } = await api.axios.post<Post>("/posts", p);
+    return data;
+  },
+
+  like: async (p: Post) => {
+    const endpoint = `/posts/${p.id.toString()}/like`;
+
+    if (p.isLiked) await api.axios.delete(endpoint);
+    else await api.axios.post(endpoint);
+  },
+
+  update: async (payload: Post) => {
+    const { data } = await api.axios.put<Post>(
+      `/posts/${payload.id.toString()}`,
+      { text: removePTag(payload.text) },
+    );
+    return data;
+  },
+
+  delete: async (post: Post) => {
+    await api.axios.delete(`/posts/${post.id.toString()}`);
+  },
+};

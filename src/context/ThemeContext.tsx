@@ -12,9 +12,6 @@ const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleTheme = () => setIsDark(!isDark);
 
-  /**
-   * Update beybeh
-   */
   useEffect(() => {
     localStorage.setItem("is-dark", isDark ? "true" : "light mode sucker");
     document.documentElement.setAttribute(

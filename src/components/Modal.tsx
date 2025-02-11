@@ -1,8 +1,8 @@
 import { HTMLAttributes, useEffect, useState, useRef } from "react";
 import { twMerge } from "tailwind-merge";
-import { removePTag } from "../../lib/utils";
+import { removePTag } from "../utils/helper";
 import { AlertOctagonIcon, NotebookPenIcon } from "lucide-react";
-import Textarea from "../ui/Textarea";
+import Textarea from "./Textarea";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   visible: boolean;
@@ -42,17 +42,21 @@ export default function Modal({ visible, onClose, ...props }: Props) {
   );
 }
 
-interface ActionModalProps<T = Post | IComment> {
-  res: T;
-  submit: (res: T) => void;
+interface ActionModalProps<T> {
+  resource: T;
+  submit: (resource: T) => void;
   onClose: () => void;
 }
 
-export function UpdateModal({ res, onClose, submit }: ActionModalProps) {
-  const [text, setText] = useState(removePTag(res.text));
+export function UpdateModal<T extends Post | IComment>({
+  resource,
+  onClose,
+  submit,
+}: ActionModalProps<T>) {
+  const [text, setText] = useState(removePTag(resource.text));
 
   const handleSubmit = () => {
-    submit({ ...res, text });
+    submit({ ...resource, text });
     onClose();
   };
 
@@ -63,7 +67,9 @@ export function UpdateModal({ res, onClose, submit }: ActionModalProps) {
           <NotebookPenIcon />
           Update post
         </p>
-        <Textarea handleChange={setText} value={text} />
+        <div className="relative">
+          <Textarea handleChange={setText} value={text} />
+        </div>
 
         <div className="flex justify-end gap-2">
           <button className="btn btn-neutral" onClick={onClose}>
@@ -78,9 +84,13 @@ export function UpdateModal({ res, onClose, submit }: ActionModalProps) {
   );
 }
 
-export function DeleteModal({ res, onClose, submit }: ActionModalProps) {
+export function DeleteModal<T extends Post | IComment>({
+  resource,
+  onClose,
+  submit,
+}: ActionModalProps<T>) {
   const handleSubmit = () => {
-    submit(res as IComment);
+    submit(resource);
     onClose();
   };
 
