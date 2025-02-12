@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axiosBase, { AxiosInstance, AxiosError } from "axios";
 import { removePTag } from "./helper";
 
@@ -107,6 +106,11 @@ class AuthService {
 export const authService = new AuthService();
 
 export const postService = {
+  getOne: async (id: string) => {
+    const { data } = await api.axios.get<Post>(`/post/${id}`);
+    return data;
+  },
+
   getMany: async (cursor?: string) => {
     const { data } = await api.axios.get<Post[]>(
       `/posts?cursor=${cursor ?? ""}`,
@@ -136,5 +140,56 @@ export const postService = {
 
   delete: async (post: Post) => {
     await api.axios.delete(`/posts/${post.id.toString()}`);
+  },
+};
+
+const base = (i: IComment | Post) => {
+  let postId: number;
+  if ("postId" in i) postId = i.postId;
+  else postId = i.id;
+
+  return `/posts/${postId.toString()}/comments`;
+};
+export const commentService = {
+  getMany: async (postId: string, cursor: string) => {
+    const { data } = await api.axios.get<IComment[]>(
+      `/posts/${postId}/comments?cursor=${cursor}`,
+    );
+    return data;
+  },
+
+  create: async (payload: CommentPayload, post: Post) => {
+    const { data } = await api.axios.post<IComment>(base(post), payload);
+    return data;
+  },
+
+  update: async (updated: IComment) => {
+    const { data } = await api.axios.put<IComment>(
+      `${base(updated)}/${updated.id.toString()}`,
+      {
+        text: updated.text,
+      },
+    );
+    return data;
+  },
+
+  delete: async (c: IComment) => {
+    await api.axios.delete(`${base(c)}/${c.id.toString()}`);
+  },
+
+  like: async (c: IComment) => {
+    const endpoint = `${base(c)}/${c.id.toString()}/like`;
+
+    if (c.isLiked) await api.axios.delete(endpoint);
+    else await api.axios.post(endpoint);
+  },
+};
+
+export const userService = {
+  getMany: async (cursor?: string) => {
+    const { data } = await api.axios.get<User[]>(
+      `/users?cursor=${cursor ?? ""}`,
+    );
+    return data;
   },
 };

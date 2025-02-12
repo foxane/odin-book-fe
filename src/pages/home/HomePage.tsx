@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import PostForm from "../components/post/PostForm";
-import { usePostMutations } from "../components/post/usePostMutation";
-import { postService } from "../utils/services";
-import PostCard from "../components/post/PostCard";
+import PostForm from "../../components/post/PostForm";
+import { usePostMutations } from "./usePostMutation";
+import { postService } from "../../utils/services";
+import PostCard from "../../components/post/PostCard";
 
 export default function HomePage() {
   const query = useInfiniteQuery({

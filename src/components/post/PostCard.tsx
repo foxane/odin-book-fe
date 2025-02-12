@@ -109,7 +109,7 @@ function PostCard({ post, action }: Props) {
         </button>
 
         <Link
-          to={`/posts/${post.id.toString()}`}
+          to={`/post/${post.id.toString()}`}
           className="btn btn-ghost btn-sm"
         >
           <MessageSquareIcon size={20} />

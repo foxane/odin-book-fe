@@ -44,19 +44,16 @@ export const usePostMutations = (queryKey: readonly unknown[]) => {
       const prev = await getPrevData();
       if (!prev) return;
 
+      const updated = {
+        text: addPTag(payload.text),
+        status: "update",
+        isPending: true,
+      };
+
       client.setQueryData(queryKey, {
         ...prev,
         pages: prev.pages.map((page) =>
-          page.map((el) =>
-            el.id === payload.id
-              ? {
-                  ...el,
-                  text: addPTag(payload.text),
-                  status: "update",
-                  isPending: true,
-                }
-              : el,
-          ),
+          page.map((el) => (el.id === payload.id ? { ...el, ...updated } : el)),
         ),
       });
 
@@ -97,16 +94,17 @@ export const usePostMutations = (queryKey: readonly unknown[]) => {
       const prev = await getPrevData();
       if (!prev) return;
 
-      const likeCount = post._count.likedBy + (post.isLiked ? -1 : 1);
+      const { likedBy, comment } = post._count;
+      const likeCount = likedBy + (post.isLiked ? -1 : 1);
+      const updated: Partial<Post> = {
+        isLiked: !post.isLiked,
+        _count: { likedBy: likeCount, comment },
+      };
 
       client.setQueryData(queryKey, {
         ...prev,
         pages: prev.pages.map((page) =>
-          page.map((el) =>
-            el.id === post.id
-              ? { ...el, isLiked: !el.isLiked, _count: { likedBy: likeCount } }
-              : el,
-          ),
+          page.map((el) => (el.id === post.id ? { ...el, ...updated } : el)),
         ),
       });
 
