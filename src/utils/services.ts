@@ -118,6 +118,12 @@ export const postService = {
     return data;
   },
 
+  getByUser: async (id: string) => {
+    const { data } = await api.axios.get<Post[]>(`/users/${id}/posts`);
+    console.log(data);
+    return data;
+  },
+
   create: async (p: PostPayload) => {
     const { data } = await api.axios.post<Post>("/posts", p);
     return data;
@@ -190,6 +196,19 @@ export const userService = {
     const { data } = await api.axios.get<User[]>(
       `/users?cursor=${cursor ?? ""}`,
     );
+    console.log(data);
     return data;
+  },
+
+  getOne: async (id: string) => {
+    const { data } = await api.axios.get<User>(`/users/${id}`);
+    return data;
+  },
+
+  follow: async (u: User) => {
+    const uri = `/user/${u.id}/follow`;
+
+    if (u.isFollowed) await api.axios.delete(uri);
+    else await api.axios.post(uri);
   },
 };

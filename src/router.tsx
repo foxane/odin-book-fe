@@ -4,6 +4,7 @@ import AuthPage from "./pages/auth/AuthPage";
 import HomePage from "./pages/home/HomePage";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import PostPage from "./pages/post/PostPage";
+import UserPage from "./pages/user/UserPage";
 
 const routes = createBrowserRouter([
   {
@@ -12,6 +13,7 @@ const routes = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "/post/:postId", element: <PostPage /> },
+      { path: "/user/:userId", element: <UserPage /> },
     ],
   },
 

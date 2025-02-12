@@ -3,16 +3,40 @@ import { Link, Outlet } from "react-router-dom";
 import useAuth from "./hooks/useAuth";
 import { useContext } from "react";
 import { ThemeContext } from "./context/ThemeContext";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "./utils/services";
+import UserCard from "./components/user/UserCard";
+
+const usersKey = ["users"];
 
 export default function App() {
   const { user, logout } = useAuth();
   const { toggleTheme } = useContext(ThemeContext);
 
+  const client = useQueryClient();
   const userQuery = useQuery({
-    queryKey: ["users"],
+    queryKey: usersKey,
     queryFn: () => userService.getMany(),
+  });
+  const followMutation = useMutation({
+    mutationFn: userService.follow,
+    onMutate: async (toFollow) => {
+      await client.cancelQueries({ queryKey: usersKey });
+      const prev = client.getQueryData(usersKey);
+
+      client.setQueryData(usersKey, (old: User[] | undefined) =>
+        old
+          ? old.map((el) =>
+              el.id !== toFollow.id ? el : { ...el, isFollowed: true },
+            )
+          : old,
+      );
+
+      return { prev };
+    },
+    onError: (_, __, ctx) =>
+      ctx?.prev && client.setQueryData(usersKey, ctx.prev),
+    onSettled: () => client.invalidateQueries({ queryKey: usersKey }),
   });
 
   return (
@@ -24,7 +48,7 @@ export default function App() {
             Home
           </Link>
 
-          <Link to={"/"} className="btn btn-ghost">
+          <Link to={`/user/${user!.id}`} className="btn btn-ghost">
             <UserIcon size={20} />
             Profile
           </Link>
@@ -44,7 +68,7 @@ export default function App() {
           <Link to={"/"} className="btn btn-ghost grow py-6">
             <HomeIcon />
           </Link>
-          <Link to={"/"} className="btn btn-ghost grow py-6">
+          <Link to={`/user/${user!.id}`} className="btn btn-ghost grow py-6">
             <UserIcon />
           </Link>
           <Link to={"/"} className="btn btn-ghost grow py-6">
@@ -59,8 +83,10 @@ export default function App() {
           <Outlet />
         </main>
 
-        <div className="hidden lg:block">
-          {userQuery.data?.map((el) => <div key={el.id}>{el.name}</div>)}
+        <div className="hidden space-y-2 lg:block">
+          {userQuery.data?.map((el) => (
+            <UserCard follow={followMutation.mutate} user={el} key={el.id} />
+          ))}
         </div>
       </div>
     </div>

@@ -8,8 +8,15 @@ interface User {
   id: string;
   name: string;
   email: string;
+  bio: null | string;
   avatar: null | string;
+  background: null | string;
   role: "GUEST" | "USER" | "ADMIN";
+  isFollowed: boolean;
+  _count: {
+    follower: number;
+    following: number;
+  };
 }
 
 interface IAuthContext {
