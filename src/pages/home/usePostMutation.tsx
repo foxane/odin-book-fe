@@ -26,7 +26,7 @@ export const usePostMutations = (queryKey: readonly unknown[]) => {
         ...prev,
         pages: [
           // Add new post to the first page (prepend)
-          [new DummyPost(payload.text, user), ...prev.pages[0]],
+          [new DummyPost(payload.get("text") ?? "", user), ...prev.pages[0]],
           ...prev.pages.slice(1),
         ],
       });

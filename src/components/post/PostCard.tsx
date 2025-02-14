@@ -91,11 +91,18 @@ function PostCard({ post, action }: Props) {
         </div>
       </div>
 
-      <div
-        className="p-2 text-sm"
-        dangerouslySetInnerHTML={{ __html: post.text }}
-      />
+      {/* Content */}
+      <div className="space-y-2 p-2">
+        <div
+          className="text-sm"
+          dangerouslySetInnerHTML={{ __html: post.text }}
+        />
+        {post.media.map((el) => (
+          <img className="obj" src={el} key={el} alt={el} />
+        ))}
+      </div>
 
+      {/* Action */}
       <div className="mt-2">
         <button
           className="btn btn-sm btn-ghost"

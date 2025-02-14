@@ -45,6 +45,7 @@ interface Post {
   user: User;
   userId: string;
   isLiked: boolean;
+  media: string[];
   _count: {
     likedBy: number;
     comment: number;
@@ -59,6 +60,7 @@ interface Post {
 
 interface PostPayload {
   text: string;
+  media: File | null;
 }
 
 interface IComment extends Post {

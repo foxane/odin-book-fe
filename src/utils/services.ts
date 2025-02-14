@@ -7,10 +7,7 @@ import { removePTag } from "./helper";
 class ApiService {
   axios: AxiosInstance;
   constructor(baseURL: string) {
-    this.axios = axiosBase.create({
-      baseURL,
-      headers: { "Content-Type": "application/json" },
-    });
+    this.axios = axiosBase.create({ baseURL });
 
     const token = localStorage.getItem("token");
     if (token) {
@@ -120,12 +117,12 @@ export const postService = {
 
   getByUser: async (id: string) => {
     const { data } = await api.axios.get<Post[]>(`/users/${id}/posts`);
-    console.log(data);
     return data;
   },
 
-  create: async (p: PostPayload) => {
+  create: async (p: FormData) => {
     const { data } = await api.axios.post<Post>("/posts", p);
+
     return data;
   },
 

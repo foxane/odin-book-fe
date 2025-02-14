@@ -23,14 +23,23 @@ export default function UserPage() {
     <div className="">
       <div className="bg-base-100 rounded pb-1">
         {/* Background */}
-        <div className="bg-base-300 flex aspect-video items-center">
-          <ImageOffIcon size={100} className="mx-auto opacity-10" />
+        <div className="bg-base-300 relative grid aspect-video items-center">
+          <img
+            src="/bg.pn"
+            className="z absolute z-10 h-full w-full object-cover"
+            onError={(e) => (e.currentTarget.style.display = "none")} // Hide image if it fails to load
+          />
+          <div className="col-start-1 row-start-1 mx-auto text-center opacity-30">
+            <ImageOffIcon size={100} />
+            <p className="text-2xl">No Image</p>
+          </div>
         </div>
 
         {/* User info */}
         <div className="mt-2 grid grid-cols-[auto_1fr_auto] items-center gap-x-2 px-2">
           <Avatar
             name={user.name}
+            src={user.avatar ?? ""}
             size="50"
             maxInitials={2}
             className="avatar avatar-online row-span-2"

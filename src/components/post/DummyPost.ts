@@ -5,6 +5,7 @@ export class DummyPost implements Post {
   user: User;
   userId: string;
   isLiked = false;
+  media: string[] = [];
   _count = {
     likedBy: 0,
     comment: 0,
@@ -13,8 +14,8 @@ export class DummyPost implements Post {
   isPending?: boolean = true;
   status: "create" | "update" | "delete" = "create";
 
-  constructor(text: string, user: User) {
-    this.text = text;
+  constructor(text: FormDataEntryValue, user: User) {
+    this.text = text as string;
     this.user = user;
     this.userId = user.id;
   }
