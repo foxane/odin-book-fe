@@ -27,10 +27,12 @@ export default function Drawer({ className, ...props }: Props) {
         />
 
         {/* Sidebar content */}
-        <div className="bg-base-300 menu min-h-full w-64 space-y-5 p-4">
-          <h1 className="mx-auto flex items-center gap-2 text-xl font-bold">
-            <SquirrelIcon size={30} className="stroke-accent" /> Twittard
-          </h1>
+        <div className="menu bg-base-200 h-full w-64 space-y-5 p-4 md:pt-20">
+          <Link to={"/"} className="mx-auto block md:hidden">
+            <h1 className="flex items-center gap-2 text-xl font-bold">
+              <SquirrelIcon size={30} className="stroke-accent" /> Twittard
+            </h1>
+          </Link>
 
           {/* Nav links */}
           <nav className="w-full space-y-1">
@@ -47,7 +49,10 @@ export default function Drawer({ className, ...props }: Props) {
           </nav>
 
           {/* User card */}
-          <div className="card bg-base-100 mt-auto grid grid-cols-[auto_1fr] gap-x-3 p-2">
+          <Link
+            to={`/user/${user?.id ?? ""}`}
+            className="card bg-base-100 border-base-content/20 mt-auto grid grid-cols-[auto_1fr] gap-x-3 border p-2"
+          >
             <Avatar
               round
               size="40"
@@ -57,7 +62,7 @@ export default function Drawer({ className, ...props }: Props) {
             />
             <p className="text-sm font-semibold">{user?.name}</p>
             <p className="label text-xs">{user?.email}</p>
-          </div>
+          </Link>
         </div>
       </div>
     </div>
