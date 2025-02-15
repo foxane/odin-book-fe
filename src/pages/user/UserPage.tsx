@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { userService } from "../../utils/services";
-import { EllipsisIcon, ImageOffIcon } from "lucide-react";
+import { PencilIcon } from "lucide-react";
 import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
 import PostSection from "./PostSection";
 import useAuth from "../../hooks/useAuth";
+import { useState } from "react";
+import { UserUpdateModal } from "./UpdateModal";
 
 export default function UserPage() {
   const { userId } = useParams();
@@ -18,42 +20,70 @@ export default function UserPage() {
 
   const owner = auth.user && auth.user.id === user?.id;
 
+  // const handleSubmit = async (field: "avatar" | "background", file: File) => {
+  //   if (file.size > 1024 * 1024 * 10) {
+  //     alert("Image is too big! Maximum allowed are 10MB");
+  //     field === "avatar" ? setNewAvatar(null) : setNewBg(null);
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append(field, file);
+
+  //   try {
+  //     const { data } = await api.axios.patch<AuthResponse>(
+  //       `/users/${user!.id}/${field}`,
+  //       formData,
+  //     );
+  //     api.setToken(data.token);
+  //     field === "avatar" ? setNewAvatar(null) : setNewBg(null);
+  //     await queryClient.invalidateQueries({ queryKey: ["user", userId] });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const [modal, setModal] = useState(false);
+
   if (!user) return <div className="loading"></div>;
   return (
     <div className="">
       <div className="bg-base-100 rounded pb-1">
         {/* Background */}
-        <div className="bg-base-300 relative grid aspect-video items-center">
+        <div className="bg-base-300 relative aspect-video">
           <img
-            src="/bg.pn"
-            className="z absolute z-10 h-full w-full object-cover"
-            onError={(e) => (e.currentTarget.style.display = "none")} // Hide image if it fails to load
+            className="h-full w-full object-cover"
+            src={user.background ?? ""}
           />
-          <div className="col-start-1 row-start-1 mx-auto text-center opacity-30">
-            <ImageOffIcon size={100} />
-            <p className="text-2xl">No Image</p>
-          </div>
         </div>
 
         {/* User info */}
         <div className="mt-2 grid grid-cols-[auto_1fr_auto] items-center gap-x-2 px-2">
-          <Avatar
-            name={user.name}
-            src={user.avatar ?? ""}
-            size="50"
-            maxInitials={2}
-            className="avatar avatar-online row-span-2"
-            textSizeRatio={2}
-            round
-          />
+          <div className="relative row-span-2 flex">
+            <Avatar
+              name={user.name}
+              src={user.avatar ?? ""}
+              size="80"
+              maxInitials={2}
+              className="avatar avatar-online"
+              textSizeRatio={2}
+              round
+            />
+          </div>
 
           <div className="flex items-center gap-3">
             <p className="font-semibold">{user.name}</p>
           </div>
 
           <div className="col-start-2 row-start-2 flex gap-2 text-xs">
-            <p>Followers {user._count.follower}</p>
-            <p>Following {user._count.following}</p>
+            <p>
+              Followers
+              <span className="ps-1 font-bold">{user._count.follower}</span>
+            </p>
+            <p>
+              Following
+              <span className="ps-1 font-bold">{user._count.following}</span>
+            </p>
           </div>
 
           <div className="row-span-2 flex gap-2">
@@ -66,8 +96,11 @@ export default function UserPage() {
             >
               {user.isFollowed ? "Unfollow" : "Follow"}
             </button>
-            <button className="btn btn-sm btn-square btn-ghost">
-              <EllipsisIcon />
+            <button
+              className="btn btn-sm btn-square btn-ghost"
+              onClick={() => setModal(true)}
+            >
+              <PencilIcon />
             </button>
           </div>
         </div>
@@ -90,6 +123,14 @@ export default function UserPage() {
       <div className="divider">Posts</div>
       {/* Post section */}
       <PostSection userId={userId!} />
+
+      {auth.user && (
+        <UserUpdateModal
+          visible={modal}
+          onClose={() => setModal(false)}
+          user={auth.user}
+        />
+      )}
     </div>
   );
 }

@@ -26,7 +26,7 @@ class ApiService {
   }
 }
 
-const api = new ApiService(import.meta.env.VITE_API_URL);
+export const api = new ApiService(import.meta.env.VITE_API_URL);
 
 class AuthError extends Error {
   errorDetails?: string[];
@@ -41,7 +41,7 @@ class AuthService {
   /**
    * No matter the error, it will always throw AuthError
    */
-  private errorHandler(err: unknown): never {
+  errorHandler(err: unknown): never {
     if (err instanceof AxiosError) {
       if (err.response) {
         const data = err.response.data as {
@@ -90,6 +90,15 @@ class AuthService {
       );
       api.setToken(data.token);
       return data.user;
+    } catch (error) {
+      this.errorHandler(error);
+    }
+  }
+
+  async updateUser(payload: UserUpdatePayload, userId: string) {
+    try {
+      const { data } = await api.axios.put<User>(`/users/${userId}`, payload);
+      return data;
     } catch (error) {
       this.errorHandler(error);
     }

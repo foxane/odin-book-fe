@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect, useState, useRef } from "react";
+import React, { HTMLAttributes, useEffect, useState, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { removePTag } from "../utils/helper";
 import { AlertOctagonIcon, NotebookPenIcon } from "lucide-react";
@@ -16,11 +16,14 @@ export default function Modal({ visible, onClose, ...props }: Props) {
     if (!modalRef.current) return;
 
     if (visible) modalRef.current.showModal();
-    else modalRef.current.close();
   }, [visible]);
 
   const handleClose = () => {
-    onClose();
+    // Adding delay for animation
+    if (modalRef.current) modalRef.current.close();
+    setTimeout(() => {
+      onClose();
+    }, 200);
   };
 
   const handleESC = (e: React.SyntheticEvent<HTMLDialogElement>) => {

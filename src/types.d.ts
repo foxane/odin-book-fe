@@ -4,6 +4,12 @@ interface Credentials {
   password: string;
 }
 
+interface UserUpdatePayload {
+  name: string;
+  email: string;
+  bio: string | null;
+}
+
 interface User {
   id: string;
   name: string;
@@ -24,6 +30,7 @@ interface IAuthContext {
   login: (cred: Credentials) => void;
   register: (cred: Credentials) => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   error: AuthError | null;
   loading: boolean;
 }

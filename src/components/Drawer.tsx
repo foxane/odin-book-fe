@@ -3,11 +3,14 @@ import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
 import useAuth from "../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { ThemeContext } from "../context/ThemeContext";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function Drawer({ className, ...props }: Props) {
   const { user } = useAuth();
+  const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
     <div className={twMerge("drawer md:drawer-open", className)} {...props}>
@@ -48,21 +51,34 @@ export default function Drawer({ className, ...props }: Props) {
             </li>
           </nav>
 
-          {/* User card */}
-          <Link
-            to={`/user/${user?.id ?? ""}`}
-            className="card bg-base-100 border-base-content/20 mt-auto grid grid-cols-[auto_1fr] gap-x-3 border p-2"
-          >
-            <Avatar
-              round
-              size="40"
-              className="row-span-2"
-              name={user?.name}
-              src={user?.avatar ?? ""}
-            />
-            <p className="text-sm font-semibold">{user?.name}</p>
-            <p className="label text-xs">{user?.email}</p>
-          </Link>
+          {/* Drawer bottom section */}
+          <div className="mt-auto space-y-3">
+            <label className="label mx-auto flex w-fit items-center">
+              <input
+                type="checkbox"
+                className="toggle"
+                checked={isDark}
+                onChange={toggleTheme}
+              />
+              Dark Mode
+            </label>
+
+            {/* User card */}
+            <Link
+              to={`/user/${user?.id ?? ""}`}
+              className="card bg-base-100 border-base-content/20 grid grid-cols-[auto_1fr] gap-x-3 border p-2"
+            >
+              <Avatar
+                round
+                size="40"
+                className="row-span-2"
+                name={user?.name}
+                src={user?.avatar ?? ""}
+              />
+              <p className="text-sm font-semibold">{user?.name}</p>
+              <p className="label text-xs">{user?.email}</p>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

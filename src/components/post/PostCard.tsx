@@ -98,7 +98,13 @@ function PostCard({ post, action }: Props) {
           dangerouslySetInnerHTML={{ __html: post.text }}
         />
         {post.media.map((el) => (
-          <img className="obj" src={el} key={el} alt={el} />
+          <img
+            className="aspect-auto rounded"
+            loading="lazy"
+            src={el}
+            key={el}
+            alt="Post image"
+          />
         ))}
       </div>
 

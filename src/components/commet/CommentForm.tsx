@@ -4,11 +4,10 @@ import { twMerge } from "tailwind-merge";
 
 interface Props {
   post: Post;
-  cancel: () => void;
   submit: ({ c, p }: { c: CommentPayload; p: Post }) => void;
 }
 
-export default function CommentForm({ post, submit, cancel }: Props) {
+export default function CommentForm({ post, submit }: Props) {
   const [text, setText] = useState("");
 
   const handleSubmit = () => {
@@ -27,20 +26,14 @@ export default function CommentForm({ post, submit, cancel }: Props) {
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <button className="btn" onClick={() => cancel()}>
-          Cancel
-        </button>
-
-        <button
-          onClick={handleSubmit}
-          className={twMerge(
-            "btn btn-sm btn-primary disabled:bg-primary flex justify-center",
-          )}
-        >
-          Submit
-        </button>
-      </div>
+      <button
+        onClick={handleSubmit}
+        className={twMerge(
+          "btn btn-sm btn-primary disabled:bg-primary flex justify-center",
+        )}
+      >
+        Submit
+      </button>
     </div>
   );
 }

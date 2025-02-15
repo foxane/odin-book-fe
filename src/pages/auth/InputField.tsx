@@ -10,7 +10,7 @@ const InputField = ({ label, errorMessage, ...props }: InputFieldProps) => {
         <input
           {...props}
           placeholder={label}
-          className={`validator input input-lg w-full ${props.className ?? ""}`}
+          className={`validator input w-full ${props.className ?? ""}`}
         />
         <span>{label}</span>
       </label>

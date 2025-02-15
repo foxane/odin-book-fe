@@ -7,6 +7,7 @@ const AuthContext = createContext<IAuthContext>({
   login: () => {},
   register: () => {},
   logout: () => {},
+  refreshUser: async () => {},
   error: null,
   loading: false,
 });
@@ -41,6 +42,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     authService.logout();
   };
 
+  const refreshUser = async () => {
+    const user = await authService.getUserInfo();
+    setUser(user);
+  };
+
   /**
    * Initial load login
    */
@@ -61,7 +67,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, error, loading, login, logout, register }}
+      value={{
+        user,
+        error,
+        loading,
+        login,
+        logout,
+        register,
+        refreshUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
