@@ -13,6 +13,7 @@ export default function App() {
     queryKey: usersKey,
     queryFn: () => userService.getMany(),
   });
+
   const followMutation = useMutation({
     mutationFn: userService.follow,
     onMutate: async (toFollow) => {

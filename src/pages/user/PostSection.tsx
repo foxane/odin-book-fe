@@ -1,16 +1,42 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { postService } from "../../utils/services";
 import PostCard from "../../components/post/PostCard";
 
 export default function PostSection({ userId }: { userId: string }) {
-  const query = useQuery({
-    queryKey: ["posts", userId],
-    queryFn: () => postService.getByUser(userId),
+  const query = useInfiniteQuery({
+    queryKey: ["post", userId],
+    initialPageParam: "",
+    queryFn: ({ pageParam }) => postService.getByUser(userId, pageParam),
+    getNextPageParam: (prevPage) => {
+      if (prevPage.length < 10) return undefined;
+      else return prevPage.at(-1)?.id.toString();
+    },
   });
 
+  const posts = query.data?.pages.flat() ?? [];
   return (
     <section className="space-y-2">
-      {query.data?.map((el) => <PostCard post={el} key={el.id} />)}
+      {posts.map((el) => (
+        <PostCard post={el} key={el.id} />
+      ))}
+
+      <div className="mx-auto my-6 w-fit">
+        {query.hasNextPage ? (
+          <button
+            disabled={query.isFetchingNextPage}
+            className="btn btn-primary btn-sm"
+            onClick={() => void query.fetchNextPage()}
+          >
+            {query.isFetchingNextPage ? (
+              <span className="loading" />
+            ) : (
+              "Load more post"
+            )}
+          </button>
+        ) : (
+          <p>No more post</p>
+        )}
+      </div>
     </section>
   );
 }

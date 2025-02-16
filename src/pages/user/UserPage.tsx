@@ -8,6 +8,8 @@ import PostSection from "./PostSection";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
 import { UserUpdateModal } from "./UpdateModal";
+import FollowerSection from "./FollowerSection";
+import FollowingSection from "./FollowingSection";
 
 export default function UserPage() {
   const { userId } = useParams();
@@ -95,11 +97,41 @@ export default function UserPage() {
         </div>
       </div>
 
-      {/* Tabs */}
+      <div className="divider" />
 
-      <div className="divider">Posts</div>
-      {/* Post section */}
-      <PostSection userId={userId!} />
+      {/* Tabs */}
+      <div className="tabs tabs-box">
+        <input
+          type="radio"
+          name="tab"
+          className="tab grow"
+          aria-label="Posts"
+          defaultChecked
+        />
+        <div className="tab-content mt-2">
+          <PostSection userId={userId!} />
+        </div>
+
+        <input
+          type="radio"
+          name="tab"
+          className="tab grow"
+          aria-label="Followers"
+        />
+        <div className="tab-content mt-2">
+          <FollowerSection userId={userId!} />
+        </div>
+
+        <input
+          type="radio"
+          name="tab"
+          className="tab grow"
+          aria-label="Following"
+        />
+        <div className="tab-content mt-2">
+          <FollowingSection userId={userId!} />
+        </div>
+      </div>
 
       {auth.user && (
         <UserUpdateModal

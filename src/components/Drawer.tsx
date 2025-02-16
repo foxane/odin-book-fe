@@ -1,4 +1,4 @@
-import { HomeIcon, SquirrelIcon, UserIcon } from "lucide-react";
+import { HomeIcon, LogOutIcon, SquirrelIcon, UserIcon } from "lucide-react";
 import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
 import useAuth from "../hooks/useAuth";
@@ -9,7 +9,7 @@ import { ThemeContext } from "../context/ThemeContext";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function Drawer({ className, ...props }: Props) {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
@@ -78,6 +78,13 @@ export default function Drawer({ className, ...props }: Props) {
               <p className="text-sm font-semibold">{user?.name}</p>
               <p className="label text-xs">{user?.email}</p>
             </Link>
+            <button
+              className="btn btn-outline btn-error btn-sm btn-block"
+              onClick={logout}
+            >
+              Logout
+              <LogOutIcon size={16} />
+            </button>
           </div>
         </div>
       </div>

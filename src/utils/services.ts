@@ -124,8 +124,10 @@ export const postService = {
     return data;
   },
 
-  getByUser: async (id: string) => {
-    const { data } = await api.axios.get<Post[]>(`/users/${id}/posts`);
+  getByUser: async (id: string, cursor?: string) => {
+    const { data } = await api.axios.get<Post[]>(
+      `/users/${id}/posts?cursor=${cursor ?? ""}`,
+    );
     return data;
   },
 
@@ -202,7 +204,6 @@ export const userService = {
     const { data } = await api.axios.get<User[]>(
       `/users?cursor=${cursor ?? ""}`,
     );
-    console.log(data);
     return data;
   },
 
