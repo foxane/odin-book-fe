@@ -1,7 +1,9 @@
+import { useQueryClient } from "@tanstack/react-query";
 import Modal from "../../components/Modal";
 import ImageUpdateField from "./ImageUpdateField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
+import { api } from "../../utils/services";
 
 interface UserUpdatePayload {
   name: string;
@@ -15,6 +17,8 @@ interface UUModal {
   user: User;
 }
 export const UserUpdateModal = ({ visible, onClose, user }: UUModal) => {
+  const queryClient = useQueryClient();
+
   const {
     register,
     reset,
@@ -30,8 +34,13 @@ export const UserUpdateModal = ({ visible, onClose, user }: UUModal) => {
   });
 
   const onSubmit: SubmitHandler<UserUpdatePayload> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Submitting", data);
+    try {
+      await api.axios.put(`/users/${user.id}`, data);
+      await queryClient.invalidateQueries({ queryKey: ["user", user.id] });
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -93,8 +102,16 @@ export const UserUpdateModal = ({ visible, onClose, user }: UUModal) => {
         </label>
       </form>
 
+      <button
+        onClick={() => {
+          console.log("vlocked");
+          onClose();
+        }}
+      >
+        Closeme
+      </button>
+
       <div className="flex justify-end gap-2">
-        <p className="ms-auto">{isSubmitting && "Submitting"}</p>
         <form method="dialog">
           <button
             className="btn mt-5"
@@ -108,11 +125,18 @@ export const UserUpdateModal = ({ visible, onClose, user }: UUModal) => {
         </form>
         <button
           onClick={handleSubmit(onSubmit)}
-          disabled={!isDirty || !isValid}
+          disabled={!isDirty || !isValid || isSubmitting}
           className="btn btn-primary mt-5"
           type="submit"
         >
-          Save changes
+          {isSubmitting ? (
+            <>
+              <span className="loading" />
+              Saving changes...
+            </>
+          ) : (
+            "save changes"
+          )}
         </button>
       </div>
     </Modal>

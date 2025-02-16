@@ -16,6 +16,7 @@ export default function Modal({ visible, onClose, ...props }: Props) {
     if (!modalRef.current) return;
 
     if (visible) modalRef.current.showModal();
+    else modalRef.current.close();
   }, [visible]);
 
   const handleClose = () => {
