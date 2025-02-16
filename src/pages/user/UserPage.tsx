@@ -66,21 +66,23 @@ export default function UserPage() {
           </div>
 
           <div className="row-span-2 flex gap-2">
-            <button
-              className={twMerge(
-                "btn btn-primary btn-sm",
-                user.isFollowed && "btn-outline",
-                owner && "hidden",
-              )}
-            >
-              {user.isFollowed ? "Unfollow" : "Follow"}
-            </button>
-            <button
-              className="btn btn-sm btn-square btn-ghost"
-              onClick={() => setModal(true)}
-            >
-              <PencilIcon />
-            </button>
+            {owner ? (
+              <button
+                className="btn btn-sm btn-square btn-ghost"
+                onClick={() => setModal(true)}
+              >
+                <PencilIcon />
+              </button>
+            ) : (
+              <button
+                className={twMerge(
+                  "btn btn-primary btn-sm",
+                  user.isFollowed && "btn-outline",
+                )}
+              >
+                {user.isFollowed ? "Unfollow" : "Follow"}
+              </button>
+            )}
           </div>
         </div>
 
