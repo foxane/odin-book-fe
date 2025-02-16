@@ -20,29 +20,6 @@ export default function UserPage() {
 
   const owner = auth.user && auth.user.id === user?.id;
 
-  // const handleSubmit = async (field: "avatar" | "background", file: File) => {
-  //   if (file.size > 1024 * 1024 * 10) {
-  //     alert("Image is too big! Maximum allowed are 10MB");
-  //     field === "avatar" ? setNewAvatar(null) : setNewBg(null);
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   formData.append(field, file);
-
-  //   try {
-  //     const { data } = await api.axios.patch<AuthResponse>(
-  //       `/users/${user!.id}/${field}`,
-  //       formData,
-  //     );
-  //     api.setToken(data.token);
-  //     field === "avatar" ? setNewAvatar(null) : setNewBg(null);
-  //     await queryClient.invalidateQueries({ queryKey: ["user", userId] });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const [modal, setModal] = useState(false);
 
   if (!user) return <div className="loading"></div>;
