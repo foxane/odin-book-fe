@@ -1,4 +1,10 @@
-import { HomeIcon, LogOutIcon, SquirrelIcon, UserIcon } from "lucide-react";
+import {
+  HomeIcon,
+  LogOutIcon,
+  SearchIcon,
+  SquirrelIcon,
+  UserIcon,
+} from "lucide-react";
 import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
 import useAuth from "../hooks/useAuth";
@@ -47,6 +53,11 @@ export default function Drawer({ className, ...props }: Props) {
             <li>
               <Link to={`/user/${user?.id ?? ""}`}>
                 <UserIcon size={20} /> Profile
+              </Link>
+            </li>
+            <li>
+              <Link to={`/search`}>
+                <SearchIcon size={20} /> Search
               </Link>
             </li>
           </nav>

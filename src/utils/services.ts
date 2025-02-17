@@ -117,9 +117,9 @@ export const postService = {
     return data;
   },
 
-  getMany: async (cursor?: string) => {
+  getMany: async (cursor?: string, search?: string) => {
     const { data } = await api.axios.get<Post[]>(
-      `/posts?cursor=${cursor ?? ""}`,
+      `/posts?cursor=${cursor ?? ""}&search=${search ?? ""}`,
     );
     return data;
   },
@@ -200,9 +200,9 @@ export const commentService = {
 };
 
 export const userService = {
-  getMany: async (cursor?: string) => {
+  getMany: async (cursor?: string, search?: string) => {
     const { data } = await api.axios.get<User[]>(
-      `/users?cursor=${cursor ?? ""}`,
+      `/users?cursor=${cursor ?? ""}&search=${search ?? ""}`,
     );
     return data;
   },
