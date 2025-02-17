@@ -4,9 +4,9 @@ import { commentService, postService } from "../../utils/services";
 import PostCard from "../../components/post/PostCard";
 import { usePostSingle } from "../../hooks/usePostSingle";
 import CommentCard from "../../components/commet/CommentCard";
-import { useCommentAction } from "./useCommentAction";
 import CommentForm from "../../components/commet/CommentForm";
 import { ArrowLeftIcon } from "lucide-react";
+import useCommentInfinite from "../../hooks/useCommentInfinite";
 
 export default function PostPage() {
   const { postId = "" } = useParams();
@@ -19,7 +19,7 @@ export default function PostPage() {
   });
 
   const commentKey = ["comment", { postId }];
-  const commentAction = useCommentAction(commentKey);
+  const commentAction = useCommentInfinite(commentKey);
   const commentQuery = useInfiniteQuery({
     queryKey: commentKey,
     initialPageParam: "",

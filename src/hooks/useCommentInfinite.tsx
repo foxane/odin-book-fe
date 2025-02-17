@@ -1,17 +1,26 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { commentService } from "../../utils/services";
-import DummyComment from "../../components/commet/DummyComment";
-import useAuth from "../../hooks/useAuth";
+import { commentService } from "../utils/services";
+import DummyComment from "../components/commet/DummyComment";
+import useAuth from "./useAuth";
 
-function useCommentAction(queryKey: readonly unknown[]) {
+interface CommentPage {
+  pages: IComment[][];
+  pageParams: never[];
+}
+
+//  TODO: Refetch only mutated page, do not invalidate entire query
+// - find a way to get mutated page index, remember that each page is an array
+//   probably need to iterate inside arr.findIndex(el => el.some(elm => elm.id === param))?
+
+export default function useCommentInfinite(queryKey: readonly unknown[]) {
   const { user } = useAuth();
   const client = useQueryClient();
 
   const _getPrev = async () => {
     await client.cancelQueries({ queryKey });
-    return client.getQueryData<{ pages: IComment[][]; pageParams: never[] }>(
-      queryKey,
-    );
+    const data = client.getQueryData<CommentPage>(queryKey);
+    if (!data) throw new Error("No cached comment data!");
+    return data;
   };
 
   const createComment = useMutation({
@@ -19,7 +28,6 @@ function useCommentAction(queryKey: readonly unknown[]) {
       commentService.create(c, p),
     onMutate: async ({ c, p }) => {
       const prev = await _getPrev();
-      if (!prev) return;
 
       client.setQueryData(queryKey, {
         ...prev,
@@ -48,7 +56,7 @@ function useCommentAction(queryKey: readonly unknown[]) {
 
       client.setQueryData(queryKey, {
         ...prev,
-        pages: prev?.pages.map((page) =>
+        pages: prev.pages.map((page) =>
           page.map((comment) => (comment.id !== updated.id ? comment : staged)),
         ),
       });
@@ -72,7 +80,7 @@ function useCommentAction(queryKey: readonly unknown[]) {
 
       client.setQueryData(queryKey, {
         ...prev,
-        pages: prev?.pages.map((page) =>
+        pages: prev.pages.map((page) =>
           page.map((comment) => (comment.id !== deleted.id ? comment : staged)),
         ),
       });
@@ -100,7 +108,7 @@ function useCommentAction(queryKey: readonly unknown[]) {
 
       client.setQueryData(queryKey, {
         ...prev,
-        pages: prev?.pages.map((page) =>
+        pages: prev.pages.map((page) =>
           page.map((el) => (el.id !== comment.id ? el : staged)),
         ),
       });
@@ -120,5 +128,3 @@ function useCommentAction(queryKey: readonly unknown[]) {
     like: likeComment.mutate,
   };
 }
-
-export { useCommentAction };
