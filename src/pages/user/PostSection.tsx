@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { postService } from "../../utils/services";
 import PostCard from "../../components/post/PostCard";
+import { usePostInfinite } from "../../hooks/usePostInfinite";
 
 export default function PostSection({ userId }: { userId: string }) {
   const query = useInfiniteQuery({
@@ -13,11 +14,13 @@ export default function PostSection({ userId }: { userId: string }) {
     },
   });
 
+  const mutation = usePostInfinite(["post", userId]);
+
   const posts = query.data?.pages.flat() ?? [];
   return (
     <section className="space-y-2">
       {posts.map((el) => (
-        <PostCard post={el} key={el.id} />
+        <PostCard action={mutation} post={el} key={el.id} />
       ))}
 
       <div className="mx-auto my-6 w-fit">

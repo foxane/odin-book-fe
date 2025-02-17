@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { commentService, postService } from "../../utils/services";
 import PostCard from "../../components/post/PostCard";
-import { usePostAction } from "./usePostAction";
+import { usePostSingle } from "../../hooks/usePostSingle";
 import CommentCard from "../../components/commet/CommentCard";
 import { useCommentAction } from "./useCommentAction";
 import CommentForm from "../../components/commet/CommentForm";
@@ -12,7 +12,7 @@ export default function PostPage() {
   const { postId = "" } = useParams();
 
   const postKey = ["post", postId];
-  const postAction = usePostAction(postKey);
+  const postAction = usePostSingle(postKey);
   const postQuery = useQuery({
     queryKey: postKey,
     queryFn: () => postService.getOne(postId),
@@ -50,11 +50,7 @@ export default function PostPage() {
 
       <div className="divider" />
 
-      <CommentForm
-        post={postQuery.data}
-        submit={commentAction.create}
-        cancel={() => console.log("Form closed")}
-      />
+      <CommentForm post={postQuery.data} submit={commentAction.create} />
 
       <div className="divider" />
 

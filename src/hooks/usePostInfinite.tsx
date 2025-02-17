@@ -1,32 +1,46 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useAuth from "../../hooks/useAuth";
-import { DummyPost } from "../../components/post/DummyPost";
-import { addPTag } from "../../utils/helper";
-import { postService } from "../../utils/services";
+import useAuth from "./useAuth";
+import { postService } from "../utils/services";
+import { addPTag } from "../utils/helper";
+import { DummyPost } from "../components/post/DummyPost";
 
-export const usePostMutations = (queryKey: readonly unknown[]) => {
-  const { user } = useAuth();
+interface PostPages {
+  pages: Post[][];
+  pageParams: never[];
+}
+
+//  TODO: Refetch only mutated page, do not invalidate entire query
+// - find a way to get mutated page index, remember that each page is an array
+//   probably need to iterate inside arr.findIndex(el => el.some(elm => elm.id === param))?
+
+export const usePostInfinite = (queryKey: readonly unknown[]) => {
+  const { user } = useAuth() as { user: User };
   const client = useQueryClient();
-  if (!user) throw new Error("useAuth is used outside of AuthProider!");
 
+  /**
+   * Invalidate and return cached data
+   */
   const getPrevData = async () => {
     await client.cancelQueries({ queryKey });
-    return client.getQueryData<{ pages: Post[][]; pageParams: never[] }>(
-      queryKey,
-    );
+    const data = client.getQueryData<PostPages>(queryKey);
+
+    /**
+     * In case user do mutation when no cache is found
+     */
+    if (!data) throw new Error("No cached data found");
+    return data;
   };
 
   const createMutation = useMutation({
     mutationFn: postService.create,
     onMutate: async (payload) => {
       const prev = await getPrevData();
-      if (!prev) return;
+      const text = addPTag(payload.get("text") as string);
 
       client.setQueryData(queryKey, {
         ...prev,
         pages: [
-          // Add new post to the first page (prepend)
-          [new DummyPost(payload.get("text") ?? "", user), ...prev.pages[0]],
+          [new DummyPost(text, user), ...prev.pages[0]],
           ...prev.pages.slice(1),
         ],
       });
@@ -42,7 +56,6 @@ export const usePostMutations = (queryKey: readonly unknown[]) => {
     mutationFn: postService.update,
     onMutate: async (payload) => {
       const prev = await getPrevData();
-      if (!prev) return;
 
       const updated = {
         text: addPTag(payload.text),
@@ -68,7 +81,6 @@ export const usePostMutations = (queryKey: readonly unknown[]) => {
     mutationFn: postService.delete,
     onMutate: async (toDelete) => {
       const prev = await getPrevData();
-      if (!prev) return;
 
       client.setQueryData(queryKey, {
         ...prev,
@@ -92,7 +104,6 @@ export const usePostMutations = (queryKey: readonly unknown[]) => {
     mutationFn: postService.like,
     onMutate: async (post) => {
       const prev = await getPrevData();
-      if (!prev) return;
 
       const { likedBy, comment } = post._count;
       const likeCount = likedBy + (post.isLiked ? -1 : 1);

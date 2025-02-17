@@ -1,30 +1,36 @@
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 import useDebounce from "../../hooks/useDebounce";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { postService, userService } from "../../utils/services";
 import PostCard from "../../components/post/PostCard";
 import UserCard from "../../components/user/UserCard";
+import { usePostInfinite } from "../../hooks/usePostInfinite";
 
 function SearchPage() {
   const [s, setS] = useState("");
   const search = useDebounce(s);
 
-  const post = useQuery({
-    queryKey: ["post", search],
-    queryFn: () => postService.getMany("", search),
+  const post = useInfiniteQuery({
     enabled: !!search,
+    queryKey: ["posts", search],
+    initialPageParam: "",
+    queryFn: ({ pageParam }) => postService.getMany(pageParam, search),
+    getNextPageParam: (prevPages) =>
+      prevPages.length < 10 ? undefined : prevPages.at(-1)?.id.toString(),
   });
+  const postMutation = usePostInfinite(["posts", search]);
+  const postsData = post.data?.pages.flat() ?? [];
 
   const user = useQuery({
+    enabled: !!search,
     queryKey: ["user", search],
     queryFn: () => userService.getMany("", search),
-    enabled: !!search,
   });
 
   return (
     <div className="space-y-2">
-      <form className="flex items-center space-x-2 p-2">
+      <div className="flex items-center space-x-2 p-2">
         <label className="input grow">
           <SearchIcon size={20} opacity={0.5} />
           <input
@@ -33,7 +39,7 @@ function SearchPage() {
             onChange={(e) => setS(e.target.value)}
           />
         </label>
-      </form>
+      </div>
 
       <div className="tabs tabs-box space-y-2">
         <input
@@ -43,13 +49,28 @@ function SearchPage() {
           aria-label="Post"
           defaultChecked
         />
-        <div className="tab-content space-y-2">
-          {post.data?.map((el) => <PostCard post={el} key={el.id} />)}
+        <div className="tab-content space-y-3">
+          {postsData.map((el) => (
+            <PostCard post={el} key={el.id} action={postMutation} />
+          ))}
           {post.isLoading && <div className="loading mx-auto" />}
-          {!post.isLoading && post.data?.length === 0 && (
+          {!post.isLoading && postsData.length === 0 && (
             <p className="text-center italic opacity-50">
               No post with &quot;{search}&quot; found
             </p>
+          )}
+          {post.hasNextPage && (
+            <button
+              disabled={post.isFetching}
+              className="btn btn-primary btn-sm mx-auto block"
+              onClick={() => post.fetchNextPage()}
+            >
+              {post.isFetching ? (
+                <span className="loading"></span>
+              ) : (
+                "Load more"
+              )}
+            </button>
           )}
         </div>
 

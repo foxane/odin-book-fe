@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { postService } from "../../utils/services";
+import { postService } from "../utils/services";
+import { addPTag } from "../utils/helper";
 
-export const usePostAction = (queryKey: readonly unknown[]) => {
+export const usePostSingle = (queryKey: readonly unknown[]) => {
   const client = useQueryClient();
 
   const _getPrev = async () => {
@@ -15,7 +16,12 @@ export const usePostAction = (queryKey: readonly unknown[]) => {
       const prev = await _getPrev();
       client.setQueryData(queryKey, (old: Post | undefined) =>
         old
-          ? { ...old, test: post.text, isPending: true, status: "update" }
+          ? {
+              ...old,
+              text: addPTag(post.text),
+              isPending: true,
+              status: "update",
+            }
           : old,
       );
       return { prev };
