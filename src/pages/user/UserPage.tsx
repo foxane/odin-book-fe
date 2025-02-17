@@ -10,19 +10,21 @@ import { useState } from "react";
 import { UserUpdateModal } from "./UpdateModal";
 import FollowerSection from "./FollowerSection";
 import FollowingSection from "./FollowingSection";
+import useUserInfinite from "../../hooks/useUserInfinite";
 
 export default function UserPage() {
-  const { userId } = useParams();
   const auth = useAuth();
+  const { userId } = useParams();
+  const [modal, setModal] = useState(false);
 
+  const queryKey = ["user", userId];
   const { data: user } = useQuery({
-    queryKey: ["user", userId],
+    queryKey,
     queryFn: () => userService.getOne(userId!),
   });
+  const { follow } = useUserInfinite(queryKey);
 
-  const owner = auth.user && auth.user.id === user?.id;
-
-  const [modal, setModal] = useState(false);
+  const isOwner = auth.user && auth.user.id === user?.id;
 
   if (!user) return <div className="loading"></div>;
   return (
@@ -66,7 +68,7 @@ export default function UserPage() {
           </div>
 
           <div className="row-span-2 flex gap-2">
-            {owner ? (
+            {isOwner ? (
               <button
                 className="btn btn-sm btn-square btn-ghost"
                 onClick={() => setModal(true)}
@@ -75,6 +77,8 @@ export default function UserPage() {
               </button>
             ) : (
               <button
+                disabled={follow.isPending}
+                onClick={() => follow.mutate(user)}
                 className={twMerge(
                   "btn btn-primary btn-sm",
                   user.isFollowed && "btn-outline",

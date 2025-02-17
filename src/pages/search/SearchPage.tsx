@@ -1,11 +1,12 @@
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 import useDebounce from "../../hooks/useDebounce";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { postService, userService } from "../../utils/services";
 import PostCard from "../../components/post/PostCard";
 import UserCard from "../../components/user/UserCard";
 import { usePostInfinite } from "../../hooks/usePostInfinite";
+import useUserInfinite from "../../hooks/useUserInfinite";
 
 function SearchPage() {
   const [s, setS] = useState("");
@@ -22,11 +23,16 @@ function SearchPage() {
   const postMutation = usePostInfinite(["posts", search]);
   const postsData = post.data?.pages.flat() ?? [];
 
-  const user = useQuery({
+  const user = useInfiniteQuery({
     enabled: !!search,
-    queryKey: ["user", search],
-    queryFn: () => userService.getMany("", search),
+    queryKey: ["users", search],
+    initialPageParam: "",
+    queryFn: ({ pageParam }) => userService.getMany(pageParam, search),
+    getNextPageParam: (prevPages) =>
+      prevPages.length < 10 ? undefined : prevPages.at(-1)?.id.toString(),
   });
+  const userMutation = useUserInfinite(["users", search]);
+  const usersData = user.data?.pages.flat() ?? [];
 
   return (
     <div className="space-y-2">
@@ -77,12 +83,18 @@ function SearchPage() {
         <input type="radio" name="tab" className="tab grow" aria-label="User" />
         <div className="tab-content space-y-2">
           {user.isLoading && <div className="loading mx-auto" />}
-          {!user.isLoading && user.data?.length === 0 && (
+          {!user.isLoading && usersData.length === 0 && (
             <p className="text-center italic opacity-50">
               No user with &quot;{search}&quot; name found
             </p>
           )}
-          {user.data?.map((el) => <UserCard user={el} key={el.id} />)}
+          {usersData.map((el) => (
+            <UserCard
+              user={el}
+              key={el.id}
+              follow={userMutation.follow.mutate}
+            />
+          ))}
         </div>
       </div>
     </div>

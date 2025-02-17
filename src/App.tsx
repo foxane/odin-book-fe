@@ -1,39 +1,21 @@
 import { Outlet } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { userService } from "./utils/services";
 import UserCard from "./components/user/UserCard";
 import Drawer from "./components/Drawer";
 import Navbar from "./components/Navbar";
-
-const usersKey = ["users"];
+import useUserInfinite from "./hooks/useUserInfinite";
 
 export default function App() {
-  const client = useQueryClient();
-  const userQuery = useQuery({
-    queryKey: usersKey,
-    queryFn: () => userService.getMany(),
+  const userQuery = useInfiniteQuery({
+    queryKey: ["users"],
+    initialPageParam: "",
+    queryFn: ({ pageParam }) => userService.getMany(pageParam),
+    getNextPageParam: (prevPages) =>
+      prevPages.length < 10 ? undefined : prevPages.at(-1)?.id.toString(),
   });
-
-  const followMutation = useMutation({
-    mutationFn: userService.follow,
-    onMutate: async (toFollow) => {
-      await client.cancelQueries({ queryKey: usersKey });
-      const prev = client.getQueryData(usersKey);
-
-      client.setQueryData(usersKey, (old: User[] | undefined) =>
-        old
-          ? old.map((el) =>
-              el.id !== toFollow.id ? el : { ...el, isFollowed: true },
-            )
-          : old,
-      );
-
-      return { prev };
-    },
-    onError: (_, __, ctx) =>
-      ctx?.prev && client.setQueryData(usersKey, ctx.prev),
-    onSettled: () => client.invalidateQueries({ queryKey: usersKey }),
-  });
+  const users = userQuery.data?.pages.flat() ?? [];
+  const { follow } = useUserInfinite(["users"]);
 
   return (
     <div className="bg-base-200 h-screen">
@@ -47,8 +29,8 @@ export default function App() {
 
         <div className="hidden h-full space-y-20 px-2 lg:block">
           <section className="sticky top-0 space-y-3 pt-20">
-            {userQuery.data?.map((el) => (
-              <UserCard follow={followMutation.mutate} user={el} key={el.id} />
+            {users.map((el) => (
+              <UserCard follow={follow.mutate} user={el} key={el.id} />
             ))}
           </section>
         </div>
