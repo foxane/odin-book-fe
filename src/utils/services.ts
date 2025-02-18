@@ -219,3 +219,12 @@ export const userService = {
     else await api.axios.post(uri);
   },
 };
+
+export const notifService = {
+  getMany: async (cursor = "", take = "") => {
+    const { data } = await api.axios.get<INotification[]>(
+      `/notifications?cursor=${cursor}&take=${take}`,
+    );
+    return data;
+  },
+};

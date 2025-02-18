@@ -12,11 +12,13 @@ import useAuth from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+import useNotification from "../hooks/useNotification";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function Drawer({ className, ...props }: Props) {
   const { user, logout } = useAuth();
+  const { unreadCount } = useNotification();
   const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
@@ -64,7 +66,14 @@ export default function Drawer({ className, ...props }: Props) {
             <li>
               <Link to={`/notification`}>
                 <BellIcon size={20} /> Notifications
-                <span className="badge badge-sm badge-primary">10</span>
+                <span
+                  className={twMerge(
+                    "badge badge-sm",
+                    unreadCount > 0 && "badge-primary",
+                  )}
+                >
+                  {unreadCount}
+                </span>
               </Link>
             </li>
           </nav>

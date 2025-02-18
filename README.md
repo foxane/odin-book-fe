@@ -45,4 +45,8 @@
 
 ---
 
+- [ ] **LOW** Create endpoint to get unread notification count
+
+---
+
 - [ ] **VERY LOW** Create online status

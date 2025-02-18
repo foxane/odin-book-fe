@@ -30,3 +30,32 @@ export const getTime = (t: Date | string) =>
 
 export const getJoke = () =>
   JOKES[Math.floor(Math.random() * JOKES.length) + 1];
+
+/**
+ * =========== Notification ============
+ */
+
+export const NOTIFICATION_TEXT = {
+  follower: "started following you",
+  post_from_followed: "created a new post",
+  post_liked: "liked your post",
+  post_commented: "commented on your post",
+  comment_liked: "liked tour comment",
+};
+
+export const getNotificationUrl = (notification: INotification) => {
+  const { type, actorId, postId } = notification;
+
+  switch (type) {
+    case "follower":
+      return `/user/${actorId}`;
+    case "post_from_followed":
+    case "post_liked":
+    case "post_commented":
+    case "comment_liked":
+      return postId ? `/post/${postId.toString()}` : "/post_not_found";
+
+    default:
+      return "/notif_type_not_found";
+  }
+};
