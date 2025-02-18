@@ -92,3 +92,27 @@ interface IComment extends Post {
 interface CommentPayload {
   text: string;
 }
+
+/**
+ * ================ Notification ===================
+ */
+type NotifType =
+  | "follower"
+  | "post_from_followed"
+  | "post_liked"
+  | "post_commented"
+  | "comment_liked";
+
+interface INotification {
+  id: number;
+  isRead: boolean;
+  type: NotifType;
+  date: Date;
+  receiverId: string;
+  actorId: string;
+  actor: User;
+  post?: Post | null;
+  postId?: number | null;
+  comment?: Comment | null;
+  commentId?: number | null;
+}

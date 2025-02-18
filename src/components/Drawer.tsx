@@ -1,4 +1,5 @@
 import {
+  BellIcon,
   HomeIcon,
   LogOutIcon,
   SearchIcon,
@@ -58,6 +59,12 @@ export default function Drawer({ className, ...props }: Props) {
             <li>
               <Link to={`/search`}>
                 <SearchIcon size={20} /> Search
+              </Link>
+            </li>
+            <li>
+              <Link to={`/notification`}>
+                <BellIcon size={20} /> Notifications
+                <span className="badge badge-sm badge-primary">10</span>
               </Link>
             </li>
           </nav>
