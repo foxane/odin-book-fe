@@ -11,6 +11,7 @@ import { twMerge } from "tailwind-merge";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../Modal";
+import { Link } from "react-router-dom";
 
 interface Props {
   comment: IComment;
@@ -40,7 +41,9 @@ export default function CommentCard({ comment, action }: Props) {
 
       <div className="bg-base-100 grow rounded p-2">
         <div className="flex items-center gap-3">
-          <p className="text-xs font-semibold">{comment.user.name}</p>
+          <p className="text-xs font-semibold">
+            <Link to={`/user/${comment.user.id}`}>{comment.user.name}</Link>
+          </p>
           <p className="label text-xs">{formatDate(comment.createdAt)}</p>
 
           <div className="ms-auto flex items-center gap-4">
@@ -55,31 +58,6 @@ export default function CommentCard({ comment, action }: Props) {
                 ...
               </p>
             )}
-
-            {/* <details className="dropdown dropdown-end">
-              <summary className="btn btn-square btn-sm btn-ghost ms-auto">
-                <EllipsisIcon size={20} />
-              </summary>
-              <div className="dropdown-content menu bg-base-200 w-30 mt-2 space-y-2">
-                <button
-                  disabled={!user || user.id !== comment.userId}
-                  onClick={() => setModal("update")}
-                  className="btn btn-sm btn-ghost justify-start"
-                >
-                  <PencilIcon size={20} /> Edit
-                </button>
-                <button className="btn btn-sm btn-ghost justify-start">
-                  <FlagIcon size={20} /> Report
-                </button>
-                <button
-                  disabled={!user || user.id !== comment.userId}
-                  onClick={() => setModal("delete")}
-                  className="btn btn-sm btn-ghost justify-start"
-                >
-                  <Trash2Icon size={20} /> Delete
-                </button>
-              </div>
-            </details> */}
           </div>
         </div>
 

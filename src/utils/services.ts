@@ -222,9 +222,18 @@ export const userService = {
 
 export const notifService = {
   getMany: async (cursor = "", take = "") => {
-    const { data } = await api.axios.get<INotification[]>(
-      `/notifications?cursor=${cursor}&take=${take}`,
-    );
+    const { data } = await api.axios.get<{
+      notifications: INotification[];
+      unreadCount: number;
+    }>(`/notifications?cursor=${cursor}&take=${take}`);
     return data;
+  },
+
+  read: async (id: number) => {
+    await api.axios.patch(`/notifications/${id.toString()}/read`);
+  },
+
+  readAll: async () => {
+    await api.axios.patch("/notifications/read-all");
   },
 };

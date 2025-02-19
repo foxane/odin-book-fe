@@ -1,6 +1,6 @@
 # TODOS
 
-- [ ] **HIGH** Notification page
+- [ ] **LOW** Notification page
 
   - [x] Create model for notification
   - [x] Update controller to craete notification where necessary
@@ -11,15 +11,15 @@
     - [x] Comment liked
   - [ ] Craete notification endpoint
     - [x] **GET** /notifications Get all notifications for the authenticated user
-    - [ ] **PATCH** /notifications/:id/read Mark a single notification as read
-    - [ ] **PATCH** /notifications/read-all Mark all notifications as read
+    - [x] **PATCH** /notifications/:id/read Mark a single notification as read
+    - [x] **PATCH** /notifications/read-all Mark all notifications as read
     - [ ] **DELETE** /notifications/:id Delete a single notification
     - [ ] **DELETE** /notifications/clear Delete all read notifications
-  - [ ] Create notification page with basic styling
+  - [x] Create notification page with basic styling
 
 ---
 
-- [ ] **MEDIUM** Message page
+- [ ] **HIGH** Message page
 
   - [ ] Create model for messages
   - [ ] Setup socket.io (server & client)
