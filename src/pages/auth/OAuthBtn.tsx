@@ -11,7 +11,7 @@ export default function OAuthBtn() {
       {/* TODO: Fix the svg to import them not directly place it here */}
       {/* try bun add @icons-pack/react-simple-icons */}
 
-      <button className="btn border-black bg-black text-white hover:bg-accent">
+      <button className="btn hover:bg-accent border-black bg-black text-white">
         <svg
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@ export default function OAuthBtn() {
         </svg>
         Continue with GitHub
       </button>
-      <button className="btn border-[#e5e5e5] bg-white text-black hover:bg-accent">
+      <button className="btn hover:bg-accent border-[#e5e5e5] bg-white text-black">
         <svg
           className="w-5 fill-current"
           role="img"

@@ -8,7 +8,6 @@ import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { NotificationProvider } from "./context/NotificationContext";
 
 const queryClient = new QueryClient();
 
@@ -17,9 +16,7 @@ createRoot(document.getElementById("root") as HTMLDivElement).render(
     <ThemeProvider>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
-          <NotificationProvider>
-            <RouterProvider router={routes} />
-          </NotificationProvider>
+          <RouterProvider router={routes} />
           <ReactQueryDevtools client={queryClient} />
         </QueryClientProvider>
       </AuthProvider>
