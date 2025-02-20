@@ -35,6 +35,10 @@ interface IAuthContext {
   loading: boolean;
 }
 
+interface AuthZustand extends IAuthContext {
+  load: () => void;
+}
+
 interface AuthResponse {
   token: string;
   user: User;
@@ -116,3 +120,47 @@ interface INotification {
   comment?: Comment | null;
   commentId?: number | null;
 }
+
+/**
+ * =============== SOCKET ==================
+ */
+
+interface ClientToServerEvents {
+  sendMessage: (e: { text: string; image? }) => void;
+}
+
+interface ServerToClientEvents {
+  newMessage: (e: { text: string; image? }) => void;
+}
+
+/**
+ * =============== CHAT ===================
+ */
+
+interface Room {
+  id: number;
+  users: User[];
+  messages: Message[];
+}
+
+interface Message {
+  id: number;
+  text?: string | null;
+  media: string[];
+  createdAt: Date;
+  Room?: Room | null;
+  roomId?: number | null;
+  User?: User | null;
+  userId?: string | null;
+  MessageStatus: MessageStatus[];
+}
+
+interface MessageStatus {
+  status: MsgStatus;
+  messageId: number;
+  Message: Message;
+  User: User;
+  userId: string;
+}
+
+type MsgStatus = "DELIVERED" | "READ";

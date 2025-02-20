@@ -21,7 +21,7 @@
 
 - [ ] **HIGH** Message page
 
-  - [ ] Create model for messages
+  - [x] Create model for messages
   - [ ] Setup socket.io (server & client)
   - [ ] Design backend events
   - [ ] Implement basic styling

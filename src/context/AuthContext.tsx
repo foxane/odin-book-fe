@@ -6,11 +6,13 @@ import {
   useState,
 } from "react";
 import { authService } from "../utils/services";
+import { useSocket } from "./SocketStore";
 
 const TOKEN = localStorage.getItem("token");
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const { disconnect } = useSocket();
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<AuthError | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,6 +52,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
    */
   useEffect(() => {
     if (!TOKEN) {
+      disconnect();
       setLoading(false);
       return;
     }

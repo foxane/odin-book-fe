@@ -5,8 +5,12 @@ import UserCard from "./components/user/UserCard";
 import Drawer from "./components/Drawer";
 import Navbar from "./components/Navbar";
 import useUserInfinite from "./hooks/useUserInfinite";
+import { useEffect } from "react";
+import { useSocket } from "./context/SocketStore";
 
 export default function App() {
+  const { initSocket } = useSocket();
+
   const userQuery = useInfiniteQuery({
     queryKey: ["users"],
     initialPageParam: "",
@@ -16,6 +20,10 @@ export default function App() {
   });
   const users = userQuery.data?.pages.flat() ?? [];
   const { follow } = useUserInfinite(["users"]);
+
+  useEffect(() => {
+    initSocket(localStorage.getItem("token") ?? "");
+  }, [initSocket]);
 
   return (
     <div className="bg-base-200 h-screen">
