@@ -45,7 +45,7 @@
 
 ---
 
-- [ ] **LOW** Create endpoint to get unread notification count
+- [x] **LOW** Create endpoint to get unread notification count
 
 ---
 

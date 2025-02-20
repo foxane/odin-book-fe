@@ -1,12 +1,12 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { commentService, postService } from "../../utils/services";
-import PostCard from "../../components/post/PostCard";
-import { usePostSingle } from "../../hooks/usePostSingle";
-import CommentCard from "../../components/commet/CommentCard";
-import CommentForm from "../../components/commet/CommentForm";
+import { commentService, postService } from "../utils/services";
+import PostCard from "../components/post/PostCard";
+import { usePostSingle } from "../hooks/usePostSingle";
+import CommentCard from "../components/commet/CommentCard";
+import CommentForm from "../components/commet/CommentForm";
 import { ArrowLeftIcon } from "lucide-react";
-import useCommentInfinite from "../../hooks/useCommentInfinite";
+import useCommentInfinite from "../hooks/useCommentInfinite";
 
 export default function PostPage() {
   const { postId = "" } = useParams();

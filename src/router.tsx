@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import AuthPage from "./pages/auth/AuthPage";
-import HomePage from "./pages/home/HomePage";
+import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./pages/ProtectedRoute";
-import PostPage from "./pages/post/PostPage";
+import PostPage from "./pages/PostPage";
 import UserPage from "./pages/user/UserPage";
-import SearchPage from "./pages/search/SearchPage";
+import SearchPage from "./pages/SearchPage";
 import NotificationPage from "./pages/NotificationPage";
 
 const routes = createBrowserRouter([

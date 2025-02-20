@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, userService } from "../../utils/services";
-import UserCard from "../../components/user/UserCard";
+import UserCard from "../../components/UserCard";
 
 export default function FollowerSection({ userId }: { userId: string }) {
   const usersKey = ["followers", userId];

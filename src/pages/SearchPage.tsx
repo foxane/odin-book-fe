@@ -1,12 +1,12 @@
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
-import useDebounce from "../../hooks/useDebounce";
+import useDebounce from "../hooks/useDebounce";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { postService, userService } from "../../utils/services";
-import PostCard from "../../components/post/PostCard";
-import UserCard from "../../components/user/UserCard";
-import { usePostInfinite } from "../../hooks/usePostInfinite";
-import useUserInfinite from "../../hooks/useUserInfinite";
+import { postService, userService } from "../utils/services";
+import PostCard from "../components/post/PostCard";
+import UserCard from "../components/UserCard";
+import { usePostInfinite } from "../hooks/usePostInfinite";
+import useUserInfinite from "../hooks/useUserInfinite";
 
 function SearchPage() {
   const [s, setS] = useState("");
