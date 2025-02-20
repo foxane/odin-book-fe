@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../Modal";
 import { twMerge } from "tailwind-merge";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../context/AuthContext";
 
 interface Props {
   post: Post;

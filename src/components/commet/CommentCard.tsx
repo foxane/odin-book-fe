@@ -8,7 +8,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../context/AuthContext";
 import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../Modal";
 import { Link } from "react-router-dom";

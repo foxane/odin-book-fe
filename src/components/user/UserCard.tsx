@@ -1,7 +1,7 @@
 import Avatar from "react-avatar";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../context/AuthContext";
 
 interface Props {
   user: User;

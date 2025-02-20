@@ -1,16 +1,14 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { authService } from "../utils/services";
 
 const TOKEN = localStorage.getItem("token");
-const AuthContext = createContext<IAuthContext>({
-  user: null,
-  login: () => {},
-  register: () => {},
-  logout: () => {},
-  refreshUser: async () => {},
-  error: null,
-  loading: false,
-});
+const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -83,3 +81,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export { AuthContext, AuthProvider };
+
+export default function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth called outside provider");
+
+  return context;
+}

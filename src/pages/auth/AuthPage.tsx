@@ -1,7 +1,7 @@
 import { Navigate, useSearchParams } from "react-router-dom";
 
 import AuthForm from "./AuthForm";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../context/AuthContext";
 import Hero from "./Hero";
 
 export default function AuthPage() {

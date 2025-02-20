@@ -4,7 +4,7 @@ import { useState } from "react";
 import Avatar from "react-avatar";
 import { api } from "../../utils/services";
 import { useQueryClient } from "@tanstack/react-query";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../context/AuthContext";
 
 interface Props {
   user: User;

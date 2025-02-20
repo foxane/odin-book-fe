@@ -5,7 +5,7 @@ import { PencilIcon } from "lucide-react";
 import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
 import PostSection from "./PostSection";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../context/AuthContext";
 import { useState } from "react";
 import { UserUpdateModal } from "./UpdateModal";
 import FollowerSection from "./FollowerSection";

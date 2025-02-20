@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useAuth from "./useAuth";
+import useAuth from "../context/AuthContext";
 import { postService } from "../utils/services";
 import { addPTag } from "../utils/helper";
 import { DummyPost } from "../components/post/DummyPost";

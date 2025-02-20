@@ -2,13 +2,14 @@ import {
   BellIcon,
   HomeIcon,
   LogOutIcon,
+  MailIcon,
   SearchIcon,
   SquirrelIcon,
   UserIcon,
 } from "lucide-react";
 import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
@@ -69,7 +70,18 @@ export default function Drawer({ className, ...props }: Props) {
                 <span
                   className={twMerge(
                     "badge badge-sm",
-                    unreadCount > 0 && "badge-primary",
+                    unreadCount && unreadCount > 0 && "badge-primary",
+                  )}
+                >
+                  {unreadCount}
+                </span>
+              </Link>
+              <Link to={"/message"}>
+                <MailIcon size={20} /> Messages
+                <span
+                  className={twMerge(
+                    "badge badge-sm",
+                    unreadCount && unreadCount > 0 && "badge-primary",
                   )}
                 >
                   {unreadCount}

@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { notifService } from "../utils/services";
-import useAuth from "./useAuth";
+import useAuth from "../context/AuthContext";
 
 const queryKey = ["notifications"];
 

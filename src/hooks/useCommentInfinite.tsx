@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { commentService } from "../utils/services";
 import DummyComment from "../components/commet/DummyComment";
-import useAuth from "./useAuth";
+import useAuth from "../context/AuthContext";
 
 interface CommentPage {
   pages: IComment[][];

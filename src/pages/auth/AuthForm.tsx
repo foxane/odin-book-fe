@@ -4,7 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 import ThemeBtn from "./ThemeBtn";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../context/AuthContext";
 import InputField from "./InputField";
 import OAuthBtn from "./OAuthBtn";
 

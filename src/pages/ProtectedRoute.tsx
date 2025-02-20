@@ -1,7 +1,7 @@
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { SquirrelIcon } from "lucide-react";
 
-import useAuth from "../hooks/useAuth";
+import useAuth from "../context/AuthContext";
 import { getJoke } from "../utils/helper";
 import { useEffect, useState } from "react";
 
