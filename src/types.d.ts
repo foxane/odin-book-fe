@@ -36,7 +36,7 @@ interface IAuthContext {
 }
 
 interface AuthZustand extends IAuthContext {
-  load: () => void;
+  initAuth: () => void;
 }
 
 interface AuthResponse {

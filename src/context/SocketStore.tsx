@@ -15,7 +15,7 @@ export const useSocket = create<SocketStore>()((set, get) => ({
   connected: false,
 
   initSocket: (token: string) => {
-    if (get().socket) return;
+    if (get().socket && token === localStorage.getItem("token")) return;
 
     const socket = io(import.meta.env.VITE_API_URL, {
       auth: { token },
