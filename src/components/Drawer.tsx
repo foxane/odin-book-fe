@@ -14,7 +14,6 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import useNotification from "../hooks/useNotification";
-import { useSocket } from "../context/SocketStore";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
@@ -26,10 +25,8 @@ export default function Drawer({ className, ...props }: Props) {
   const { unreadCount } = useNotification();
   const { isDark, toggleTheme } = useContext(ThemeContext);
   const client = useQueryClient();
-  const socket = useSocket();
 
   const handleLogout = () => {
-    socket.disconnect();
     client.clear();
     logout();
   };

@@ -5,12 +5,8 @@ import UserCard from "./components/UserCard";
 import Drawer from "./components/Drawer";
 import Navbar from "./components/Navbar";
 import useUserInfinite from "./hooks/useUserInfinite";
-import { useEffect } from "react";
-import { useSocket } from "./context/SocketStore";
 
 export default function App() {
-  const { initSocket } = useSocket();
-
   const userQuery = useInfiniteQuery({
     queryKey: ["users"],
     initialPageParam: "",
@@ -20,10 +16,6 @@ export default function App() {
   });
   const users = userQuery.data?.pages.flat() ?? [];
   const { follow } = useUserInfinite(["users"]);
-
-  useEffect(() => {
-    initSocket(localStorage.getItem("token") ?? "");
-  }, [initSocket]);
 
   return (
     <div className="bg-base-200">
@@ -35,7 +27,7 @@ export default function App() {
           <Outlet />
         </main>
 
-        <div className="hidden h-full space-y-20 px-2">
+        <div className="hidden h-full space-y-20 px-2 lg:block">
           <section className="sticky top-0 space-y-3 pt-20">
             {users.map((el) => (
               <UserCard follow={follow.mutate} user={el} key={el.id} />

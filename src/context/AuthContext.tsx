@@ -1,23 +1,51 @@
 import { create } from "zustand";
 import { authService } from "../utils/services";
+import { io, Socket } from "socket.io-client";
 
-const useAuth = create<AuthZustand>()((set) => ({
+interface AuthZustand extends IAuthContext {
+  initAuth: () => void;
+  _initSocket: () => void;
+  socket: Socket<ServerToClientEvents, ClientToServerEvents> | null;
+  connected: boolean;
+}
+
+const useAuth = create<AuthZustand>()((set, get) => ({
   user: null,
   error: null,
   loading: false,
+  socket: null,
+  connected: false,
 
   login: (cred) => {
     set({ loading: true, error: null });
     authService
       .login(cred)
-      .then((user) => set({ user }))
+      .then((user) => {
+        get()._initSocket();
+        set({ user });
+      })
+      .catch((err: unknown) => set({ error: err as AuthError }))
+      .finally(() => set({ loading: false }));
+  },
+
+  register: (cred) => {
+    set({ loading: true, error: null });
+    authService
+      .register(cred)
+      .then((user) => {
+        get()._initSocket();
+        set({ user });
+      })
       .catch((err: unknown) => set({ error: err as AuthError }))
       .finally(() => set({ loading: false }));
   },
 
   logout: () => {
-    set({ user: null });
     authService.logout();
+    set((state) => {
+      state.socket?.disconnect();
+      return { user: null, socket: null, connected: false };
+    });
   },
 
   refreshUser: async () => {
@@ -25,28 +53,36 @@ const useAuth = create<AuthZustand>()((set) => ({
     set({ user });
   },
 
-  register: (cred) => {
-    set({ loading: true, error: null });
+  /**
+   * Initialize auth loading on page load
+   */
+  initAuth: () => {
+    set({ loading: true });
+    const token = localStorage.getItem("token");
+    if (!token) return set({ loading: false });
+
     authService
-      .register(cred)
-      .then((user) => set({ user }))
+      .getUserInfo()
+      .then((user) => {
+        get()._initSocket();
+        set({ user });
+      })
       .catch((err: unknown) => set({ error: err as AuthError }))
       .finally(() => set({ loading: false }));
   },
 
   /**
-   * Initliad loading on page load
+   * Private method, initialize socket
    */
-  initAuth: () => {
-    set({ loading: true });
-    const token = () => localStorage.getItem("token");
-    if (!token()) return set({ loading: false });
+  _initSocket: () => {
+    const token = localStorage.getItem("token");
+    if (get().socket) return;
 
-    authService
-      .getUserInfo()
-      .then((user) => set({ user }))
-      .catch((err: unknown) => set({ error: err as AuthError }))
-      .finally(() => set({ loading: false }));
+    const socket = io(import.meta.env.VITE_API_URL, { auth: { token } });
+    socket.on("connect", () => set({ connected: true }));
+    socket.on("disconnect", () => set({ connected: false }));
+
+    set({ socket });
   },
 }));
 

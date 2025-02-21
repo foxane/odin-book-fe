@@ -25,6 +25,7 @@ interface User {
   };
 }
 
+// React context ver
 interface IAuthContext {
   user: User | null;
   login: (cred: Credentials) => void;
@@ -33,10 +34,6 @@ interface IAuthContext {
   refreshUser: () => Promise<void>;
   error: AuthError | null;
   loading: boolean;
-}
-
-interface AuthZustand extends IAuthContext {
-  initAuth: () => void;
 }
 
 interface AuthResponse {
