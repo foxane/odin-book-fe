@@ -14,7 +14,7 @@ interface PostPages {
 //   probably need to iterate inside arr.findIndex(el => el.some(elm => elm.id === param))?
 
 export const usePostInfinite = (queryKey: readonly unknown[]) => {
-  const { user } = useAuth() as { user: User };
+  const user = useAuth((s) => s.user)!;
   const client = useQueryClient();
 
   /**

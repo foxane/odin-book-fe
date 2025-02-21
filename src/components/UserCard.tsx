@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function UserCard({ user, follow }: Props) {
-  const auth = useAuth();
+  const authUser = useAuth((s) => s.user);
 
   return (
     <div className="bg-base-100 border-base-content/20 flex max-w-64 items-center gap-1 rounded-md border p-2">
@@ -27,7 +27,7 @@ export default function UserCard({ user, follow }: Props) {
         <p className="truncate text-xs font-semibold">{user.name}</p>
       </Link>
 
-      {auth.user?.id !== user.id && (
+      {authUser?.id !== user.id && (
         <button
           onClick={() => follow(user)}
           className={twMerge(

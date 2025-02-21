@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function CommentCard({ comment, action }: Props) {
-  const { user } = useAuth();
+  const user = useAuth((s) => s.user);
   const [modal, setModal] = useState<"update" | "delete" | null>(null);
 
   return (

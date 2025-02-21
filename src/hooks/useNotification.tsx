@@ -9,7 +9,7 @@ import useAuth from "../context/AuthContext";
 const queryKey = ["notifications"];
 
 export default function useNotification() {
-  const { user } = useAuth();
+  const user = useAuth((s) => s.user);
 
   const client = useQueryClient();
   const query = useInfiniteQuery({

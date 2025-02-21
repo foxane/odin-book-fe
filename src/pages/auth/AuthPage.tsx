@@ -5,7 +5,7 @@ import useAuth from "../../context/AuthContext";
 import Hero from "./Hero";
 
 export default function AuthPage() {
-  const { user } = useAuth();
+  const user = useAuth((s) => s.user);
   const [query] = useSearchParams();
 
   if (user) {

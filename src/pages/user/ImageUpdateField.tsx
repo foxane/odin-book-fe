@@ -12,7 +12,7 @@ interface Props {
 
 function ImageUpdateField({ user }: Props) {
   const queryClient = useQueryClient();
-  const { refreshUser } = useAuth();
+  const refreshUser = useAuth((s) => s.refreshUser);
 
   const [bg, setBg] = useState<File | null>(null);
   const bgPreview = bg && URL.createObjectURL(bg);

@@ -13,7 +13,7 @@ interface CommentPage {
 //   probably need to iterate inside arr.findIndex(el => el.some(elm => elm.id === param))?
 
 export default function useCommentInfinite(queryKey: readonly unknown[]) {
-  const { user } = useAuth();
+  const user = useAuth((s) => s.user);
   const client = useQueryClient();
 
   const _getPrev = async () => {

@@ -13,7 +13,7 @@ import FollowingSection from "./FollowingSection";
 import useUserInfinite from "../../hooks/useUserInfinite";
 
 export default function UserPage() {
-  const auth = useAuth();
+  const authUser = useAuth((s) => s.user);
   const { userId } = useParams();
   const [modal, setModal] = useState(false);
 
@@ -24,7 +24,7 @@ export default function UserPage() {
   });
   const { follow } = useUserInfinite(queryKey);
 
-  const isOwner = auth.user && auth.user.id === user?.id;
+  const isOwner = authUser && authUser.id === user?.id;
 
   if (!user) return <div className="loading"></div>;
   return (
@@ -139,11 +139,11 @@ export default function UserPage() {
         </div>
       </div>
 
-      {auth.user && (
+      {authUser && (
         <UserUpdateModal
           visible={modal}
           onClose={() => setModal(false)}
-          user={auth.user}
+          user={authUser}
         />
       )}
     </div>

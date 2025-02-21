@@ -13,7 +13,12 @@ export default function AuthForm({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [params] = useSearchParams();
-  const { error, loading, login, register } = useAuth();
+
+  const error = useAuth((s) => s.error);
+  const loading = useAuth((s) => s.loading);
+  const login = useAuth((s) => s.login);
+  const register = useAuth((s) => s.register);
+
   const isLogin = params.get("login") === "true";
   const redirect = params.get("redirect") ?? "";
 

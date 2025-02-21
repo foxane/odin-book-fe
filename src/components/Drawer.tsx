@@ -20,7 +20,9 @@ import { useQueryClient } from "@tanstack/react-query";
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function Drawer({ className, ...props }: Props) {
-  const { user, logout } = useAuth();
+  const user = useAuth((state) => state.user);
+  const logout = useAuth((state) => state.logout);
+
   const { unreadCount } = useNotification();
   const { isDark, toggleTheme } = useContext(ThemeContext);
   const client = useQueryClient();

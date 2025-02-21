@@ -26,7 +26,7 @@ export default function App() {
   }, [initSocket]);
 
   return (
-    <div className="bg-base-200 h-screen">
+    <div className="bg-base-200">
       <Navbar />
       <div className="mx-auto grid max-w-7xl md:grid-cols-[1fr_3fr] lg:grid-cols-[1fr_4fr_1fr]">
         <Drawer />
@@ -35,7 +35,7 @@ export default function App() {
           <Outlet />
         </main>
 
-        <div className="hidden h-full space-y-20 px-2 lg:block">
+        <div className="hidden h-full space-y-20 px-2">
           <section className="sticky top-0 space-y-3 pt-20">
             {users.map((el) => (
               <UserCard follow={follow.mutate} user={el} key={el.id} />
