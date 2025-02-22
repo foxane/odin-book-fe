@@ -5,7 +5,6 @@ import { notifService } from "../utils/services";
 export interface IUseNotification {
   notification: INotification[];
   unreadCount: number;
-  badge: boolean;
   read: (id: number) => void;
 }
 
@@ -24,10 +23,8 @@ export const useNotification = (): IUseNotification => {
 
   const [notification, setNotification] = useState<INotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [badge, setBadge] = useState(false);
 
   const read = (id: number) => {
-    setBadge(false);
     setUnreadCount((prev) => Math.max(0, prev - 1));
     setNotification((prev) =>
       prev.map((el) => (el.id === id ? { ...el, isRead: true } : el)),
@@ -41,10 +38,9 @@ export const useNotification = (): IUseNotification => {
     if (!socket) return;
 
     const handleNewNotification = (notif: INotification) => {
-      setBadge(true);
+      alert(`new notif! from: ${notif.actor.name} with type: ${notif.type} `);
       setNotification((prev) => [notif, ...prev]);
       setUnreadCount((prev) => prev + 1);
-      alert(notif.actor.name);
     };
 
     socket.on("newNotification", handleNewNotification);
@@ -72,5 +68,5 @@ export const useNotification = (): IUseNotification => {
     void fetchNotif();
   }, []);
 
-  return { notification, unreadCount, badge, read };
+  return { notification, unreadCount, read };
 };

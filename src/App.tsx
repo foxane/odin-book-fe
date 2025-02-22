@@ -24,7 +24,7 @@ export default function App() {
     <div className="bg-base-200">
       <Navbar />
       <div className="mx-auto grid max-w-7xl md:grid-cols-[1fr_3fr] lg:grid-cols-[1fr_4fr_1fr]">
-        <Drawer unreadCount={notifOutlet.unreadCount} />
+        <Drawer notifOutlet={notifOutlet} />
 
         <main className="border-base-content/10 mt-20 border-0 border-x px-2 pb-6">
           <Outlet context={notifOutlet} />

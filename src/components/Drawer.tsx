@@ -14,12 +14,13 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { useQueryClient } from "@tanstack/react-query";
+import { IUseNotification } from "../hooks/useNotification";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  unreadCount: number;
+  notifOutlet: IUseNotification;
 }
 
-export default function Drawer({ className, unreadCount, ...props }: Props) {
+export default function Drawer({ className, notifOutlet, ...props }: Props) {
   const user = useAuth((state) => state.user);
   const logout = useAuth((state) => state.logout);
 
@@ -79,22 +80,14 @@ export default function Drawer({ className, unreadCount, ...props }: Props) {
                 <span
                   className={twMerge(
                     "badge badge-sm",
-                    unreadCount && unreadCount > 0 && "badge-primary",
+                    notifOutlet.unreadCount > 0 && "badge-primary",
                   )}
                 >
-                  {unreadCount}
+                  {notifOutlet.unreadCount}
                 </span>
               </Link>
               <Link to={"/message"}>
                 <MailIcon size={20} /> Messages
-                <span
-                  className={twMerge(
-                    "badge badge-sm",
-                    unreadCount && unreadCount > 0 && "badge-primary",
-                  )}
-                >
-                  {unreadCount}
-                </span>
               </Link>
             </li>
           </nav>
