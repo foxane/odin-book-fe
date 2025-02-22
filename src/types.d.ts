@@ -123,11 +123,14 @@ interface INotification {
  */
 
 interface ClientToServerEvents {
+  createChatRoom: (userId: string) => void;
   sendMessage: (e: { text: string; image? }) => void;
 }
 
 interface ServerToClientEvents {
   newMessage: (e: { text: string; image? }) => void;
+  newChatRoom: (room: Room) => void;
+  newNotification: (notif: INotification) => void;
 }
 
 /**

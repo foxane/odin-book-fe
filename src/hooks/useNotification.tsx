@@ -1,48 +1,76 @@
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { notifService } from "../utils/services";
+import { useEffect, useState } from "react";
 import useAuth from "../context/AuthContext";
+import { notifService } from "../utils/services";
 
-const queryKey = ["notifications"];
-
-export default function useNotification() {
-  const user = useAuth((s) => s.user);
-
-  const client = useQueryClient();
-  const query = useInfiniteQuery({
-    queryKey,
-    enabled: !!user,
-    initialPageParam: "",
-    queryFn: ({ pageParam }) => notifService.getMany(pageParam),
-    getNextPageParam: ({ notifications }) => {
-      if (notifications.length < 10) return undefined;
-      else return notifications.at(-1)?.id.toString();
-    },
-  });
-
-  const refresh = () => client.invalidateQueries({ queryKey });
-  const data = query.data?.pages.map((el) => el.notifications).flat() ?? [];
-  const unreadCount = query.data?.pages[0].unreadCount;
-
-  const read = useMutation({
-    mutationFn: notifService.read,
-    onSettled: () => client.invalidateQueries({ queryKey }),
-  });
-
-  const readAll = useMutation({
-    mutationFn: notifService.readAll,
-    onSettled: () => client.invalidateQueries({ queryKey }),
-  });
-
-  return {
-    refresh,
-    query,
-    data,
-    unreadCount,
-    markAsRead: read.mutate,
-    markAllAsRead: readAll.mutate,
-  };
+export interface IUseNotification {
+  notification: INotification[];
+  unreadCount: number;
+  badge: boolean;
+  read: (id: number) => void;
 }
+
+/**
+ * DOES NOT CALL THIS MORE THAN ONE!!
+ *
+ * This is only used in App.tsx and passed as outlet context
+ *
+ * Why not use context?
+ * - Context would cause extra re-renders
+ * - Redundant WebSocket listeners
+ * - Unecessary re-fetching
+ */
+export const useNotification = (): IUseNotification => {
+  const socket = useAuth((s) => s.socket);
+
+  const [notification, setNotification] = useState<INotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [badge, setBadge] = useState(false);
+
+  const read = (id: number) => {
+    setBadge(false);
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+    setNotification((prev) =>
+      prev.map((el) => (el.id === id ? { ...el, isRead: true } : el)),
+    );
+  };
+
+  /**
+   * Listen to new notification
+   */
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNewNotification = (notif: INotification) => {
+      setBadge(true);
+      setNotification((prev) => [notif, ...prev]);
+      setUnreadCount((prev) => prev + 1);
+      alert(notif.actor.name);
+    };
+
+    socket.on("newNotification", handleNewNotification);
+
+    return () => {
+      socket.off("newNotification", handleNewNotification);
+    };
+  }, [socket]);
+
+  /**
+   * Fetch old notification
+   */
+  useEffect(() => {
+    const fetchNotif = async () => {
+      console.log("fetching old notification...");
+      try {
+        const data = await notifService.getMany();
+        setNotification(data.notifications);
+        setUnreadCount(data.unreadCount);
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      }
+    };
+
+    void fetchNotif();
+  }, []);
+
+  return { notification, unreadCount, badge, read };
+};

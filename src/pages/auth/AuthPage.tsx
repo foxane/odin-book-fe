@@ -3,10 +3,17 @@ import { Navigate, useSearchParams } from "react-router-dom";
 import AuthForm from "./AuthForm";
 import useAuth from "../../context/AuthContext";
 import Hero from "./Hero";
+import { useEffect } from "react";
 
 export default function AuthPage() {
   const user = useAuth((s) => s.user);
+  const { initAuth } = useAuth(); // destructure does not re render on change
+
   const [query] = useSearchParams();
+
+  useEffect(() => {
+    initAuth();
+  }, [initAuth]);
 
   if (user) {
     const redirect = query.get("redirect") ?? "/";

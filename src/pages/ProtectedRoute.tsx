@@ -12,7 +12,6 @@ interface Props {
 export default function ProtectedRoute({ page }: Props) {
   const user = useAuth((s) => s.user);
   const loading = useAuth((s) => s.loading);
-  const initAuth = useAuth((s) => s.initAuth);
 
   const [isTimeout, setIsTimeout] = useState(false);
   const location = useLocation();
@@ -22,9 +21,8 @@ export default function ProtectedRoute({ page }: Props) {
       setIsTimeout(true);
     }, 1000 * 10);
 
-    initAuth();
     return () => clearTimeout(timer);
-  }, [initAuth]);
+  }, []);
 
   /**
    * Loading screen on initial load

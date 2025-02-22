@@ -5,6 +5,7 @@ import UserCard from "./components/UserCard";
 import Drawer from "./components/Drawer";
 import Navbar from "./components/Navbar";
 import useUserInfinite from "./hooks/useUserInfinite";
+import { useNotification } from "./hooks/useNotification";
 
 export default function App() {
   const userQuery = useInfiniteQuery({
@@ -17,14 +18,16 @@ export default function App() {
   const users = userQuery.data?.pages.flat() ?? [];
   const { follow } = useUserInfinite(["users"]);
 
+  const notifOutlet = useNotification();
+
   return (
     <div className="bg-base-200">
       <Navbar />
       <div className="mx-auto grid max-w-7xl md:grid-cols-[1fr_3fr] lg:grid-cols-[1fr_4fr_1fr]">
-        <Drawer />
+        <Drawer unreadCount={notifOutlet.unreadCount} />
 
         <main className="border-base-content/10 mt-20 border-0 border-x px-2 pb-6">
-          <Outlet />
+          <Outlet context={notifOutlet} />
         </main>
 
         <div className="hidden h-full space-y-20 px-2 lg:block">

@@ -66,6 +66,9 @@ const useAuth = create<AuthZustand>()((set, get) => ({
       .then((user) => {
         get()._initSocket();
         set({ user });
+        console.log(
+          get().connected ? "Socket connected" : "Socket not connected",
+        );
       })
       .catch((err: unknown) => set({ error: err as AuthError }))
       .finally(() => set({ loading: false }));

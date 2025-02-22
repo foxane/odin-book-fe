@@ -13,16 +13,16 @@ import useAuth from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
-import useNotification from "../hooks/useNotification";
 import { useQueryClient } from "@tanstack/react-query";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {}
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+  unreadCount: number;
+}
 
-export default function Drawer({ className, ...props }: Props) {
+export default function Drawer({ className, unreadCount, ...props }: Props) {
   const user = useAuth((state) => state.user);
   const logout = useAuth((state) => state.logout);
 
-  const { unreadCount } = useNotification();
   const { isDark, toggleTheme } = useContext(ThemeContext);
   const client = useQueryClient();
 
