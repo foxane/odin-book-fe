@@ -14,10 +14,10 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { useQueryClient } from "@tanstack/react-query";
-import { IUseNotification } from "../hooks/useNotification";
+import { NoticationOutlet } from "../context/OutletContext";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  notifOutlet: IUseNotification;
+  notifOutlet: NoticationOutlet;
 }
 
 export default function Drawer({ className, notifOutlet, ...props }: Props) {

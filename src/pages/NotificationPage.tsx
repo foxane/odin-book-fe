@@ -6,11 +6,11 @@ import {
   getNotificationUrl,
   NOTIFICATION_TEXT,
 } from "../utils/helper";
-import { IUseNotification } from "../hooks/useNotification";
+import { NoticationOutlet } from "../context/OutletContext";
 
 export default function NotificationPage() {
   const navigate = useNavigate();
-  const { notification, read } = useOutletContext<IUseNotification>();
+  const { notification, read } = useOutletContext<NoticationOutlet>();
 
   const handleOpen = (el: INotification) => {
     read(el.id);

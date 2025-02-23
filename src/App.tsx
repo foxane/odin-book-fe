@@ -5,7 +5,7 @@ import UserCard from "./components/UserCard";
 import Drawer from "./components/Drawer";
 import Navbar from "./components/Navbar";
 import useUserInfinite from "./hooks/useUserInfinite";
-import { useNotification } from "./hooks/useNotification";
+import { useNotification } from "./context/OutletContext";
 
 export default function App() {
   const userQuery = useInfiniteQuery({

@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
-import useAuth from "../context/AuthContext";
+import useAuth from "./AuthContext";
 import { notifService } from "../utils/services";
 
-export interface IUseNotification {
+export interface NoticationOutlet {
   notification: INotification[];
   unreadCount: number;
   read: (id: number) => void;
 }
 
 /**
- * DOES NOT CALL THIS MORE THAN ONE!!
- *
- * This is only used in App.tsx and passed as outlet context
- *
+ * DOES NOT CALL ANY OF THESE HOOK MORE THAN ONE!!
  * Why not use context?
  * - Context would cause extra re-renders
  * - Redundant WebSocket listeners
  * - Unecessary re-fetching
  */
-export const useNotification = (): IUseNotification => {
+
+/**
+ * This is only used in App.tsx and passed as outlet context
+ */
+export const useNotification = (): NoticationOutlet => {
   const socket = useAuth((s) => s.socket);
 
   const [notification, setNotification] = useState<INotification[]>([]);
@@ -70,3 +71,8 @@ export const useNotification = (): IUseNotification => {
 
   return { notification, unreadCount, read };
 };
+
+/**
+ * This is only used in App.tsx and passed as outlet context
+ */
+export const useMessage = () => {};
