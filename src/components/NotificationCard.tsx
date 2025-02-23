@@ -1,6 +1,7 @@
 import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
 import { formatDate, NOTIFICATION_TEXT } from "../utils/helper";
+import Card from "./Card";
 
 interface Props {
   notif: INotification;
@@ -9,12 +10,9 @@ interface Props {
 
 function NotificationCard({ notif, handleClick }: Props) {
   return (
-    <button
+    <Card
       onClick={() => handleClick(notif)}
-      className={twMerge(
-        "card bg-base-100 hover:border-base-content/40 w-full cursor-pointer border border-transparent p-2 shadow-md transition-colors",
-        notif.isRead && "opacity-50",
-      )}
+      className={twMerge(notif.isRead && "opacity-50")}
     >
       <div className="flex w-full flex-wrap items-center gap-1 text-sm">
         <Avatar
@@ -33,7 +31,7 @@ function NotificationCard({ notif, handleClick }: Props) {
           </p>
         </div>
       </div>
-    </button>
+    </Card>
   );
 }
 

@@ -21,7 +21,7 @@ export default function App() {
   const notifOutlet = useNotification();
 
   return (
-    <div className="bg-base-200">
+    <div className="bg-base-200 min-h-screen">
       <Navbar />
       <div className="mx-auto grid max-w-7xl md:grid-cols-[1fr_3fr] lg:grid-cols-[1fr_4fr_1fr]">
         <Drawer notifOutlet={notifOutlet} />
