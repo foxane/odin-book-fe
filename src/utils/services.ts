@@ -236,4 +236,8 @@ export const notifService = {
   readAll: async () => {
     await api.axios.patch("/notifications/read-all");
   },
+
+  clear: async (unread?: boolean) => {
+    await api.axios.delete(`/notifications?${unread ? "unread=true" : ""}`);
+  },
 };

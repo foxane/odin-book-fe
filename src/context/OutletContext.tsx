@@ -6,6 +6,11 @@ export interface NoticationOutlet {
   notification: INotification[];
   unreadCount: number;
   read: (id: number) => void;
+  readAll: () => void;
+  /**
+   * @param unread True = delete unread notif aswell
+   */
+  clear: (unread?: boolean) => void;
 }
 
 /**
@@ -30,6 +35,19 @@ export const useNotification = (): NoticationOutlet => {
     setNotification((prev) =>
       prev.map((el) => (el.id === id ? { ...el, isRead: true } : el)),
     );
+    void notifService.read(id);
+  };
+
+  const readAll = () => {
+    setUnreadCount(0);
+    setNotification([]);
+    void notifService.readAll();
+  };
+
+  const clear = (unread = false) => {
+    setUnreadCount(0);
+    setNotification((prev) => (!unread ? prev.filter((el) => !el.isRead) : []));
+    void notifService.clear(unread);
   };
 
   /**
@@ -69,9 +87,14 @@ export const useNotification = (): NoticationOutlet => {
     void fetchNotif();
   }, []);
 
-  return { notification, unreadCount, read };
+  return { notification, unreadCount, read, clear, readAll };
 };
 
+export interface MessageOutlet {
+  room: Room;
+  unreadCount: number;
+  read: (id: number) => void;
+}
 /**
  * This is only used in App.tsx and passed as outlet context
  */
