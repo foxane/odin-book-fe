@@ -11,30 +11,32 @@ import { UserUpdateModal } from "./UpdateModal";
 import FollowerSection from "./FollowerSection";
 import FollowingSection from "./FollowingSection";
 import useUserInfinite from "../../hooks/useUserInfinite";
+import ChatButton from "./ChatButton";
 
 export default function UserPage() {
   const authUser = useAuth((s) => s.user);
-  const { userId } = useParams();
-  const [modal, setModal] = useState(false);
 
+  const [updateModal, setUpdateModal] = useState(false);
+
+  const { userId } = useParams();
   const queryKey = ["user", userId];
   const { data: user } = useQuery({
     queryKey,
     queryFn: () => userService.getOne(userId!),
   });
   const { follow } = useUserInfinite(queryKey);
-
   const isOwner = authUser && authUser.id === user?.id;
 
   if (!user) return <div className="loading"></div>;
   return (
-    <div className="">
+    <div className="space-y-2">
       <div className="bg-base-100 rounded pb-1">
         {/* Background */}
         <div className="bg-base-300 relative aspect-video">
           <img
             className="h-full w-full object-cover"
             src={user.background ?? ""}
+            alt="No image"
           />
         </div>
 
@@ -44,7 +46,7 @@ export default function UserPage() {
             <Avatar
               name={user.name}
               src={user.avatar ?? ""}
-              size="80"
+              size="70"
               maxInitials={2}
               className="avatar avatar-online"
               textSizeRatio={2}
@@ -67,11 +69,11 @@ export default function UserPage() {
             </p>
           </div>
 
-          <div className="row-span-2 flex gap-2">
+          <div className="row-span-2">
             {isOwner ? (
               <button
                 className="btn btn-sm btn-square btn-ghost"
-                onClick={() => setModal(true)}
+                onClick={() => setUpdateModal(true)}
               >
                 <PencilIcon />
               </button>
@@ -103,7 +105,11 @@ export default function UserPage() {
         </div>
       </div>
 
-      <div className="divider" />
+      {!isOwner && (
+        <div className="flex justify-end">
+          <ChatButton target={user} />
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="tabs tabs-box">
@@ -141,8 +147,8 @@ export default function UserPage() {
 
       {authUser && (
         <UserUpdateModal
-          visible={modal}
-          onClose={() => setModal(false)}
+          visible={updateModal}
+          onClose={() => setUpdateModal(false)}
           user={authUser}
         />
       )}

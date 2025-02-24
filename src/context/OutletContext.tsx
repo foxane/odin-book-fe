@@ -1,17 +1,6 @@
 import { useEffect, useState } from "react";
 import useAuth from "./AuthContext";
-import { notifService } from "../utils/services";
-
-export interface NoticationOutlet {
-  notification: INotification[];
-  unreadCount: number;
-  read: (id: number) => void;
-  readAll: () => void;
-  /**
-   * @param unread True = delete unread notif aswell
-   */
-  clear: (unread?: boolean) => void;
-}
+import { api, notifService } from "../utils/services";
 
 /**
  * DOES NOT CALL ANY OF THESE HOOK MORE THAN ONE!!
@@ -90,12 +79,47 @@ export const useNotification = (): NoticationOutlet => {
   return { notification, unreadCount, read, clear, readAll };
 };
 
-export interface MessageOutlet {
-  room: Room;
-  unreadCount: number;
-  read: (id: number) => void;
-}
 /**
  * This is only used in App.tsx and passed as outlet context
  */
-export const useMessage = () => {};
+export const useMessage = (): MessageOutlet => {
+  const socket = useAuth((s) => s.socket);
+  const [chats, setChats] = useState<Chat[]>([]);
+
+  const sendMessage = (opts: SendMsgPayload) => {
+    socket?.emit("sendMessage", opts);
+  };
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNewChat = (c: Chat) => {
+      setChats((prev) => [c, ...prev]);
+    };
+
+    socket.on("newChat", handleNewChat);
+
+    return () => {
+      socket.off("newChat", handleNewChat);
+    };
+  }, [socket]);
+
+  /**
+   * Onload fetch
+   */
+  useEffect(() => {
+    const fetchChat = async () => {
+      console.log("Fetching chat list...");
+      try {
+        const { data } = await api.axios.get<Chat[]>(`/chats`);
+        setChats(data);
+      } catch (error) {
+        console.log("error fetching chat: ", error);
+      }
+    };
+
+    void fetchChat();
+  }, []);
+
+  return { chats, sendMessage };
+};

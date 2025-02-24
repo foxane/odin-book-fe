@@ -11,7 +11,7 @@ interface UserUpdatePayload {
 }
 
 interface User {
-  id: string;
+  id: number;
   name: string;
   email: string;
   bio: null | string;
@@ -122,14 +122,30 @@ interface INotification {
  * =============== SOCKET ==================
  */
 
+interface SendMsgPayload {
+  targetId: number;
+  chatId?: number;
+  message: {
+    text: string;
+    // image?: File; // To be added later
+  };
+}
+
+interface NewMsgPayload {
+  chatId: number;
+  message: Message;
+}
+
 interface ClientToServerEvents {
-  createChatRoom: (userId: string) => void;
-  sendMessage: (e: { text: string; image? }) => void;
+  readChat: (id: number) => void;
+  sendMessage: (p: SendMsgPayload) => void;
+  createChat: (targetId: number) => void;
 }
 
 interface ServerToClientEvents {
-  newMessage: (e: { text: string; image? }) => void;
-  newChatRoom: (room: Room) => void;
+  chatCreated: (c: chat) => void; // Response to the one who create the chat room
+  newMessage: (e: NewMsgPayload) => void;
+  newChat: (c: Chat) => void; // Response to member
   newNotification: (notif: INotification) => void;
 }
 
@@ -137,30 +153,48 @@ interface ServerToClientEvents {
  * =============== CHAT ===================
  */
 
-interface Room {
+interface Chat {
   id: number;
-  users: User[];
-  messages: Message[];
+  member: User[];
+  message: Message[];
 }
 
 interface Message {
   id: number;
+  createdAt: Date;
+  status: MsgStatus;
+  readAt?: Date | null;
   text?: string | null;
   media: string[];
-  createdAt: Date;
-  Room?: Room | null;
-  roomId?: number | null;
-  User?: User | null;
-  userId?: string | null;
-  MessageStatus: MessageStatus[];
+  userId: number;
+  user: User;
+  chat?: Chat | null;
+  chatId?: number | null;
 }
 
-interface MessageStatus {
-  status: MsgStatus;
-  messageId: number;
-  Message: Message;
-  User: User;
-  userId: string;
+type MsgStatus = "UNREAD" | "READ";
+
+/**
+ * ====================== Outlet context ===================
+ */
+
+interface NoticationOutlet {
+  notification: INotification[];
+  unreadCount: number;
+  read: (id: number) => void;
+  readAll: () => void;
+  /**
+   * @param unread True = delete unread notif aswell
+   */
+  clear: (unread?: boolean) => void;
 }
 
-type MsgStatus = "DELIVERED" | "READ";
+interface MessageOutlet {
+  chats: Chat[];
+  sendMessage: (opts: SendMsgPayload) => void;
+}
+
+interface OutletContext {
+  notifOutlet: NoticationOutlet;
+  msgOutlet: MessageOutlet;
+}

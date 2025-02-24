@@ -5,7 +5,7 @@ import UserCard from "./components/UserCard";
 import Drawer from "./components/Drawer";
 import Navbar from "./components/Navbar";
 import useUserInfinite from "./hooks/useUserInfinite";
-import { useNotification } from "./context/OutletContext";
+import { useMessage, useNotification } from "./context/OutletContext";
 
 export default function App() {
   const userQuery = useInfiniteQuery({
@@ -19,6 +19,7 @@ export default function App() {
   const { follow } = useUserInfinite(["users"]);
 
   const notifOutlet = useNotification();
+  const msgOutlet = useMessage();
 
   return (
     <div className="bg-base-200 min-h-screen">
@@ -27,7 +28,7 @@ export default function App() {
         <Drawer notifOutlet={notifOutlet} />
 
         <main className="border-base-content/10 mt-20 border-0 border-x px-2 pb-6">
-          <Outlet context={notifOutlet} />
+          <Outlet context={{ notifOutlet, msgOutlet }} />
         </main>
 
         <div className="hidden h-full space-y-20 px-2 lg:block">

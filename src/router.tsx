@@ -7,7 +7,7 @@ import PostPage from "./pages/PostPage";
 import UserPage from "./pages/user/UserPage";
 import SearchPage from "./pages/SearchPage";
 import NotificationPage from "./pages/NotificationPage";
-import MessagePage from "./pages/MessagePage";
+import MessagePage from "./pages/message/MessagePage";
 
 const routes = createBrowserRouter([
   {
