@@ -1,13 +1,12 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getNotificationUrl } from "../utils/helper";
 import NotificationCard from "../components/NotificationCard";
 import { Trash2Icon } from "lucide-react";
+import useNotification from "../hooks/useNotification";
 
 export default function NotificationPage() {
   const navigate = useNavigate();
-  const {
-    notifOutlet: { notification, read, readAll, clear },
-  } = useOutletContext<OutletContext>();
+  const { read, clear, readAll, notification } = useNotification();
 
   const handleOpen = (el: INotification) => {
     read(el.id);

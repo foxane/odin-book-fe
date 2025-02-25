@@ -1,19 +1,21 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import useAuth from "./AuthContext";
 import { notifService } from "../utils/services";
 
-/**
- * DOES NOT CALL ANY OF THESE HOOK MORE THAN ONE!!
- * Why not use context?
- * - Context would cause extra re-renders
- * - Redundant WebSocket listeners
- * - Unecessary re-fetching
- */
+interface INotifContext {
+  notification: INotification[];
+  unreadCount: number;
+  read: (id: number) => void;
+  readAll: () => void;
+  /**
+   * @param unread True = delete unread notif aswell
+   */
+  clear: (unread?: boolean) => void;
+}
 
-/**
- * This is only used in App.tsx and passed as outlet context
- */
-export const useNotification = (): NoticationOutlet => {
+const NotifContext = createContext<INotifContext | null>(null);
+
+const NotifProvider = ({ children }: { children: React.ReactNode }) => {
   const socket = useAuth((s) => s.socket);
 
   const [notification, setNotification] = useState<INotification[]>([]);
@@ -76,5 +78,13 @@ export const useNotification = (): NoticationOutlet => {
     void fetchNotif();
   }, []);
 
-  return { notification, unreadCount, read, clear, readAll };
+  return (
+    <NotifContext.Provider
+      value={{ clear, notification, read, readAll, unreadCount }}
+    >
+      {children}
+    </NotifContext.Provider>
+  );
 };
+
+export { NotifContext, NotifProvider };

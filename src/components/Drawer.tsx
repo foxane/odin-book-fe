@@ -14,14 +14,16 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { useQueryClient } from "@tanstack/react-query";
+import useNotification from "../hooks/useNotification";
+import useMessage from "../hooks/useMessage";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  notifContext: NoticationOutlet;
-}
+interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function Drawer({ className, notifContext, ...props }: Props) {
+export default function Drawer({ className, ...props }: Props) {
   const user = useAuth((state) => state.user);
   const logout = useAuth((state) => state.logout);
+  const notifContext = useNotification();
+  const msgContext = useMessage();
 
   const { isDark, toggleTheme } = useContext(ThemeContext);
   const client = useQueryClient();
@@ -87,6 +89,14 @@ export default function Drawer({ className, notifContext, ...props }: Props) {
               </Link>
               <Link to={"/message"}>
                 <MailIcon size={20} /> Messages
+                <span
+                  className={twMerge(
+                    "badge badge-sm",
+                    msgContext.unreadChat > 0 && "badge-primary",
+                  )}
+                >
+                  {msgContext.unreadChat}
+                </span>
               </Link>
             </li>
           </nav>

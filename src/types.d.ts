@@ -176,29 +176,3 @@ interface Message {
 }
 
 type MsgStatus = "UNREAD" | "READ";
-
-/**
- * ====================== Outlet context ===================
- */
-
-interface NoticationOutlet {
-  notification: INotification[];
-  unreadCount: number;
-  read: (id: number) => void;
-  readAll: () => void;
-  /**
-   * @param unread True = delete unread notif aswell
-   */
-  clear: (unread?: boolean) => void;
-}
-
-interface MessageOutlet {
-  chats: Chat[];
-  sendMessage: (opts: SendMsgPayload) => void;
-  unreadChat: number;
-}
-
-interface OutletContext {
-  notifOutlet: NoticationOutlet;
-  msgOutlet: MessageOutlet;
-}

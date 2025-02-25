@@ -17,7 +17,7 @@ const routes = createBrowserRouter([
       { path: "/post/:postId", element: <PostPage /> },
       { path: "/user/:userId", element: <UserPage /> },
       { path: "/search", element: <SearchPage /> },
-      // { path: "/notification", element: <NotificationPage /> },
+      { path: "/notification", element: <NotificationPage /> },
       { path: "/*", element: <div>Page not found</div> },
     ],
   },

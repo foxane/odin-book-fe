@@ -4,6 +4,8 @@ import { SquirrelIcon } from "lucide-react";
 import useAuth from "../context/AuthContext";
 import { getJoke } from "../utils/helper";
 import { useEffect, useState } from "react";
+import { NotifProvider } from "../context/NotifContext";
+import { MessageProvider } from "../context/MessageContext";
 
 interface Props {
   page: React.ReactNode;
@@ -56,5 +58,12 @@ export default function ProtectedRoute({ page }: Props) {
     return <Navigate to={`/auth?login=true&redirect=${redirectUrl}`} replace />;
   }
 
-  return page;
+  /**
+   * Context for authenticated user is used here
+   */
+  return (
+    <NotifProvider>
+      <MessageProvider>{page}</MessageProvider>
+    </NotifProvider>
+  );
 }
