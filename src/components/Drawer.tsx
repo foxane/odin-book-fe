@@ -16,10 +16,10 @@ import { ThemeContext } from "../context/ThemeContext";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-  notifOutlet: NoticationOutlet;
+  notifContext: NoticationOutlet;
 }
 
-export default function Drawer({ className, notifOutlet, ...props }: Props) {
+export default function Drawer({ className, notifContext, ...props }: Props) {
   const user = useAuth((state) => state.user);
   const logout = useAuth((state) => state.logout);
 
@@ -79,10 +79,10 @@ export default function Drawer({ className, notifOutlet, ...props }: Props) {
                 <span
                   className={twMerge(
                     "badge badge-sm",
-                    notifOutlet.unreadCount > 0 && "badge-primary",
+                    notifContext.unreadCount > 0 && "badge-primary",
                   )}
                 >
-                  {notifOutlet.unreadCount}
+                  {notifContext.unreadCount}
                 </span>
               </Link>
               <Link to={"/message"}>

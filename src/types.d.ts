@@ -157,6 +157,9 @@ interface Chat {
   id: number;
   member: User[];
   message: Message[];
+  _count: {
+    message: number;
+  };
 }
 
 interface Message {
@@ -192,6 +195,7 @@ interface NoticationOutlet {
 interface MessageOutlet {
   chats: Chat[];
   sendMessage: (opts: SendMsgPayload) => void;
+  unreadChat: number;
 }
 
 interface OutletContext {

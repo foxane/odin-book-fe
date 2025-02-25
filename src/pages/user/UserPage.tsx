@@ -11,7 +11,7 @@ import { UserUpdateModal } from "./UpdateModal";
 import FollowerSection from "./FollowerSection";
 import FollowingSection from "./FollowingSection";
 import useUserInfinite from "../../hooks/useUserInfinite";
-import ChatButton from "./ChatButton";
+// import ChatButton from "./ChatButton";
 
 export default function UserPage() {
   const authUser = useAuth((s) => s.user);
@@ -105,11 +105,11 @@ export default function UserPage() {
         </div>
       </div>
 
-      {!isOwner && (
+      {/* {!isOwner && (
         <div className="flex justify-end">
           <ChatButton target={user} />
         </div>
-      )}
+      )} */}
 
       {/* Tabs */}
       <div className="tabs tabs-box">

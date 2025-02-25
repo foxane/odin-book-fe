@@ -7,7 +7,6 @@ import PostPage from "./pages/PostPage";
 import UserPage from "./pages/user/UserPage";
 import SearchPage from "./pages/SearchPage";
 import NotificationPage from "./pages/NotificationPage";
-import MessagePage from "./pages/message/MessagePage";
 
 const routes = createBrowserRouter([
   {
@@ -18,8 +17,7 @@ const routes = createBrowserRouter([
       { path: "/post/:postId", element: <PostPage /> },
       { path: "/user/:userId", element: <UserPage /> },
       { path: "/search", element: <SearchPage /> },
-      { path: "/notification", element: <NotificationPage /> },
-      { path: "/message", element: <MessagePage /> },
+      // { path: "/notification", element: <NotificationPage /> },
       { path: "/*", element: <div>Page not found</div> },
     ],
   },
