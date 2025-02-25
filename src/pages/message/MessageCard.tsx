@@ -2,12 +2,17 @@ import Avatar from "react-avatar";
 import Card from "../../components/Card";
 import useAuth from "../../context/AuthContext";
 
-function MessageCard({ chat }: { chat: Chat }) {
+interface Props {
+  chat: Chat;
+  onClick: (chat: Chat) => void;
+}
+
+function MessageCard({ chat, onClick }: Props) {
   const { user } = useAuth();
   const otherUser = chat.member.find((el) => el.id !== user?.id);
 
   return (
-    <Card>
+    <Card onClick={() => onClick(chat)}>
       <div className="grid grid-cols-[50px_1fr_auto] items-center gap-x-2">
         <Avatar
           name={otherUser?.name}
@@ -17,11 +22,10 @@ function MessageCard({ chat }: { chat: Chat }) {
           size="40"
         />
 
-        <div className="truncate">
+        <div className="grid grid-rows-2 truncate">
           <p className="font-bold">{otherUser?.name}</p>
           <p className="truncate text-sm">
-            Last messages dawhdu awudh uawd awuhuhuad awiudhdaiuwduh awuhd
-            awuduh awiuhdhawaiowf uhpg8huiwegh pwrg [90uqefhohf oihewf ugh
+            {chat.message.length > 0 ? chat.message[0].text : ""}
           </p>
         </div>
 

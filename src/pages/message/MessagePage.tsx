@@ -32,11 +32,17 @@ function MessagePage() {
 
       <section className="space-y-3">
         {msgOutlet.chats.map((el) => (
-          <MessageCard chat={el} key={el.id} />
+          <MessageCard chat={el} key={el.id} onClick={setActive} />
         ))}
       </section>
 
-      {active && <MessageRoom chat={active} user={user} />}
+      {active && (
+        <MessageRoom
+          chat={active}
+          user={user}
+          handleClose={() => setActive(null)}
+        />
+      )}
     </div>
   );
 }

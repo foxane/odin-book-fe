@@ -124,7 +124,7 @@ interface INotification {
 
 interface SendMsgPayload {
   targetId: number;
-  chatId?: number;
+  chatId: number;
   message: {
     text: string;
     // image?: File; // To be added later

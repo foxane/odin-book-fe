@@ -241,3 +241,10 @@ export const notifService = {
     await api.axios.delete(`/notifications?${unread ? "unread=true" : ""}`);
   },
 };
+
+export const chatServices = {
+  getMany: async (chatId: number) => {
+    const { data } = await api.axios.get<Message[]>(`/chat/${chatId}/messages`);
+    return data;
+  },
+};
