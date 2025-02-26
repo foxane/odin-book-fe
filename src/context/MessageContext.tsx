@@ -1,41 +1,67 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { api } from "../utils/services";
+import useAuth from "./AuthContext";
+import { convertToSummary } from "../utils/helper";
 
 interface IMessageContext {
-  /**
-   * Chat list, not sure if i should put messages in here as well
-   */
-  chatList: Chat[];
-
-  /**
-   * Total number of chat that have unread message.
-   *  Useful to show in navigation
-   */
-  unreadChat: number;
-
-  /**
-   * Mark all message inside this chat as read
-   * @param chatId chat id
-   */
+  chatList: ChatSummary[];
+  unreadCount: number;
   markChatAsRead: (chatId: number) => void;
 }
 
 const MessageContext = createContext<IMessageContext | null>(null);
 
 const MessageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [chatList, setChatList] = useState<Chat[]>([]);
-  const unreadChat = chatList.reduce(
-    (acc, chat) => (chat._count.message > 0 ? acc + 1 : acc),
+  const user = useAuth((s) => s.user)!;
+  const socket = useAuth((s) => s.socket)!;
+
+  const [chatList, setChatList] = useState<ChatSummary[]>([]);
+  const unreadCount = chatList.reduce(
+    (acc, chat) => (chat.unreadCount > 0 ? acc + 1 : acc),
     0,
   );
 
   const markChatAsRead = (id: number) => {
+    socket.emit("readChat", id);
     setChatList((prev) =>
       prev.map((el) => (el.id === id ? { ...el, _count: { message: 0 } } : el)),
     );
   };
 
+  /**
+   * Initial load
+   */
+  useEffect(() => {
+    const fetcher = async () => {
+      try {
+        const { data } = await api.axios.get<ChatSummary[]>(`/chats`);
+        console.log("initial chat summary: ", data);
+
+        setChatList(data);
+      } catch (error) {
+        console.log("failed to  fetch initial chat data :", error);
+      }
+    };
+
+    void fetcher();
+  }, []);
+
+  /**
+   * ========== Socket listeners ===========
+   */
+  useEffect(() => {
+    const handle = (c: Chat) => {
+      setChatList((prev) => [...prev, convertToSummary(c, user.id)]);
+    };
+
+    socket.on("newChat", handle);
+    return () => {
+      socket.off("newChat");
+    };
+  }, [socket, user]);
+
   return (
-    <MessageContext.Provider value={{ chatList, markChatAsRead, unreadChat }}>
+    <MessageContext.Provider value={{ chatList, markChatAsRead, unreadCount }}>
       {children}
     </MessageContext.Provider>
   );

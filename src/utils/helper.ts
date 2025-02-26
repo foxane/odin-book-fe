@@ -59,3 +59,14 @@ export const getNotificationUrl = (notification: INotification) => {
       return "/notif_type_not_found";
   }
 };
+
+export const convertToSummary = (c: Chat, userId: number): ChatSummary => ({
+  id: c.id,
+  lastMessage: c.message.at(-1) ?? null,
+  otherUser: c.member.find((u) => u.id !== userId)!,
+  unreadCount: c.message.reduce(
+    (acc, el) =>
+      el.status === "UNREAD" && el.userId !== userId ? acc + 1 : acc,
+    0,
+  ),
+});

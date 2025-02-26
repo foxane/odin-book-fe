@@ -92,10 +92,10 @@ export default function Drawer({ className, ...props }: Props) {
                 <span
                   className={twMerge(
                     "badge badge-sm",
-                    msgContext.unreadChat > 0 && "badge-primary",
+                    msgContext.unreadCount > 0 && "badge-primary",
                   )}
                 >
-                  {msgContext.unreadChat}
+                  {msgContext.unreadCount}
                 </span>
               </Link>
             </li>

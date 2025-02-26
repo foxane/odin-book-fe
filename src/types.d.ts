@@ -176,3 +176,14 @@ interface Message {
 }
 
 type MsgStatus = "UNREAD" | "READ";
+
+interface ChatSummary {
+  id: number;
+  lastMessage: Message | null;
+  unreadCount: number;
+  otherUser: {
+    id: number;
+    name: string;
+    avatar: string | null;
+  };
+}
