@@ -1,17 +1,16 @@
-import { useContext } from "react";
 import { SunIcon, MoonIcon } from "lucide-react";
-
-import { ThemeContext } from "../../context/ThemeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function ThemeBtn({
   className,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  const { isDark, toggleTheme } = useContext(ThemeContext);
+  const isDark = useTheme((s) => s.isDark);
+  const toggle = useTheme((s) => s.toggle);
 
   return (
     <button
-      onClick={toggleTheme}
+      onClick={toggle}
       className={`${className ?? ""} btn btn-square`}
       {...props}
     >

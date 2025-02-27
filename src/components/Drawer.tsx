@@ -11,11 +11,10 @@ import Avatar from "react-avatar";
 import { twMerge } from "tailwind-merge";
 import useAuth from "../context/AuthContext";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { ThemeContext } from "../context/ThemeContext";
 import { useQueryClient } from "@tanstack/react-query";
 import useNotification from "../hooks/useNotification";
 import useMessage from "../hooks/useMessage";
+import { useTheme } from "../context/ThemeContext";
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -25,7 +24,8 @@ export default function Drawer({ className, ...props }: Props) {
   const notifContext = useNotification();
   const msgContext = useMessage();
 
-  const { isDark, toggleTheme } = useContext(ThemeContext);
+  const isDark = useTheme((s) => s.isDark);
+  const toggleTheme = useTheme((s) => s.toggle);
   const client = useQueryClient();
 
   const handleLogout = () => {

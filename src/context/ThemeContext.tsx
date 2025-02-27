@@ -1,30 +1,22 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { create } from "zustand";
 
-const ThemeContext = createContext({
-  isDark: true,
-  toggleTheme: () => {},
+interface IThemeContext {
+  isDark: boolean;
+  toggle: () => void;
+}
+
+export const useTheme = create<IThemeContext>()((set, get) => {
+  const isInitialDark = localStorage.getItem("is-dark") === "true";
+  return {
+    isDark: isInitialDark,
+    toggle: () => {
+      const isDark = !get().isDark;
+      localStorage.setItem("is-dark", isDark ? "true" : "light mode sucker");
+      document.documentElement.setAttribute(
+        "data-theme",
+        isDark ? "dark" : "garden",
+      );
+      set({ isDark });
+    },
+  };
 });
-
-const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [isDark, setIsDark] = useState(
-    localStorage.getItem("is-dark") === "true",
-  );
-
-  const toggleTheme = () => setIsDark(!isDark);
-
-  useEffect(() => {
-    localStorage.setItem("is-dark", isDark ? "true" : "light mode sucker");
-    document.documentElement.setAttribute(
-      "data-theme",
-      isDark ? "dark" : "garden",
-    );
-  }, [isDark]);
-
-  return (
-    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
-
-export { ThemeContext, ThemeProvider };
