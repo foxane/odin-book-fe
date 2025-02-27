@@ -1,43 +1,33 @@
 import { MessageSquareIcon } from "lucide-react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../../context/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useMessage from "../../hooks/useMessage";
 
 interface Props {
-  target: User;
+  targetId: number;
 }
 
-function ChatButton({ target }: Props) {
+function ChatButton({ targetId }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { msgOutlet } = useOutletContext<OutletContext>();
-  const socket = useAuth((s) => s.socket);
+  const { chatList } = useMessage();
+  const socket = useAuth((s) => s.socket)!;
   const navigate = useNavigate();
 
-  const handleMessage = () => {
-    const existingChat = msgOutlet.chats.find((c) =>
-      c.member.some((m) => m.id === target.id),
-    );
-
+  const handleMessage = async () => {
+    const existingChat = chatList.find((c) => c.otherUser.id === targetId);
     if (existingChat) return void navigate(`/message?c=${existingChat.id}`);
 
     setIsLoading(true);
-    socket?.emit("createChat", target.id);
-  };
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleCreated = (c: Chat) => {
+    try {
+      const newChat = await socket.emitWithAck("createChat", targetId);
       setIsLoading(false);
-      void navigate(`/message?c=${c.id}`);
-    };
-
-    socket.on("chatCreated", handleCreated);
-    return () => {
-      socket.off("chatCreated", handleCreated);
-    };
-  }, [socket, navigate]);
+      void navigate(`/message?c=${newChat.id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <button

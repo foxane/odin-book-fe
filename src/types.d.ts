@@ -123,7 +123,6 @@ interface INotification {
  */
 
 interface SendMsgPayload {
-  targetId: number;
   chatId: number;
   message: {
     text: string;
@@ -131,21 +130,16 @@ interface SendMsgPayload {
   };
 }
 
-interface NewMsgPayload {
-  chatId: number;
-  message: Message;
-}
-
 interface ClientToServerEvents {
-  readChat: (id: number) => void;
-  sendMessage: (p: SendMsgPayload) => void;
-  createChat: (targetId: number) => void;
+  markChatAsRead: (id: number) => void;
+  sendMessage: (p: SendMsgPayload, ack: (m: Message) => void) => void;
+  createChat: (targetId: number, ack: (c: ChatSummary) => void) => void;
 }
 
 interface ServerToClientEvents {
-  chatCreated: (c: chat) => void; // Response to the one who create the chat room
-  newMessage: (e: NewMsgPayload) => void;
-  newChat: (c: Chat) => void; // Response to member
+  readChat: (id: number) => void;
+  newMessage: (m: Message) => void;
+  newChat: (c: ChatSummary) => void;
   newNotification: (notif: INotification) => void;
 }
 
@@ -175,7 +169,7 @@ interface Message {
   chatId?: number | null;
 }
 
-type MsgStatus = "UNREAD" | "READ";
+type MsgStatus = "UNREAD" | "READ" | "PENDING";
 
 interface ChatSummary {
   id: number;

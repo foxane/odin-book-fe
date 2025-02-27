@@ -82,8 +82,12 @@ const useAuth = create<AuthZustand>()((set, get) => ({
     if (get().socket) return;
 
     const socket = io(import.meta.env.VITE_API_URL, { auth: { token } });
-    socket.on("connect", () => set({ connected: true }));
-    socket.on("disconnect", () => set({ connected: false }));
+    socket.on("connect", () => {
+      set({ connected: true });
+    });
+    socket.on("disconnect", () => {
+      set({ connected: false });
+    });
 
     set({ socket });
   },
