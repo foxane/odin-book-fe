@@ -31,7 +31,7 @@ const NotifProvider = ({ children }: { children: React.ReactNode }) => {
 
   const readAll = () => {
     setUnreadCount(0);
-    setNotification([]);
+    setNotification((prev) => prev.map((el) => ({ ...el, isRead: true })));
     void notifService.readAll();
   };
 

@@ -43,9 +43,7 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
    * New Chat listener
    */
   useEffect(() => {
-    const handle = (c: ChatSummary) => {
-      console.log("NewCat come: ", c);
-
+    const handleNewChat = (c: ChatSummary) => {
       client.setQueryData(["chats"], (prev: ChatSummary[] | undefined) => {
         if (!prev) return [c];
         if (prev.some((chat) => chat.id === c.id)) return prev; // Prevent duplicate
@@ -53,9 +51,9 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
       });
     };
 
-    socket.on("newChat", handle);
+    socket.on("newChat", handleNewChat);
     return () => {
-      socket.off("newChat");
+      socket.off("newChat", handleNewChat);
     };
   }, [socket, user, client]);
 
@@ -63,16 +61,22 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
    * New messgae listener
    */
   useEffect(() => {
-    const handle = (newMessage: Message) => {
-      // Message room update
-      client.setQueryData(
-        ["messages", newMessage.chatId],
-        (oldMessages: Message[] | undefined) => {
-          return oldMessages ? [newMessage, ...oldMessages] : [newMessage];
-        },
-      );
+    const handleNewMessage = (newMessage: Message) => {
+      /**
+       * Message room update, only if user did not send it
+       * The message sent will be updated by event emiiter (MessageRoom comp)
+       */
+      if (newMessage.userId !== user.id)
+        client.setQueryData(
+          ["messages", newMessage.chatId],
+          (oldMessages: Message[] | undefined) => {
+            return oldMessages ? [newMessage, ...oldMessages] : [newMessage];
+          },
+        );
 
-      // Chatlist update
+      /**
+       * Update last message
+       */
       client.setQueryData(["chats"], (prev: ChatSummary[] | undefined) => {
         if (!prev) return [];
         return prev.map((el) =>
@@ -88,9 +92,9 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
       });
     };
 
-    socket.on("newMessage", handle);
+    socket.on("newMessage", handleNewMessage);
     return () => {
-      socket.off("newMessage", handle);
+      socket.off("newMessage", handleNewMessage);
     };
   }, [socket, user, client]);
 
