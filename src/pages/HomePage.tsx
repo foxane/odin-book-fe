@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import PostForm from "../components/post/PostForm";
 import { postService } from "../utils/services";
 import PostCard from "../components/post/PostCard";
-import { usePostInfinite } from "../hooks/usePostInfinite";
+import usePostMutation from "../hooks/usePostInfinite";
 
 export default function HomePage() {
   const query = useInfiniteQuery({
@@ -14,19 +14,21 @@ export default function HomePage() {
       else return prevPage.at(-1)?.id.toString();
     },
   });
-  const mutation = usePostInfinite(["posts"]);
   const posts = query.data?.pages.flat() ?? [];
+  const { createPost, deletePost, likePost, updatePost } = usePostMutation([
+    "posts",
+  ]);
 
   return (
     <div className="space-y-2">
-      <PostForm submit={mutation.create} />
+      <PostForm submit={createPost} />
 
       {posts.map((post) => (
         <PostCard
           action={{
-            delete: mutation.delete,
-            like: mutation.like,
-            update: mutation.update,
+            delete: deletePost,
+            like: likePost,
+            update: updatePost,
           }}
           post={post}
           key={post.id}

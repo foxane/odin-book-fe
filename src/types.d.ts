@@ -51,7 +51,7 @@ interface Post {
   createdAt: string;
   text: string;
   user: User;
-  userId: string;
+  userId: number;
   isLiked: boolean;
   media: string[];
   _count: {
@@ -180,4 +180,9 @@ interface ChatSummary {
     name: string;
     avatar: string | null;
   };
+}
+
+interface InfiniteData<T> {
+  pages: T[];
+  pageParams: unknown[];
 }

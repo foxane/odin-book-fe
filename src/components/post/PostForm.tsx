@@ -35,7 +35,7 @@ export default function PostForm({ submit }: Props) {
   };
 
   return (
-    <div className="card bg-base-100 border border-gray-300 p-3 dark:border-0">
+    <div className="card p-3 dark:border-0">
       <div className="card space-y-4">
         <div className="relative">
           <Textarea

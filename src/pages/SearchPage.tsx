@@ -5,8 +5,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { postService, userService } from "../utils/services";
 import PostCard from "../components/post/PostCard";
 import UserCard from "../components/UserCard";
-import { usePostInfinite } from "../hooks/usePostInfinite";
 import useUserInfinite from "../hooks/useUserInfinite";
+import usePostMutation from "../hooks/usePostInfinite";
 
 function SearchPage() {
   const [s, setS] = useState("");
@@ -20,7 +20,10 @@ function SearchPage() {
     getNextPageParam: (prevPages) =>
       prevPages.length < 10 ? undefined : prevPages.at(-1)?.id.toString(),
   });
-  const postMutation = usePostInfinite(["posts", search]);
+  const { deletePost, likePost, updatePost } = usePostMutation([
+    "posts",
+    search,
+  ]);
   const postsData = post.data?.pages.flat() ?? [];
 
   const user = useInfiniteQuery({
@@ -57,7 +60,15 @@ function SearchPage() {
         />
         <div className="tab-content space-y-3">
           {postsData.map((el) => (
-            <PostCard post={el} key={el.id} action={postMutation} />
+            <PostCard
+              post={el}
+              key={el.id}
+              action={{
+                delete: deletePost,
+                like: likePost,
+                update: updatePost,
+              }}
+            />
           ))}
           {post.isLoading && <div className="loading mx-auto" />}
           {!post.isLoading && postsData.length === 0 && (

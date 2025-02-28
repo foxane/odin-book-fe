@@ -17,9 +17,9 @@ import useAuth from "../../context/AuthContext";
 interface Props {
   post: Post;
   action: {
-    update: (p: Post) => void;
-    delete: (p: Post) => void;
-    like: (p: Post) => void;
+    update: (p: Post) => void | Promise<void>;
+    delete: (p: Post) => void | Promise<void>;
+    like: (p: Post) => void | Promise<void>;
   };
 }
 

@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { postService } from "../../utils/services";
 import PostCard from "../../components/post/PostCard";
-import { usePostInfinite } from "../../hooks/usePostInfinite";
+import usePostMutation from "../../hooks/usePostInfinite";
 
 export default function PostSection({ userId }: { userId: string }) {
   const query = useInfiniteQuery({
@@ -13,14 +13,20 @@ export default function PostSection({ userId }: { userId: string }) {
       else return prevPage.at(-1)?.id.toString();
     },
   });
-
-  const mutation = usePostInfinite(["post", userId]);
-
   const posts = query.data?.pages.flat() ?? [];
+  const { likePost, deletePost, updatePost } = usePostMutation([
+    "post",
+    userId,
+  ]);
+
   return (
     <section className="space-y-2">
       {posts.map((el) => (
-        <PostCard action={mutation} post={el} key={el.id} />
+        <PostCard
+          action={{ like: likePost, delete: deletePost, update: updatePost }}
+          post={el}
+          key={el.id}
+        />
       ))}
 
       <div className="mx-auto my-6 w-fit">
