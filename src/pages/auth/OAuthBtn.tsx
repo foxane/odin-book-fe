@@ -1,23 +1,57 @@
 import { User } from "lucide-react";
 import useAuth from "../../context/AuthContext";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { api } from "../../utils/services";
+
+const URL = import.meta.env.VITE_API_URL;
 
 export default function OAuthBtn() {
   const guestLogin = useAuth((s) => s.guestLogin);
   const loading = useAuth((s) => s.loading);
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+
+  const [authLoading, setAuthLoading] = useState(false);
+  const startOauth = (provider: "google" | "github") => {
+    setAuthLoading(true);
+    const url = `${URL}/auth/${provider}`;
+    window.location.assign(url);
+  };
+
+  useEffect(() => {
+    const token = params.get("token");
+    if (!token) return;
+
+    setAuthLoading(true);
+
+    api.axios
+      .post<{ token: string }>(`${URL}/auth/exchange-token`, { token })
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+        api.setToken(res.data.token);
+        void navigate("/");
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
+  }, [params, navigate]);
 
   return (
     <div className="flex flex-col gap-3">
-      <button disabled={loading} className="btn btn-soft" onClick={guestLogin}>
+      <button
+        className="btn btn-soft"
+        onClick={guestLogin}
+        disabled={loading || authLoading}
+      >
         <User />
         Continue as Guest
       </button>
 
-      {/* TODO: Fix the svg to import them not directly place it here */}
-      {/* try bun add @icons-pack/react-simple-icons */}
-
       <button
-        disabled={loading}
-        className="btn hover:bg-accent border-black bg-black text-white"
+        onClick={() => startOauth("github")}
+        disabled={loading || authLoading}
+        className="btn hover:bg-accent btn-block border-black bg-black text-white"
       >
         <svg
           viewBox="0 0 24 24"
@@ -29,8 +63,9 @@ export default function OAuthBtn() {
         Continue with GitHub
       </button>
       <button
-        disabled={loading}
-        className="btn hover:bg-accent border-[#e5e5e5] bg-white text-black"
+        onClick={() => startOauth("google")}
+        disabled={loading || authLoading}
+        className="btn hover:bg-accent btn-block border-[#e5e5e5] bg-white text-black"
       >
         <svg
           className="w-5 fill-current"
