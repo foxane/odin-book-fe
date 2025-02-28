@@ -5,6 +5,9 @@ import UserCard from "./components/UserCard";
 import Drawer from "./components/Drawer";
 import Navbar from "./components/Navbar";
 import useUserInfinite from "./hooks/useUserInfinite";
+import { Slide } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import { useTheme } from "./context/ThemeContext";
 
 export default function App() {
   const userQuery = useInfiniteQuery({
@@ -35,6 +38,14 @@ export default function App() {
           </section>
         </div>
       </div>
+      <ToastContainer
+        theme={useTheme().isDark ? "dark" : "light"}
+        position="bottom-right"
+        transition={Slide}
+        hideProgressBar
+        closeButton
+        closeOnClick
+      />
     </div>
   );
 }

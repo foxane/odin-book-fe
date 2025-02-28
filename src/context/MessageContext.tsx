@@ -2,6 +2,8 @@ import { createContext, useCallback, useEffect } from "react";
 import { api } from "../utils/services";
 import useAuth from "./AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import MessageToast from "../components/MessageToast";
 
 interface IMessageContext {
   chatList: ChatSummary[];
@@ -66,13 +68,16 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
        * Message room update, only if user did not send it
        * The message sent will be updated by event emiiter (MessageRoom comp)
        */
-      if (newMessage.userId !== user.id)
+      if (newMessage.userId !== user.id) {
         client.setQueryData(
           ["messages", newMessage.chatId],
           (oldMessages: Message[] | undefined) => {
             return oldMessages ? [newMessage, ...oldMessages] : [newMessage];
           },
         );
+
+        toast(<MessageToast msg={newMessage} />);
+      }
 
       /**
        * Update last message

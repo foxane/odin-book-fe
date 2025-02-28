@@ -1,6 +1,9 @@
 import { createContext, useEffect, useState } from "react";
 import useAuth from "./AuthContext";
 import { notifService } from "../utils/services";
+import { getNotificationUrl, NOTIFICATION_TEXT } from "../utils/helper";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface INotifContext {
   notification: INotification[];
@@ -17,6 +20,7 @@ const NotifContext = createContext<INotifContext | null>(null);
 
 const NotifProvider = ({ children }: { children: React.ReactNode }) => {
   const socket = useAuth((s) => s.socket);
+  const navigate = useNavigate();
 
   const [notification, setNotification] = useState<INotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -48,7 +52,14 @@ const NotifProvider = ({ children }: { children: React.ReactNode }) => {
     if (!socket) return;
 
     const handleNewNotification = (notif: INotification) => {
-      alert(`new notif! from: ${notif.actor.name} with type: ${notif.type} `);
+      const text = `${notif.actor.name} ${NOTIFICATION_TEXT[notif.type]}`;
+      const url = getNotificationUrl(notif);
+      toast(text, {
+        onClick: () => {
+          void navigate(url);
+        },
+      });
+
       setNotification((prev) => [notif, ...prev]);
       setUnreadCount((prev) => prev + 1);
     };
@@ -58,7 +69,7 @@ const NotifProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       socket.off("newNotification", handleNewNotification);
     };
-  }, [socket]);
+  }, [navigate, socket]);
 
   /**
    * Fetch old notification
