@@ -7,6 +7,11 @@ interface IThemeContext {
 
 export const useTheme = create<IThemeContext>()((set, get) => {
   const isInitialDark = localStorage.getItem("is-dark") === "true";
+  document.documentElement.setAttribute(
+    "data-theme",
+    isInitialDark ? "dark" : "garden",
+  );
+
   return {
     isDark: isInitialDark,
     toggle: () => {
