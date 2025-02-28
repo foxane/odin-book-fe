@@ -1,35 +1,44 @@
-import { MenuIcon, SquirrelIcon } from "lucide-react";
+import {
+  BellIcon,
+  MenuIcon,
+  MessageSquareIcon,
+  SquirrelIcon,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
+import useNotification from "../hooks/useNotification";
+import useMessage from "../hooks/useMessage";
+import NavbarBtn from "./NavbarBtn";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {}
+export default function Navbar() {
+  const { unreadCount: notifCount } = useNotification();
+  const { unreadCount: msgCount } = useMessage();
 
-export default function Navbar({ className, ...props }: Props) {
   return (
-    <div
-      className={twMerge(
-        "navbar bg-base-100/50 border-base-content/20 fixed top-0 z-10 border-b backdrop-blur-md md:z-20",
-        className,
-      )}
-      {...props}
-    >
-      <div className="mx-auto flex w-full items-center gap-2 lg:container">
+    <div className="navbar border-base-content/30 bg-base-100 sticky top-0 z-10 border-b px-5 md:hidden">
+      <section className="navbar-start gap-x-2">
         <label
           htmlFor="main-drawer"
-          className="btn btn-square drawer-button btn-ghost md:hidden"
+          className="btn btn-ghost btn-square btn-sm md:hidden"
         >
           <MenuIcon />
         </label>
 
-        <Link to={"/"} className="">
+        <Link to={"/"} className="md:hidden">
           <h1 className="flex items-center gap-2 text-xl font-bold">
             <SquirrelIcon size={30} className="stroke-accent" />
-            <p className="hidden md:block">Twittard</p>
+            <p>Twittard</p>
           </h1>
         </Link>
+      </section>
 
-        {props.children}
-      </div>
+      <section className="navbar-end gap-x-2">
+        <NavbarBtn to="/message" count={msgCount}>
+          <MessageSquareIcon size={18} />
+        </NavbarBtn>
+        <NavbarBtn to="/notification" count={notifCount}>
+          <BellIcon size={18} />
+        </NavbarBtn>
+      </section>
     </div>
   );
 }
