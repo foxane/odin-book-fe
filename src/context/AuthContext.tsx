@@ -3,6 +3,7 @@ import { authService } from "../utils/services";
 import { io, Socket } from "socket.io-client";
 
 interface AuthZustand extends IAuthContext {
+  guestLogin: () => void;
   initAuth: () => void;
   _isInititalized: boolean;
   _initSocket: () => void;
@@ -17,6 +18,18 @@ const useAuth = create<AuthZustand>()((set, get) => ({
   socket: null,
   connected: false,
   _isInititalized: false,
+
+  guestLogin: () => {
+    set({ loading: true, error: null });
+    authService
+      .guestLogin()
+      .then((user) => {
+        get()._initSocket();
+        set({ user });
+      })
+      .catch((err: unknown) => set({ error: err as AuthError }))
+      .finally(() => set({ loading: false }));
+  },
 
   login: (cred) => {
     set({ loading: true, error: null });

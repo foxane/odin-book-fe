@@ -72,6 +72,16 @@ class AuthService {
     }
   }
 
+  async guestLogin() {
+    try {
+      const { data } = await api.axios.get<AuthResponse>("/auth/guest");
+      api.setToken(data.token);
+      return data.user;
+    } catch (error) {
+      this.errorHandler(error);
+    }
+  }
+
   async login(cred: Credentials) {
     try {
       const { data } = await api.axios.post<AuthResponse>("/auth/login", cred);
