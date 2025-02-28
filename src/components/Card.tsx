@@ -6,7 +6,7 @@ export default function Card({ className, ...props }: Props) {
   return (
     <div
       className={twMerge(
-        "card bg-base-100 hover:border-base-content/40 w-full cursor-pointer border border-transparent p-2 shadow-md transition-colors",
+        "card hover:border-base-content/40 border-base-content/10 w-full cursor-pointer border p-2 shadow-md transition-colors",
         className,
       )}
       {...props}

@@ -1,10 +1,13 @@
 import {
   BellIcon,
+  Github,
   HomeIcon,
   LogOutIcon,
   MailIcon,
+  MoonIcon,
   SearchIcon,
   SquirrelIcon,
+  SunIcon,
   UserIcon,
 } from "lucide-react";
 import useAuth from "../context/AuthContext";
@@ -41,7 +44,7 @@ export default function Drawer({ children }: { children: React.ReactNode }) {
         ></label>
 
         {/* pt- add space between navbar and drawer */}
-        <div className="bg-base-100 border-base-content/30 pt-15 flex h-full w-64 flex-col space-y-5 border-r px-2 pb-5 md:pt-5">
+        <div className="bg-base-100 border-base-content/30 pt-15 flex h-full w-64 flex-col space-y-5 border-r px-2 md:pt-5">
           <Link to={"/"} className="hidden md:block">
             <h1 className="flex items-center gap-2 text-xl font-bold">
               <SquirrelIcon size={30} className="stroke-accent" />
@@ -87,39 +90,47 @@ export default function Drawer({ children }: { children: React.ReactNode }) {
           </nav>
 
           {/* Drawer bottom section */}
-          <div className="space-y-3">
-            <label className="label mx-auto flex w-fit items-center">
-              <input
-                type="checkbox"
-                className="toggle"
-                checked={isDark}
-                onChange={toggle}
-              />
-              Dark Mode
-            </label>
+          <div className="space-y-4 py-2">
+            <div className="flex items-center justify-end gap-2">
+              <a
+                className="opacity-80"
+                href="https://github.com/foxane"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github />
+              </a>
+
+              <label className="swap swap-rotate opacity-80">
+                <input type="checkbox" checked={isDark} onChange={toggle} />
+                <SunIcon className="swap-on" />
+                <MoonIcon className="swap-off" />
+              </label>
+            </div>
 
             {/* User card */}
-            <Link
-              to={`/user/${user?.id ?? ""}`}
-              className="card bg-base-100 border-base-content/20 grid grid-cols-[auto_1fr] gap-x-3 border p-2"
-            >
-              <Avatar
-                round
-                size="40"
-                className="row-span-2"
-                name={user?.name}
-                src={user?.avatar ?? ""}
-              />
-              <p className="text-sm font-semibold">{user?.name}</p>
-              <p className="label text-xs">{user?.email}</p>
-            </Link>
-            <button
-              className="btn btn-outline btn-error btn-sm btn-block"
-              onClick={handleLogout}
-            >
-              Logout
-              <LogOutIcon size={16} />
-            </button>
+            <div className="border-base-content/40 flex items-center rounded border p-2">
+              <Link
+                to={`/user/${user?.id ?? ""}`}
+                className="grid grow grid-cols-[auto_1fr] gap-x-3"
+              >
+                <Avatar
+                  round
+                  size="40"
+                  className="row-span-2"
+                  name={user?.name}
+                  src={user?.avatar ?? ""}
+                />
+                <p className="text-sm font-semibold">{user?.name}</p>
+                <p className="label text-xs">{user?.email}</p>
+              </Link>
+              <button
+                className="btn btn-outline btn-error btn-sm"
+                onClick={handleLogout}
+              >
+                <LogOutIcon size={16} />
+              </button>
+            </div>
           </div>
         </div>
       </div>

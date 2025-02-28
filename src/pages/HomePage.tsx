@@ -3,6 +3,8 @@ import PostForm from "../components/post/PostForm";
 import { postService } from "../utils/services";
 import PostCard from "../components/post/PostCard";
 import usePostMutation from "../hooks/usePostInfinite";
+import { useState } from "react";
+import PollForm from "../components/PollForm";
 
 export default function HomePage() {
   const query = useInfiniteQuery({
@@ -19,9 +21,12 @@ export default function HomePage() {
     "posts",
   ]);
 
+  const [isPoll, setIsPoll] = useState(false);
+
   return (
-    <div className="space-y-2">
-      <PostForm submit={createPost} />
+    <div className="space-y-3">
+      <PostForm submit={createPost} openPoll={() => setIsPoll(true)} />
+      <PollForm visible={isPoll} onClose={() => setIsPoll(false)} />
 
       {posts.map((post) => (
         <PostCard

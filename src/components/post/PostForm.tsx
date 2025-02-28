@@ -3,15 +3,16 @@ import { CheckCircle, ImageIcon } from "lucide-react";
 import Textarea from "../Textarea";
 
 interface Props {
-  submit: (p: FormData) => void;
+  submit: (p: FormData) => Promise<boolean>;
+  openPoll: () => void;
 }
 
-export default function PostForm({ submit }: Props) {
+export default function PostForm({ submit, openPoll }: Props) {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (text.length < 3) return;
 
     const formData = new FormData();
@@ -20,10 +21,13 @@ export default function PostForm({ submit }: Props) {
       formData.append("user-upload", imageFile);
     }
 
-    setText("");
-    setImageFile(null);
-    setImagePreview(null);
-    submit(formData);
+    const isSuccess = await submit(formData);
+
+    if (isSuccess) {
+      setText("");
+      setImageFile(null);
+      setImagePreview(null);
+    }
   };
 
   const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +39,7 @@ export default function PostForm({ submit }: Props) {
   };
 
   return (
-    <div className="card p-3 dark:border-0">
+    <div className="card p-3 shadow-md">
       <div className="card space-y-4">
         <div className="relative">
           <Textarea
@@ -61,6 +65,7 @@ export default function PostForm({ submit }: Props) {
           </label>
 
           <button
+            onClick={openPoll}
             className="btn tooltip btn-square btn-ghost"
             data-tip="Create poll"
           >

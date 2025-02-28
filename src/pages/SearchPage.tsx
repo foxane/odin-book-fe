@@ -50,7 +50,7 @@ function SearchPage() {
         </label>
       </div>
 
-      <div className="tabs tabs-box space-y-2">
+      <div className="tabs tabs-border space-y-2">
         <input
           type="radio"
           name="tab"

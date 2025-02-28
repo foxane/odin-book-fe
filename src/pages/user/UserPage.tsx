@@ -30,7 +30,7 @@ export default function UserPage() {
   if (!user) return <div className="loading"></div>;
   return (
     <div className="space-y-2">
-      <div className="bg-base-100 rounded pb-1">
+      <div className="rounded pb-1">
         {/* Background */}
         <div className="bg-base-300 relative aspect-video">
           <img
@@ -48,7 +48,7 @@ export default function UserPage() {
               src={user.avatar ?? ""}
               size="70"
               maxInitials={2}
-              className="avatar avatar-online"
+              className="avatar"
               textSizeRatio={2}
               round
             />
@@ -112,7 +112,7 @@ export default function UserPage() {
       )}
 
       {/* Tabs */}
-      <div className="tabs tabs-box">
+      <div className="tabs tabs-border">
         <input
           type="radio"
           name="tab"

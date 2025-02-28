@@ -18,6 +18,8 @@ function usePostMutation(queryKey: readonly unknown[]) {
       ...data,
       pages: [[newPost, ...data.pages[0]], ...data.pages.slice(1)],
     }));
+
+    return true;
   };
 
   const updatePost = async (post: Post) => {

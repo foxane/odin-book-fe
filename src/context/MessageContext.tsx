@@ -4,6 +4,7 @@ import useAuth from "./AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import MessageToast from "../components/MessageToast";
+import { useNavigate } from "react-router-dom";
 
 interface IMessageContext {
   chatList: ChatSummary[];
@@ -17,6 +18,7 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
   const user = useAuth((s) => s.user)!;
   const socket = useAuth((s) => s.socket)!;
   const client = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: chatList = [] } = useQuery({
     queryKey: ["chats"],
@@ -76,7 +78,12 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
           },
         );
 
-        toast(<MessageToast msg={newMessage} />);
+        toast(<MessageToast msg={newMessage} />, {
+          onClick: () => {
+            markChatAsRead(newMessage.chatId!);
+            void navigate(`/message?c=${newMessage.chatId}`);
+          },
+        });
       }
 
       /**
@@ -101,7 +108,7 @@ const MessageProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
-  }, [socket, user, client]);
+  }, [socket, user, client, markChatAsRead, navigate]);
 
   /**
    * Other user read the chat

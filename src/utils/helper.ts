@@ -70,3 +70,13 @@ export const convertToSummary = (c: Chat, userId: number): ChatSummary => ({
     0,
   ),
 });
+
+/**
+ * Default backend api config
+ */
+export const API_CONFIG = {
+  /**
+   * Default cursor based query take limit
+   */
+  queryLimit: 10,
+};

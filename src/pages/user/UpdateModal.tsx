@@ -102,15 +102,6 @@ export const UserUpdateModal = ({ visible, onClose, user }: UUModal) => {
         </label>
       </form>
 
-      <button
-        onClick={() => {
-          console.log("vlocked");
-          onClose();
-        }}
-      >
-        Closeme
-      </button>
-
       <div className="flex justify-end gap-2">
         <form method="dialog">
           <button

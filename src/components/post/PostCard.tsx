@@ -30,11 +30,11 @@ function PostCard({ post, action }: Props) {
   return (
     <div
       className={twMerge(
-        "bg-base-100 card flex flex-col p-2",
+        "card border-base-content/10 flex flex-col border p-2 shadow-md",
         post.isPending && "animate-pulse",
       )}
     >
-      <div className="border-base-content/10 card-title border-b pb-1">
+      <div className="card-title pb-1">
         <Link
           to={`/user/${post.user.id}`}
           className="grid grid-cols-[auto_1fr] gap-x-3 rounded p-1"

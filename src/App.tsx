@@ -10,7 +10,7 @@ export default function App() {
     <div className="border-base-content/30 mx-auto max-w-7xl">
       <Drawer>
         <Navbar />
-        <main>
+        <main className="p-3">
           <Outlet />
         </main>
       </Drawer>
