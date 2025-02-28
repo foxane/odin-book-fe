@@ -4,6 +4,7 @@ import { io, Socket } from "socket.io-client";
 
 interface AuthZustand extends IAuthContext {
   initAuth: () => void;
+  _isInititalized: boolean;
   _initSocket: () => void;
   socket: Socket<ServerToClientEvents, ClientToServerEvents> | null;
   connected: boolean;
@@ -12,9 +13,10 @@ interface AuthZustand extends IAuthContext {
 const useAuth = create<AuthZustand>()((set, get) => ({
   user: null,
   error: null,
-  loading: false,
+  loading: true,
   socket: null,
   connected: false,
+  _isInititalized: false,
 
   login: (cred) => {
     set({ loading: true, error: null });
@@ -57,6 +59,7 @@ const useAuth = create<AuthZustand>()((set, get) => ({
    * Initialize auth loading on page load
    */
   initAuth: () => {
+    if (get()._isInititalized) return;
     set({ loading: true });
     const token = localStorage.getItem("token");
     if (!token) return set({ loading: false });
@@ -71,7 +74,7 @@ const useAuth = create<AuthZustand>()((set, get) => ({
         );
       })
       .catch((err: unknown) => set({ error: err as AuthError }))
-      .finally(() => set({ loading: false }));
+      .finally(() => set({ loading: false, _isInititalized: true }));
   },
 
   /**
