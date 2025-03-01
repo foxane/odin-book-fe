@@ -71,7 +71,7 @@ interface PostPayload {
   media: File | null;
 }
 
-interface IComment extends Post {
+interface IComment {
   id: number;
   postId: number;
   createdAt: string;

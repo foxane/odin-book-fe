@@ -3,7 +3,7 @@ export class DummyPost implements Post {
   createdAt: string = new Date().toISOString();
   text: string;
   user: User;
-  userId: string;
+  userId: number;
   isLiked = false;
   media: string[] = [];
   _count = {

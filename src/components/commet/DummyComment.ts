@@ -6,7 +6,6 @@ export default class DummyComment implements IComment {
   user: User;
   userId: number;
   isLiked = false;
-  media = [];
   _count = {
     likedBy: 0,
     comment: 0,
