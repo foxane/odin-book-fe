@@ -4,8 +4,9 @@ export default class DummyComment implements IComment {
   createdAt: string = new Date().toISOString();
   text: string;
   user: User;
-  userId: string;
+  userId: number;
   isLiked = false;
+  media = [];
   _count = {
     likedBy: 0,
     comment: 0,
