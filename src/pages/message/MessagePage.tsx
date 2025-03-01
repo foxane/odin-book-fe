@@ -3,6 +3,7 @@ import useMessage from "../../hooks/useMessage";
 import MessageCard from "./MessageCard";
 import MessageRoom from "./MessageRoom";
 import { useSearchParams } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 function MessagePage() {
   const [params, setParams] = useSearchParams();
@@ -19,16 +20,16 @@ function MessagePage() {
   }, [chatList, params, setParams]);
 
   return (
-    <div className="space-y-2">
-      <h2 className="text-xl font-semibold">Messages</h2>
-
-      {chatList.map((el) => (
-        <MessageCard
-          handleClick={() => setActive(el)}
-          chatSummary={el}
-          key={el.id}
-        />
-      ))}
+    <div className="flex grow flex-col">
+      <section className={twMerge("space-y-3", active && "hidden")}>
+        {chatList.map((el) => (
+          <MessageCard
+            handleClick={() => setActive(el)}
+            chatSummary={el}
+            key={el.id}
+          />
+        ))}
+      </section>
 
       {active && (
         <MessageRoom chat={active} closeChat={() => setActive(null)} />

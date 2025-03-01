@@ -1,7 +1,6 @@
 import Avatar from "react-avatar";
 import Card from "../../components/Card";
 import { formatDate } from "../../utils/helper";
-import { twMerge } from "tailwind-merge";
 
 interface Props {
   chatSummary: ChatSummary;
@@ -31,14 +30,9 @@ function MessageCard({ chatSummary, handleClick }: Props) {
 
         <div className="flex flex-col gap-2 text-xs">
           {lastMessage && <p>{formatDate(lastMessage.createdAt)}</p>}
-          <p
-            className={twMerge(
-              "badge ms-auto",
-              unreadCount > 0 && "badge-primary",
-            )}
-          >
-            {unreadCount}
-          </p>
+          {unreadCount > 0 && (
+            <p className="badge badge-primary ms-auto">{unreadCount}</p>
+          )}
         </div>
       </div>
     </Card>

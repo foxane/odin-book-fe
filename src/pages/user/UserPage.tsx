@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { userService } from "../../utils/services";
 import { PencilIcon } from "lucide-react";
@@ -10,8 +10,8 @@ import { useState } from "react";
 import { UserUpdateModal } from "./UpdateModal";
 import FollowerSection from "./FollowerSection";
 import FollowingSection from "./FollowingSection";
-import useUserInfinite from "../../hooks/useUserInfinite";
 import ChatButton from "./ChatButton";
+import { toast } from "react-toastify";
 
 export default function UserPage() {
   const authUser = useAuth((s) => s.user);
@@ -20,13 +20,33 @@ export default function UserPage() {
 
   const { userId } = useParams();
   const queryKey = ["user", userId];
+  const client = useQueryClient();
   const { data: user } = useQuery({
     queryKey,
     queryFn: () => userService.getOne(userId!),
   });
-  const { follow } = useUserInfinite(queryKey);
-  const isOwner = authUser && authUser.id === user?.id;
 
+  const followUser = async () => {
+    const prev = client.getQueryData(queryKey);
+    client.setQueryData(queryKey, (old: User): User => {
+      const follower = old._count.follower + (old.isFollowed ? -1 : +1);
+      return {
+        ...old,
+        isFollowed: !old.isFollowed,
+        _count: { follower, following: old._count.following },
+      };
+    });
+
+    try {
+      await userService.follow(user!);
+    } catch (error) {
+      client.setQueryData(queryKey, prev);
+      toast.error("Error occured while following user");
+      console.log(error);
+    }
+  };
+
+  const isOwner = authUser && authUser.id === user?.id;
   if (!user) return <div className="loading"></div>;
   return (
     <div className="space-y-2">
@@ -79,8 +99,7 @@ export default function UserPage() {
               </button>
             ) : (
               <button
-                disabled={follow.isPending}
-                onClick={() => follow.mutate(user)}
+                onClick={followUser}
                 className={twMerge(
                   "btn btn-primary btn-sm",
                   user.isFollowed && "btn-outline",

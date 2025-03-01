@@ -14,7 +14,7 @@ export default function Navbar() {
   const { unreadCount: msgCount } = useMessage();
 
   return (
-    <div className="navbar border-base-content/30 bg-base-100 sticky top-0 z-10 border-b px-5 md:hidden">
+    <div className="navbar border-base-content/30 bg-base-200/50 sticky top-0 z-10 border-b px-5 backdrop-blur-2xl md:hidden">
       <section className="navbar-start gap-x-2">
         <label
           htmlFor="main-drawer"

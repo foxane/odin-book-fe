@@ -2,10 +2,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { chatServices } from "../../utils/services";
 import ChatBubble from "./ChatBubble";
 import useAuth from "../../context/AuthContext";
-import { Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import useMessage from "../../hooks/useMessage";
+import Avatar from "react-avatar";
 
 const updateCache = (oldData: Message[] | undefined, newMsg: Message) => {
   if (!oldData) return [newMsg];
@@ -82,24 +83,35 @@ function MessageRoom({ chat, closeChat }: Props) {
   }, [chat.id, socket, markChatAsRead]);
 
   return (
-    <div className="mb-15">
-      <button className="btn btn-outline" onClick={closeChat}>
-        Exit
-      </button>
+    <div className="flex grow flex-col">
+      {/* Header */}
+      <div className="navbar gap-2">
+        <button className="btn btn-square btn-ghost" onClick={closeChat}>
+          <ArrowLeft />
+        </button>
 
-      <section className="flex flex-col-reverse space-y-2">
+        <Avatar
+          name={chat.otherUser.name}
+          src={chat.otherUser.avatar ?? ""}
+          round
+          size="40"
+        />
+
+        <p className="text-md font-semibold">{chat.otherUser.name}</p>
+      </div>
+
+      {/* Chat list */}
+      <section className="m-1 grow overflow-y-auto">
         {query.isLoading && <span className="loading"></span>}
         {query.data?.map((el) => (
           <ChatBubble isSent={user.id === el.userId} msg={el} key={el.id} />
         ))}
       </section>
 
-      <form
-        className="fixed bottom-0 flex w-full px-5"
-        onSubmit={handleSubmit(onSend)}
-      >
+      {/* input */}
+      <form className="flex gap-2 px-5 py-2" onSubmit={handleSubmit(onSend)}>
         <textarea
-          className="textarea"
+          className="input input-primary input-lg w-full"
           {...register("text", { required: true })}
         />
         <button type="submit" className="btn btn-primary btn-square">

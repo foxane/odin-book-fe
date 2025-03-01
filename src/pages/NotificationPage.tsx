@@ -15,8 +15,7 @@ export default function NotificationPage() {
 
   return (
     <div className="space-y-2">
-      <div className="card-title">
-        <h2>Notifications</h2>
+      <div className="card-title pb-2">
         <button
           data-tip="Delete already read notification"
           onClick={() => clear()}

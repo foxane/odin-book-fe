@@ -94,7 +94,7 @@ export default function Drawer({ children }: { children: React.ReactNode }) {
             <div className="flex items-center justify-end gap-2">
               <a
                 className="opacity-80"
-                href="https://github.com/foxane"
+                href="https://github.com/foxane/odin-book-fe"
                 target="_blank"
                 rel="noopener noreferrer"
               >
