@@ -1,11 +1,10 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { commentService, postService } from "../utils/services";
 import PostCard from "../components/post/PostCard";
 import { usePostSingle } from "../hooks/usePostSingle";
 import CommentCard from "../components/commet/CommentCard";
 import CommentForm from "../components/commet/CommentForm";
-import { ArrowLeftIcon } from "lucide-react";
 import useCommentInfinite from "../hooks/useCommentInfinite";
 
 export default function PostPage() {
@@ -19,7 +18,8 @@ export default function PostPage() {
   });
 
   const commentKey = ["comment", { postId }];
-  const commentAction = useCommentInfinite(commentKey);
+  const { createComment, deleteComment, likeComment, updateComment } =
+    useCommentInfinite(commentKey);
   const commentQuery = useInfiniteQuery({
     queryKey: commentKey,
     initialPageParam: "",
@@ -30,27 +30,15 @@ export default function PostPage() {
     },
   });
 
-  const navigate = useNavigate();
-
   /* TODO: Add loading state for post and comment */
   if (!postQuery.data) return <div className="loading"></div>;
   return (
     <div className="pb-10">
-      <div className="mb-3 flex items-center gap-3">
-        <button
-          className="btn border-base-content/20"
-          onClick={() => void navigate(-1)}
-        >
-          <ArrowLeftIcon />
-        </button>
-        <p>Go back</p>
-      </div>
-
       <PostCard post={postQuery.data} action={postAction} />
 
       <div className="divider" />
 
-      <CommentForm post={postQuery.data} submit={commentAction.create} />
+      <CommentForm post={postQuery.data} submit={createComment} />
 
       <div className="divider" />
 
@@ -60,7 +48,11 @@ export default function PostPage() {
             <CommentCard
               key={comment.id}
               comment={comment}
-              action={commentAction}
+              action={{
+                update: updateComment,
+                like: likeComment,
+                delete: deleteComment,
+              }}
             />
           ))}
         </section>

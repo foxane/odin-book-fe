@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 interface Props {
   post: Post;
-  submit: ({ c, p }: { c: CommentPayload; p: Post }) => void;
+  submit: (c: CommentPayload, p: Post) => Promise<void>;
 }
 
 export default function CommentForm({ post, submit }: Props) {
@@ -12,8 +12,11 @@ export default function CommentForm({ post, submit }: Props) {
 
   const handleSubmit = () => {
     if (text.length < 3) return;
-    submit({ c: { text }, p: post });
-    setText("");
+    submit({ text }, post)
+      .then(() => {
+        setText("");
+      })
+      .catch((error: unknown) => console.log(error));
   };
 
   return (

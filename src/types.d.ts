@@ -77,7 +77,7 @@ interface IComment extends Post {
   createdAt: string;
   text: string;
   user: User;
-  userId: string;
+  userId: number;
   isLiked: boolean;
   _count: {
     likedBy: number;

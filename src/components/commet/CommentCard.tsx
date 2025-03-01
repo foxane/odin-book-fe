@@ -16,9 +16,9 @@ import { Link } from "react-router-dom";
 interface Props {
   comment: IComment;
   action: {
-    like: (comment: IComment) => void;
-    update: (comment: IComment) => void;
-    delete: (comment: IComment) => void;
+    like: (comment: IComment) => Promise<void>;
+    update: (comment: IComment) => Promise<void>;
+    delete: (comment: IComment) => Promise<void>;
   };
 }
 
