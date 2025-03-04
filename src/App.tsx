@@ -1,42 +1,35 @@
-import { Outlet } from "react-router-dom";
-import { Slide } from "react-toastify";
-import { ToastContainer } from "react-toastify";
-import { useTheme } from "./context/ThemeContext";
-import Navbar from "./components/Navbar";
-import Drawer from "./components/Drawer";
-import { ArrowUp } from "lucide-react";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
 
-export default function App() {
+function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <div className="border-base-content/30 mx-auto max-w-7xl">
-      <Drawer>
-        <div className="flex min-h-screen flex-col">
-          <Navbar />
-          <main className="flex grow flex-col p-3">
-            <Outlet />
-          </main>
-        </div>
-      </Drawer>
-
-      <ToastContainer
-        theme={useTheme().isDark ? "dark" : "light"}
-        position="bottom-right"
-        transition={Slide}
-        hideProgressBar
-        closeButton
-        closeOnClick
-      />
-
-      <div className="fixed bottom-10 right-10">
-        <button
-          className="btn btn-circle btn-outline btn-primary btn-lg"
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <ArrowUp size={30} />
-        </button>
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
       </div>
-    </div>
-  );
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
 }
+
+export default App
