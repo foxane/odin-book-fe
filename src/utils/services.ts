@@ -50,13 +50,7 @@ class AuthService {
         };
         throw new AuthError(data.message, data.errorDetails);
       } else {
-        throw new AuthError("Server seems to be offline", [
-          "Sorry, I can't keep the service up :(",
-          "If you want to try the website,",
-          "create issue in the repo.",
-          "I'll try to gather any coins i could find",
-          "The link is in the footer.",
-        ]);
+        throw new AuthError("Server seems to be offline");
       }
     } else {
       console.log(err);
