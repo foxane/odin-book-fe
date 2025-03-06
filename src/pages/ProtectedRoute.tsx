@@ -15,6 +15,9 @@ function ProtectedRoute({ page }: { page: React.ReactNode }) {
 
   const [loading, setLoading] = useState(true);
 
+  /**
+   * Initial load token check
+   */
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return void navigate(redirectUrl, { replace: true });
@@ -29,9 +32,15 @@ function ProtectedRoute({ page }: { page: React.ReactNode }) {
       .finally(() => setLoading(false));
   }, [login, navigate, redirectUrl]);
 
+  /**
+   * Render loading on initial load
+   */
   if (loading) return <LoadingScreen />;
 
-  if (!user) return <Navigate to="/auth" />;
+  /**
+   * Redirect to auth page with target url params
+   */
+  if (!user) return <Navigate to={redirectUrl} />;
 
   return page;
 }
