@@ -8,7 +8,6 @@ interface AuthStore {
   login: (token: string, user?: User) => Promise<void>;
   logout: () => void;
   connected: boolean;
-  _initSocket: () => void;
 }
 
 const useAuth = create<AuthStore>()((set, get) => ({
@@ -20,8 +19,13 @@ const useAuth = create<AuthStore>()((set, get) => ({
     api.setToken(token);
     const userData = user ?? (await api.axios.get<User>("/auth/me")).data;
     set({ user: userData });
+
+    if (!get().socket) {
+      const socket = io(import.meta.env.VITE_API_URL, { auth: { token } });
+      set({ socket });
+    }
+
     localStorage.setItem("token", token);
-    get()._initSocket();
   },
 
   logout: () => {
@@ -29,21 +33,6 @@ const useAuth = create<AuthStore>()((set, get) => ({
     api.setToken(null);
     set({ user: null, socket: null });
     localStorage.removeItem("token");
-  },
-
-  _initSocket: () => {
-    const token = localStorage.getItem("token");
-    if (get().socket) return;
-
-    const socket = io(import.meta.env.VITE_API_URL, { auth: { token } });
-    socket.on("connect", () => {
-      set({ connected: true });
-    });
-    socket.on("disconnect", () => {
-      set({ connected: false });
-    });
-
-    set({ socket });
   },
 }));
 
