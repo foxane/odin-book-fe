@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "../context/AuthContext";
 import LoadingScreen from "../components/LoadingScreen";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { authErrorHandler } from "../utils/authHelper";
 
 function ProtectedRoute({ page }: { page: React.ReactNode }) {
@@ -29,8 +29,11 @@ function ProtectedRoute({ page }: { page: React.ReactNode }) {
       .finally(() => setLoading(false));
   }, [login, navigate, redirectUrl]);
 
-  if (user) return page;
   if (loading) return <LoadingScreen />;
+
+  if (!user) return <Navigate to="/auth" />;
+
+  return page;
 }
 
 export default ProtectedRoute;

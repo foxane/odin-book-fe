@@ -7,29 +7,43 @@ interface AuthStore {
   socket: Socket | null;
   login: (token: string, user?: User) => Promise<void>;
   logout: () => void;
+  connected: boolean;
+  _initSocket: () => void;
 }
 
-const useAuth = create<AuthStore>((set, get) => ({
+const useAuth = create<AuthStore>()((set, get) => ({
   user: null,
   socket: null,
+  connected: false,
+
   login: async (token, user) => {
-    try {
-      api.setToken(token);
-      const socket = io(import.meta.env.VITE_API_URL, { auth: { token } });
-      const newUserData = user ?? (await api.axios.get<User>("/auth/me")).data;
-      set({ user: newUserData, socket });
-      localStorage.setItem("token", token);
-    } catch (error) {
-      localStorage.removeItem("token");
-      api.setToken(null);
-      throw error;
-    }
+    api.setToken(token);
+    const userData = user ?? (await api.axios.get<User>("/auth/me")).data;
+    set({ user: userData });
+    localStorage.setItem("token", token);
+    get()._initSocket();
   },
+
   logout: () => {
-    api.setToken(null);
     get().socket?.disconnect();
+    api.setToken(null);
     set({ user: null, socket: null });
     localStorage.removeItem("token");
+  },
+
+  _initSocket: () => {
+    const token = localStorage.getItem("token");
+    if (get().socket) return;
+
+    const socket = io(import.meta.env.VITE_API_URL, { auth: { token } });
+    socket.on("connect", () => {
+      set({ connected: true });
+    });
+    socket.on("disconnect", () => {
+      set({ connected: false });
+    });
+
+    set({ socket });
   },
 }));
 

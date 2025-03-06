@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../context/AuthContext";
 import {
   AuthError,
@@ -17,6 +17,7 @@ interface LoginCredentials {
 export default function AuthPage() {
   const login = useAuth((s) => s.login);
   const location = useLocation();
+  const navigate = useNavigate();
   const passedError = location.state ? (location.state as AuthError) : null;
 
   const [error, setError] = useState<AuthError | null>(passedError);
@@ -27,6 +28,7 @@ export default function AuthPage() {
     try {
       const { data } = await api.axios.post<AuthResponse>("/auth/login", cred);
       void login(data.token, data.user);
+      void navigate("/", { replace: true });
     } catch (error) {
       setError(authErrorHandler(error));
     }
