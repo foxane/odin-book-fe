@@ -18,15 +18,18 @@ function Navbar() {
   };
 
   return (
-    <header className="bg-base-100/30 flex h-14 px-4 backdrop-blur-lg">
+    <header className="bg-base-100/30 flex h-14 backdrop-blur-lg">
       <div className="navbar-start gap-1">
         <NavBtn className="btn-square lg:hidden" onClick={toggleDrawer}>
           <MenuIcon />
         </NavBtn>
 
-        <Link to={"/"} className="flex items-center">
+        <Link to={"/"} className="inline-flex font-mono">
           <BotIcon size={30} className="me-1" />
-          <h1 className="text-lg font-bold">{import.meta.env.VITE_APP_NAME}</h1>
+          <h1 className="text-lg/loose font-bold">
+            {" "}
+            {import.meta.env.VITE_APP_NAME}
+          </h1>
         </Link>
       </div>
 

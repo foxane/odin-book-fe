@@ -27,7 +27,12 @@ function PostCard({ post }: { post: Post }) {
         </div>
       </div>
 
-      <div dangerouslySetInnerHTML={{ __html: post.text }} className="py-2" />
+      <div>
+        <div dangerouslySetInnerHTML={{ __html: post.text }} className="py-2" />
+        {post.media.map((img) => (
+          <img src={img} key={img} />
+        ))}
+      </div>
 
       {showCount && (
         <div className="flex items-center px-2 text-xs">

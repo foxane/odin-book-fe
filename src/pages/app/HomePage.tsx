@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "../../utils/services";
 import { DEFAULT_API_CURSOR_LIMIT as LIMIT } from "../../utils/helpers";
 import PostCard from "../../components/post/PostCard";
+import PostForm from "../../components/post/PostForm";
 
 function HomePage() {
   const postQuery = useInfiniteQuery({
@@ -18,10 +19,9 @@ function HomePage() {
   const postList = postQuery.data?.pages.flat() ?? [];
 
   return (
-    <div>
-      <form></form>
-
-      <section className="space-y-5">
+    <div className="space-y-6">
+      <PostForm />
+      <section className="space-y-4">
         {postList.map((el) => (
           <PostCard post={el} key={el.id} />
         ))}

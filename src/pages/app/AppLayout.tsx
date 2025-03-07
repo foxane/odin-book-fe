@@ -27,13 +27,13 @@ export default function AppLayout() {
     );
 
   return (
-    <div className="mx-auto max-w-7xl">
+    <div className="container mx-auto">
       <Navbar />
       <Drawer>
         {/* Height is 100vh - navbar height */}
         {/* TODO: create new util class for it */}
-        <div className="flex min-h-[calc(100vh-3.5rem)] justify-between gap-2 p-2">
-          <main className="w-full pt-5">
+        <div className="flex min-h-[calc(100vh-3.5rem)] justify-between gap-2">
+          <main className="mx-auto w-full max-w-3xl">
             <Outlet />
           </main>
 
