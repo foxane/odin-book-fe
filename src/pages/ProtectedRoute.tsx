@@ -24,6 +24,7 @@ function ProtectedRoute({ page }: { page: React.ReactNode }) {
 
     login(token)
       .catch((error: unknown) => {
+        localStorage.removeItem("token");
         void navigate(redirectUrl, {
           replace: true,
           state: authErrorHandler(error),

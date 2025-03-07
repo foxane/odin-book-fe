@@ -18,7 +18,7 @@ function Navbar() {
   };
 
   return (
-    <header className="flex h-14 px-4">
+    <header className="bg-base-100/30 flex h-14 px-4 backdrop-blur-lg">
       <div className="navbar-start gap-1">
         <NavBtn className="btn-square lg:hidden" onClick={toggleDrawer}>
           <MenuIcon />

@@ -16,9 +16,11 @@ interface User {
   avatar?: string | null;
   background?: string | null;
   bio?: string | null;
-  createdAt: Date;
+  createdAt: string;
   provider?: OAuth | null;
   role: Role;
+  lastSeen: string | null;
+  isFollowed: boolean;
 }
 
 interface OAuth {
@@ -26,4 +28,19 @@ interface OAuth {
   user: User;
   userId: number;
   provider: string;
+}
+
+interface Post {
+  id: number;
+  text: string;
+  media: string[];
+  createdAt: string;
+  updatedAt: string | null;
+  user: Pick<User, "id" | "name" | "avatar" | "lastSeen">;
+  userId: number;
+  _count: {
+    likedBy: number;
+    comment: number;
+  };
+  isLiked: boolean;
 }
