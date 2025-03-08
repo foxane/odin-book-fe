@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Drawer from "../../components/Drawer";
+import Drawer from "./Drawer";
 import Navbar from "../../components/navbar/Navbar";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "../../utils/services";
@@ -33,7 +33,7 @@ export default function AppLayout() {
         {/* Height is 100vh - navbar height */}
         {/* TODO: create new util class for it */}
         <div className="flex min-h-[calc(100vh-3.5rem)] justify-between gap-2">
-          <main className="mx-auto w-full max-w-3xl">
+          <main className="mx-auto mt-3 w-full max-w-3xl">
             <Outlet />
           </main>
 

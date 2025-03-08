@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAuth from "../context/AuthContext";
-import LoadingScreen from "../components/LoadingScreen";
+import LoadingScreen from "../components/common/LoadingScreen";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { authErrorHandler } from "../utils/authHelper";
 

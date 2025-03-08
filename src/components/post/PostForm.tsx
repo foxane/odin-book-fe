@@ -1,6 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { api } from "../../utils/services";
-import { ImagePlusIcon } from "lucide-react";
+import { CheckCircleIcon, ImagePlusIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 interface PostPayload {
@@ -85,7 +85,7 @@ function PostForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="border-base-content/10 space-y-3 border p-4 shadow-lg"
+      className="border-base-content/10 space-y-2 border p-4 shadow-lg"
     >
       <div>
         <label className="floating-label">
@@ -95,7 +95,7 @@ function PostForm() {
               textRefHook(e);
               textRef.current = e;
             }}
-            className="textarea w-full resize-none"
+            className="textarea w-full resize-none border-0 ring-0"
             placeholder="What's on your mind?"
           />
           <span>Whats on your mind?</span>
@@ -105,15 +105,28 @@ function PostForm() {
         </span>
       </div>
 
-      <div className="flex">
+      <div className="divider h-1" />
+
+      <div className="flex space-x-1">
         <div>
-          <label tabIndex={0} className="btn">
-            <ImagePlusIcon />
+          <label tabIndex={0} className="btn btn-sm">
+            <ImagePlusIcon size={20} />
             Add image
             <input type="file" className="hidden" {...imageRules} />
           </label>
           <p className="validator-hint text-error">{errors.image?.message}</p>
         </div>
+
+        <button
+          type="button"
+          className="btn btn-sm"
+          onClick={() => {
+            console.log("Open poll form");
+          }}
+        >
+          <CheckCircleIcon size={20} />
+          Create Poll
+        </button>
 
         <button
           disabled={isSubmitting}

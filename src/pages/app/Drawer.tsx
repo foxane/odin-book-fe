@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import SearchForm from "./SearchForm";
+import SearchForm from "../../components/common/SearchForm";
 import { HomeIcon, MoonIcon, SunIcon, UserIcon } from "lucide-react";
-import useTheme from "../context/ThemeContext";
+import useTheme from "../../context/ThemeContext";
 
 function Drawer({ children }: { children: React.ReactNode }) {
   const toggleTheme = useTheme((s) => s.toggle);
@@ -21,7 +21,7 @@ function Drawer({ children }: { children: React.ReactNode }) {
         {/* Sidebar content */}
         {/* NOTE: xl:min-h-fit is to prevent overflow-y when 
                   displayed as sidebar. not drawer */}
-        <div className="bg-base-100 flex min-h-full w-64 flex-col space-y-4 p-4 xl:min-h-[calc(100vh-3.5rem)]">
+        <div className="bg-base-100 flex h-full w-64 flex-col space-y-4 p-4 xl:h-[calc(100vh-3.5rem)]">
           <SearchForm className="md:hidden" />
 
           <nav>

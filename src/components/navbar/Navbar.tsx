@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import NavBtn from "./NavBtn";
-import SearchForm from "../SearchForm";
+import SearchForm from "../common/SearchForm";
 
 function Navbar() {
   const toggleDrawer = () => {
@@ -18,7 +18,7 @@ function Navbar() {
   };
 
   return (
-    <header className="bg-base-100/30 flex h-14 backdrop-blur-lg">
+    <header className="bg-base-100/30 border-base-content/20 flex h-14 border-b backdrop-blur-lg">
       <div className="navbar-start gap-1">
         <NavBtn className="btn-square lg:hidden" onClick={toggleDrawer}>
           <MenuIcon />
