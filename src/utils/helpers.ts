@@ -14,3 +14,9 @@ export const formatDate = (t: Date | string): string => {
     });
   else return format(time, "dd LLL yyyy 'at' HH:mm");
 };
+
+export const postStatusText = {
+  create: "Posting...",
+  update: "Updating...",
+  delete: "Deleting...",
+};

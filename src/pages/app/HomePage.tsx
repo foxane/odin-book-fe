@@ -21,6 +21,7 @@ function HomePage() {
   return (
     <div className="space-y-6">
       <PostForm />
+
       <section className="space-y-4">
         {postList.map((el) => (
           <PostCard post={el} key={el.id} />

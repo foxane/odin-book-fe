@@ -1,27 +1,13 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import { api } from "../../utils/services";
 import { CheckCircleIcon, ImagePlusIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
-
-interface PostPayload {
-  text: string;
-  image?: FileList;
-}
+import ImagePreview from "./ImagePreview";
+import usePostForm from "./usePostForm";
+import useAutoResize from "../../hooks/useAutoResize";
 
 function PostForm() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    resetField,
-    formState: { errors, isSubmitting },
-  } = useForm<PostPayload>();
-
-  /**
-   * Field rules
-   */
-  const { ref: textRefHook, ...textRules } = register("text", {
+  const { formState, handleSubmit, register, resetField, watch } =
+    usePostForm();
+  const { errors, isSubmitting } = formState;
+  const { ref, ...textRules } = register("text", {
     required: "Post cannot be empty",
     minLength: {
       message: "Post need to be at least 3 characters long",
@@ -33,88 +19,69 @@ function PostForm() {
     },
   });
 
-  const imageRules = register("image", {
-    validate: (files) => {
-      const file = files?.[0];
-      if (!file) return true;
-
-      const maxSize = 1024 * 1024 * 10;
-      const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-
-      if (file.size > maxSize) {
-        return `File size cannot exceed ${maxSize / 1024 / 1024}MB`;
-      }
-      if (!allowedTypes.includes(file.type)) {
-        return "Only JPEG, PNG, and GIF files are allowed";
-      }
-
-      return true;
-    },
-  });
-
-  const onSubmit: SubmitHandler<PostPayload> = async (data) => {
-    const payload = new FormData();
-    payload.append("text", data.text);
-    if (data.image) payload.append("user-upload", data.image[0]);
-
-    /**
-     * TODO: Create optimistic update
-     */
-    try {
-      const { data: post } = await api.axios.post<Post>("/posts", payload);
-      console.log(post);
-      reset();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const imagePreview = watch("image")?.[0];
-  const textValue = watch("text");
-
-  const textRef = useRef<HTMLTextAreaElement | null>(null);
-  useEffect(() => {
-    if (!textRef.current) return;
-    const { style } = textRef.current;
-
-    // Height autosize
-    style.height = "auto";
-    style.height = `${textRef.current.scrollHeight.toString()}px`;
-  }, [textValue]);
+  const textRef = useAutoResize(watch("text"));
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="border-base-content/10 space-y-2 border p-4 shadow-lg"
+      onSubmit={handleSubmit}
+      className="border-base-content/10 space-y-4 border p-4 shadow-lg"
     >
       <div>
         <label className="floating-label">
           <textarea
-            {...textRules}
             ref={(e) => {
-              textRefHook(e);
               textRef.current = e;
+              ref(e);
             }}
-            className="textarea w-full resize-none border-0 ring-0"
+            {...textRules}
+            className="textarea max-h-52 w-full resize-none"
             placeholder="What's on your mind?"
           />
           <span>Whats on your mind?</span>
         </label>
-        <span className="validator-hint text-error">
-          {errors.text?.message}
-        </span>
       </div>
 
-      <div className="divider h-1" />
+      {formState.isDirty && (
+        <div className="">
+          <p className="validator-hint text-error">{errors.text?.message}</p>
+          <p className="validator-hint text-error">{errors.image?.message}</p>
+        </div>
+      )}
 
       <div className="flex space-x-1">
         <div>
-          <label tabIndex={0} className="btn btn-sm">
+          <input
+            id="imageInput"
+            type="file"
+            className="hidden"
+            {...register("image", {
+              validate: (files) => {
+                const file = files?.[0];
+                if (!file) return true;
+
+                const maxSize = 1024 * 1024 * 10;
+                const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+
+                if (file.size > maxSize) {
+                  return `File size cannot exceed ${maxSize / 1024 / 1024}MB`;
+                }
+                if (!allowedTypes.includes(file.type)) {
+                  return "Only JPEG, PNG, and GIF files are allowed";
+                }
+
+                return true;
+              },
+            })}
+          />
+
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() => document.getElementById("imageInput")?.click()}
+          >
             <ImagePlusIcon size={20} />
             Add image
-            <input type="file" className="hidden" {...imageRules} />
-          </label>
-          <p className="validator-hint text-error">{errors.image?.message}</p>
+          </button>
         </div>
 
         <button
@@ -131,27 +98,16 @@ function PostForm() {
         <button
           disabled={isSubmitting}
           type="submit"
-          className="btn btn-primary ms-auto"
+          className="btn btn-primary btn-sm ms-auto"
         >
           Submit
         </button>
       </div>
 
-      {imagePreview && (
-        <div className="indicator">
-          <img
-            src={URL.createObjectURL(imagePreview)}
-            alt="Preview"
-            className="h-20 w-20 object-cover"
-          />
-          <button
-            onClick={() => resetField("image")}
-            className="indicator-item badge badge-error hover cursor-pointer"
-          >
-            X
-          </button>
-        </div>
-      )}
+      <ImagePreview
+        image={watch("image")?.[0]}
+        remove={() => resetField("image")}
+      />
     </form>
   );
 }

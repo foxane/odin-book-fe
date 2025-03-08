@@ -34,7 +34,7 @@ interface Post {
   id: number;
   text: string;
   media: string[];
-  createdAt: string;
+  createdAt: string | Date;
   updatedAt: string | null;
   user: Pick<User, "id" | "name" | "avatar" | "lastSeen">;
   userId: number;
@@ -43,4 +43,12 @@ interface Post {
     comment: number;
   };
   isLiked: boolean;
+  status?: "create" | "update" | "delete"; // frontend only
 }
+
+interface InfiniteData<T> {
+  pageParams: unknown[];
+  pages: T[];
+}
+
+type InfinitePost = InfiniteData<Post[]>;
