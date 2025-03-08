@@ -3,7 +3,7 @@ import Drawer from "./Drawer";
 import Navbar from "../../components/navbar/Navbar";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { api } from "../../utils/services";
-import { DEFAULT_API_CURSOR_LIMIT as LIMIT } from "../../utils/helpers";
+import { DEFAULT_API_CURSOR_LIMIT as LIMIT } from "../../utils/constants";
 import UserCard from "../../components/user/UserCard";
 
 export default function AppLayout() {

@@ -11,7 +11,8 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import UserAvatar from "../user/UserAvatar";
-import { formatDate, postStatusText } from "../../utils/helpers";
+import { formatDate } from "../../utils/helpers";
+import { POST_STATUS_TEXT } from "../../utils/constants";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
@@ -19,18 +20,24 @@ interface Props {
   post: Post;
 }
 
-export default function PostCard({ post }: Props) {
+interface Actions {
+  delete: () => void;
+  like: () => void;
+  update: () => void;
+}
+
+export default function PostCard({ post, ...props }: Props & Actions) {
   return (
     <div
       className={twMerge(
-        "border-base-content/20 w-full space-y-2 rounded border p-4 shadow-xl",
+        "border-base-content/20 w-full space-y-2 rounded border p-4 pb-1 shadow-xl",
         post.status && "animate-pulse",
       )}
     >
       <Title post={post} />
       <Content post={post} />
       <Count count={post._count} />
-      <Actions post={post} />
+      <Actions post={post} like={props.like} />
     </div>
   );
 }
@@ -53,28 +60,6 @@ function Count({ count }: { count: { likedBy: number; comment: number } }) {
   );
 }
 
-function Actions({ post }: Props) {
-  return (
-    <div className="border-base-content/20 flex gap-2 border-t pt-2">
-      <button className="btn btn-ghost grow text-xs">
-        <HeartIcon
-          size={20}
-          className={post.isLiked ? "stroke-primary fill-primary" : ""}
-        />{" "}
-        Like
-      </button>
-
-      <Link to={`/post/${post.id}`} className="btn btn-ghost grow text-xs">
-        <MessageCircleIcon size={20} /> Comment
-      </Link>
-
-      <button className="btn btn-ghost grow text-xs">
-        <Share2Icon size={20} /> Share
-      </button>
-    </div>
-  );
-}
-
 function Title({ post }: Props) {
   return (
     <div className="flex items-center space-x-2">
@@ -87,23 +72,12 @@ function Title({ post }: Props) {
 
       {post.status ? (
         <p className="ms-auto text-sm">
-          {postStatusText[post.status]}
+          {POST_STATUS_TEXT[post.status]}
           <span className="loading loading-sm ms-1"></span>
         </p>
       ) : (
         <PostDropdown post={post} />
       )}
-    </div>
-  );
-}
-
-function Content({ post }: Props) {
-  return (
-    <div>
-      <div dangerouslySetInnerHTML={{ __html: post.text }} className="py-2" />
-      {post.media.map((src) => (
-        <img src={src} key={src} loading="lazy" />
-      ))}
     </div>
   );
 }
@@ -138,6 +112,39 @@ function PostDropdown({ post }: Props) {
           </button>
         </li>
       </ul>
+    </div>
+  );
+}
+
+function Content({ post }: Props) {
+  return (
+    <div>
+      <div dangerouslySetInnerHTML={{ __html: post.text }} className="py-2" />
+      {post.media.map((src) => (
+        <img src={src} key={src} loading="lazy" />
+      ))}
+    </div>
+  );
+}
+
+function Actions({ post, like }: Props & { like: () => void }) {
+  return (
+    <div className="border-base-content/20 flex gap-2 border-t pt-2">
+      <button className="btn btn-ghost grow text-xs" onClick={like}>
+        <HeartIcon
+          size={20}
+          className={post.isLiked ? "stroke-primary fill-primary" : ""}
+        />{" "}
+        Like
+      </button>
+
+      <Link to={`/post/${post.id}`} className="btn btn-ghost grow text-xs">
+        <MessageCircleIcon size={20} /> Comment
+      </Link>
+
+      <button className="btn btn-ghost grow text-xs">
+        <Share2Icon size={20} /> Share
+      </button>
     </div>
   );
 }

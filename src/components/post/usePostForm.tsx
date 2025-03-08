@@ -3,6 +3,7 @@ import useAuth from "../../context/AuthContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import DummyPost from "./DummyPost";
 import { api } from "../../utils/services";
+import { QUERY_KEY } from "../../utils/constants";
 
 export interface PostPayload {
   text: string;
@@ -23,9 +24,9 @@ export default function usePostForm() {
     /**
      * Update cache before submitting
      */
-    const prevData = client.getQueryData<InfinitePost>(["posts"]);
+    const prevData = client.getQueryData<InfinitePost>(QUERY_KEY.posts);
     const dummyPost = new DummyPost(data, user);
-    client.setQueryData(["posts"], (oldData: InfinitePost) => ({
+    client.setQueryData(QUERY_KEY.posts, (oldData: InfinitePost) => ({
       ...oldData,
       pages: [[dummyPost, ...oldData.pages[0]], ...oldData.pages.slice(1)],
     }));
@@ -33,14 +34,14 @@ export default function usePostForm() {
     try {
       const { data: post } = await api.axios.post<Post>("/posts", payload);
       dummyPost.media.forEach((src) => URL.revokeObjectURL(src));
-      client.setQueryData(["posts"], (oldData: InfinitePost) => ({
+      client.setQueryData(QUERY_KEY.posts, (oldData: InfinitePost) => ({
         ...prevData,
         pages: [[post, ...prevData!.pages[0]], ...oldData.pages.slice(1)],
       }));
       reset();
     } catch (error) {
       console.log(error);
-      client.setQueryData(["posts"], prevData);
+      client.setQueryData(QUERY_KEY.posts, prevData);
     }
   };
 
