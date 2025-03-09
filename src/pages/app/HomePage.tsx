@@ -6,9 +6,9 @@ import {
 } from "../../utils/constants";
 import PostCard from "../../components/post/PostCard";
 import PostForm from "../../components/post/PostForm";
-import { useDelete, useLike, useUpdate } from "../../hooks/usePostActions";
 import { DeleteModal, UpdateModal } from "../../components/common/Modal";
 import { useState } from "react";
+import usePostInfinite from "../../hooks/usePostInfinite";
 
 function HomePage() {
   const postQuery = useInfiniteQuery({
@@ -26,11 +26,7 @@ function HomePage() {
   /**
    * Mutation fns
    */
-  const [likePost, updatePost, deletePost] = [
-    useLike(),
-    useUpdate(),
-    useDelete(),
-  ];
+  const { likePost, deletePost, updatePost } = usePostInfinite(QUERY_KEY.posts);
 
   /**
    * Modal state
@@ -49,7 +45,7 @@ function HomePage() {
             <PostCard
               post={el}
               key={el.id}
-              like={() => likePost(el)}
+              like={() => likePost.mutate(el)}
               update={() => setToUpdate(el)}
               delete={() => setToDelete(el)}
             />
@@ -58,14 +54,14 @@ function HomePage() {
 
       <DeleteModal
         data={toDelete}
-        submit={() => deletePost(toDelete!)}
+        submit={() => deletePost.mutate(toDelete!)}
         onClose={() => setToDelete(null)}
       />
 
       {toUpdate && (
         <UpdateModal
           data={toUpdate}
-          submit={(data) => updatePost(data)}
+          submit={(data) => updatePost.mutate(data)}
           onClose={() => setToUpdate(null)}
         />
       )}
