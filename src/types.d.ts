@@ -52,3 +52,21 @@ interface InfiniteData<T> {
 }
 
 type InfinitePost = InfiniteData<Post[]>;
+type InfiniteComment = InfiniteData<IComment[]>;
+
+interface IComment {
+  id: number;
+  text: string;
+  media: string[];
+  createdAt: Date | string;
+  updatedAt: string | null;
+  postId: number;
+  userId: number;
+  user: Pick<User, "id" | "name" | "avatar" | "lastSeen">;
+  _count: {
+    likedBy: number;
+    comment: number;
+  };
+  isLiked: boolean;
+  status?: "create" | "update" | "delete"; // frontend only
+}

@@ -7,6 +7,8 @@ import {
 import PostCard from "../../components/post/PostCard";
 import PostForm from "../../components/post/PostForm";
 import { useDelete, useLike, useUpdate } from "../../hooks/usePostActions";
+import { DeleteModal, UpdateModal } from "../../components/common/Modal";
+import { useState } from "react";
 
 function HomePage() {
   const postQuery = useInfiniteQuery({
@@ -20,27 +22,53 @@ function HomePage() {
       else return page.at(-1)!.id.toString();
     },
   });
-  const postList = postQuery.data?.pages.flat() ?? [];
 
-  const like = useLike();
-  const update = useUpdate();
-  const deletePost = useDelete();
+  /**
+   * Mutation fns
+   */
+  const [likePost, updatePost, deletePost] = [
+    useLike(),
+    useUpdate(),
+    useDelete(),
+  ];
+
+  /**
+   * Modal state
+   */
+  const [toDelete, setToDelete] = useState<Post | null>(null);
+  const [toUpdate, setToUpdate] = useState<Post | null>(null);
 
   return (
     <div className="space-y-6">
       <PostForm />
 
       <section className="space-y-4">
-        {postList.map((el) => (
-          <PostCard
-            post={el}
-            key={el.id}
-            like={() => like(el)}
-            update={() => update(el)}
-            delete={() => deletePost(el)}
-          />
-        ))}
+        {postQuery.data?.pages
+          .flat()
+          .map((el) => (
+            <PostCard
+              post={el}
+              key={el.id}
+              like={() => likePost(el)}
+              update={() => setToUpdate(el)}
+              delete={() => setToDelete(el)}
+            />
+          ))}
       </section>
+
+      <DeleteModal
+        data={toDelete}
+        submit={() => deletePost(toDelete!)}
+        onClose={() => setToDelete(null)}
+      />
+
+      {toUpdate && (
+        <UpdateModal
+          data={toUpdate}
+          submit={(data) => updatePost(data)}
+          onClose={() => setToUpdate(null)}
+        />
+      )}
     </div>
   );
 }

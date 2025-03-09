@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEY } from "../utils/constants";
 import { api } from "../utils/services";
+import { modifyLike } from "../utils/helpers";
 
 const queryKey = QUERY_KEY.posts;
 
@@ -27,7 +28,7 @@ interface CreateOptimistic<T extends unknown[]> {
   apiCall: (...args: T) => Promise<void>;
 }
 
-function useCreateOptimistic<T extends unknown[]>({
+export function useCreateOptimistic<T extends unknown[]>({
   updater,
   apiCall,
 }: CreateOptimistic<T>) {
@@ -54,33 +55,20 @@ function useCreateOptimistic<T extends unknown[]>({
   };
 }
 
-const likeUpdater: Updater<[Post]> = (data, post) => {
-  const { _count, isLiked } = post;
-  const updatedCount = {
-    ..._count,
-    likedBy: _count.likedBy + (isLiked ? -1 : +1),
-  };
-
-  return {
-    ...data,
-    pages: data.pages.map((page) =>
-      page.map((el) =>
-        el.id === post.id
-          ? { ...el, isLiked: !isLiked, _count: updatedCount }
-          : el,
-      ),
-    ),
-  };
-};
-export const useLike = () => {
-  return useCreateOptimistic<[Post]>({
+const likeUpdater: Updater<[Post]> = (data, post) => ({
+  ...data,
+  pages: data.pages.map((page) =>
+    page.map((el) => (el.id === post.id ? modifyLike(post) : el)),
+  ),
+});
+export const useLike = () =>
+  useCreateOptimistic<[Post]>({
     updater: likeUpdater,
     apiCall: async (post) => {
       if (post.isLiked) await api.axios.delete(`/posts/${post.id}/like`);
       else await api.axios.post(`/posts/${post.id}/like`);
     },
   });
-};
 
 const updateUpdater: Updater<[Post]> = (data, updatedPost) => ({
   ...data,
@@ -88,8 +76,8 @@ const updateUpdater: Updater<[Post]> = (data, updatedPost) => ({
     page.map((post) => (post.id === updatedPost.id ? updatedPost : post)),
   ),
 });
-export const useUpdate = () => {
-  return useCreateOptimistic<[Post]>({
+export const useUpdate = () =>
+  useCreateOptimistic<[Post]>({
     updater: updateUpdater,
     apiCall: async (updatedPost) => {
       await api.axios.put(`/posts/${updatedPost.id}`, {
@@ -97,7 +85,6 @@ export const useUpdate = () => {
       });
     },
   });
-};
 
 const deleteUpdater: Updater<[Post]> = (data, toDelete) => ({
   ...data,

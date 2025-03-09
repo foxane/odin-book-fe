@@ -6,15 +6,16 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "./pages/app/HomePage";
 import { useEffect } from "react";
 import useTheme from "./context/ThemeContext";
+import PostPage from "./pages/app/PostPage";
 
+export type RouteParams = Record<"postId" | "userId", string>;
 const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute page={<AppLayout />} />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "home", element: <p>home</p> },
-      { path: "nothome", element: <p>home</p> },
+      { path: "/post/:postId", element: <PostPage /> },
     ],
   },
 

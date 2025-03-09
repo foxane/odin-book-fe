@@ -34,6 +34,10 @@ export default function usePostForm() {
     try {
       const { data: post } = await api.axios.post<Post>("/posts", payload);
       dummyPost.media.forEach((src) => URL.revokeObjectURL(src));
+
+      /**
+       * Change dummy to actual data
+       */
       client.setQueryData(QUERY_KEY.posts, (oldData: InfinitePost) => ({
         ...prevData,
         pages: [[post, ...prevData!.pages[0]], ...oldData.pages.slice(1)],
