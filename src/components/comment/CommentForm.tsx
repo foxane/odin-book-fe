@@ -1,54 +1,73 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import { optimistic } from "../../utils/helpers";
-import { useQueryClient } from "@tanstack/react-query";
-import DummyComment from "./DummyComment";
-import useAuth from "../../context/AuthContext";
-import { api } from "../../utils/services";
-
-export interface CommentPayload {
-  text: string;
-}
+import useAutoResize from "../../hooks/useAutoResize";
+import { ImagePlusIcon } from "lucide-react";
+import useCommentForm from "./useCommentForm";
 
 function CommentForm({ postId }: { postId: string }) {
-  const client = useQueryClient();
-  const user = useAuth((s) => s.user)!;
+  const { formState, handleSubmit, register, watch } = useCommentForm(postId);
 
-  const { register, handleSubmit } = useForm<CommentPayload>();
-  const onSubmit: SubmitHandler<CommentPayload> = (data) => {
-    const dummy = new DummyComment(data.text, user, Number(postId));
-    const create = optimistic<InfiniteComment, []>({
-      client,
-      queryKey: ["comments", postId],
-      update: (old) => ({
-        ...old,
-        pages: [[dummy, ...old.pages[0]], ...old.pages.slice(1)],
-      }),
-      apiCall: async () =>
-        await api.axios.post(`/posts/${postId}/comments`, data),
-    });
+  const { ref, ...textRules } = register("text", {
+    required: "Post cannot be empty",
+    minLength: {
+      message: "Post need to be at least 3 characters long",
+      value: 3,
+    },
+    maxLength: {
+      message: "Post cannot exceed 300 characters",
+      value: 300,
+    },
+  });
 
-    void create();
-  };
+  const textRef = useAutoResize(watch("text"));
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <textarea
-          className="textarea"
-          {...register("text", {
-            required: "Comment cannot be empty",
-            minLength: {
-              value: 3,
-              message: "comment need to be at least 3 character",
-            },
-            maxLength: {
-              value: 300,
-              message: "comment cannot exceed 300 characters",
-            },
-          })}
-        />
+      <form
+        onSubmit={handleSubmit}
+        className="border-base-content/10 space-y-4 border p-4 shadow-lg"
+      >
+        <div>
+          <label className="floating-label">
+            <textarea
+              ref={(e) => {
+                textRef.current = e;
+                ref(e);
+              }}
+              {...textRules}
+              className="textarea max-h-52 w-full resize-none"
+              placeholder="Post a comment"
+            />
+            <span>Post a comment</span>
+          </label>
+        </div>
 
-        <button className="btn btn-primary">Submit</button>
+        {formState.isDirty && (
+          <div className="">
+            <p className="validator-hint text-error">
+              {formState.errors.text?.message}
+            </p>
+          </div>
+        )}
+
+        <div className="flex space-x-1">
+          <div>
+            <button
+              type="button"
+              className="btn btn-sm"
+              onClick={() => document.getElementById("imageInput")?.click()}
+            >
+              <ImagePlusIcon size={20} />
+              Add image
+            </button>
+          </div>
+
+          <button
+            disabled={formState.isSubmitting}
+            type="submit"
+            className="btn btn-primary btn-sm ms-auto"
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );

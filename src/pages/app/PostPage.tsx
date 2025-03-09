@@ -3,16 +3,13 @@ import { RouteParams } from "../../App";
 import PostCard from "../../components/post/PostCard";
 import PostSkeleton from "../../components/post/PostSkeleton";
 import CommentCard from "../../components/comment/CommentCard";
-import {
-  useCommentMutation,
-  useCommentQuery,
-  usePostMutation,
-  usePostQuery,
-} from "../../hooks/usePostPage";
+import { useCommentQuery, usePostQuery } from "./usePostPage";
 import { isComment } from "../../utils/helpers";
 import CommentForm from "../../components/comment/CommentForm";
 import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../../components/common/Modal";
+import useCommentInfinite from "../../hooks/useCommentInfnite";
+import usePostSingle from "../../hooks/usePostSingle";
 
 function PostPage() {
   const postId = useParams<RouteParams>().postId!;
@@ -29,9 +26,9 @@ function PostPage() {
   /**
    * Mutations
    */
-  const { deletePost, likePost, updatePost } = usePostMutation(postKey);
+  const { deletePost, likePost, updatePost } = usePostSingle(postKey);
   const { deleteComment, likeComment, updateComment } =
-    useCommentMutation(commentKey);
+    useCommentInfinite(commentKey);
 
   /**
    * Control modal visibility based this 2 state
@@ -49,11 +46,9 @@ function PostPage() {
 
   return (
     <div className="space-y-6">
-      <p>Post page for {postId}</p>
-
       <PostCard
         post={postQuery.data}
-        like={() => likePost(postQuery.data)}
+        like={() => likePost.mutate(postQuery.data)}
         delete={() => setToDelete(postQuery.data)}
         update={() => setToUpdate(postQuery.data)}
       />
@@ -67,33 +62,37 @@ function PostPage() {
             <CommentCard
               comment={el}
               key={el.id}
-              like={() => likeComment(el)}
+              like={() => likeComment.mutate(el)}
+              delete={() => setToDelete(el)}
+              update={() => setToUpdate(el)}
             />
           ))}
       </section>
 
-      <DeleteModal
-        data={toDelete}
-        onClose={() => setToDelete(null)}
-        submit={() => {
-          if (!toDelete) return console.log("Deleting non-existent data");
-          if (isComment(toDelete)) void deleteComment(toDelete);
-          else {
-            void deletePost(toDelete);
-            void navigate("/", { replace: true });
-          }
-        }}
-      />
+      {toDelete && (
+        <DeleteModal
+          data={toDelete}
+          onClose={() => setToDelete(null)}
+          submit={() => {
+            if (isComment(toDelete)) deleteComment.mutate(toDelete);
+            else {
+              deletePost.mutate(toDelete);
+              void navigate("/", { replace: true });
+            }
+          }}
+        />
+      )}
 
-      <UpdateModal
-        data={toUpdate}
-        onClose={() => setToUpdate(null)}
-        submit={() => {
-          if (!toUpdate) return console.log("Deleting non-existent data");
-          if (isComment(toUpdate)) void updateComment(toUpdate);
-          else void updatePost(toUpdate);
-        }}
-      />
+      {toUpdate && (
+        <UpdateModal
+          data={toUpdate}
+          onClose={() => setToUpdate(null)}
+          submit={(data: IComment | Post) => {
+            if (isComment(data)) updateComment.mutate(data);
+            else updatePost.mutate(data);
+          }}
+        />
+      )}
     </div>
   );
 }

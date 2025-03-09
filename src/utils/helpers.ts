@@ -32,32 +32,6 @@ export const cancelAndGetPrev = async <T>(
   return client.getQueryData<T>(queryKey);
 };
 
-export function optimistic<TData, TArgs extends unknown[]>({
-  client,
-  queryKey,
-  update,
-  apiCall,
-}: {
-  client: QueryClient;
-  queryKey: unknown[];
-  update: (data: TData, ...args: TArgs) => TData;
-  apiCall: (...args: TArgs) => Promise<void>;
-}) {
-  return async (...args: TArgs) => {
-    const prev = await cancelAndGetPrev(client, queryKey);
-    client.setQueryData(queryKey, (old: TData) =>
-      old ? update(old, ...args) : old,
-    );
-
-    try {
-      await apiCall(...args);
-    } catch (error) {
-      console.log(error);
-      client.setQueryData(queryKey, prev);
-    }
-  };
-}
-
 export function isComment(data: Post | IComment): data is IComment {
   return "postId" in data;
 }

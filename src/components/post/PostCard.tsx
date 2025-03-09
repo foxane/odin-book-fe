@@ -9,7 +9,7 @@ import {
 import UserAvatar from "../user/UserAvatar";
 import { formatDate } from "../../utils/helpers";
 import { POST_STATUS_TEXT } from "../../utils/constants";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 
 interface Props {
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export default function PostCard({ post, ...actions }: Props) {
+  const location = useLocation();
   return (
     <div
       className={twMerge(
@@ -95,9 +96,11 @@ export default function PostCard({ post, ...actions }: Props) {
           />{" "}
           Like
         </button>
-        <Link to={`/post/${post.id}`} className="btn btn-ghost grow text-xs">
-          <MessageCircleIcon size={20} /> Comment
-        </Link>
+        {!location.pathname.includes("/post") && (
+          <Link to={`/post/${post.id}`} className="btn btn-ghost grow text-xs">
+            <MessageCircleIcon size={20} /> Comment
+          </Link>
+        )}
         <button className="btn btn-ghost grow text-xs">
           <Share2Icon size={20} /> Share
         </button>

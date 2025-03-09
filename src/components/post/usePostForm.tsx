@@ -39,8 +39,11 @@ export default function usePostForm() {
        * Change dummy to actual data
        */
       client.setQueryData(QUERY_KEY.posts, (oldData: InfinitePost) => ({
-        ...prevData,
-        pages: [[post, ...prevData!.pages[0]], ...oldData.pages.slice(1)],
+        ...oldData,
+        pages: [
+          oldData.pages[0].map((el) => (el.id === dummyPost.id ? post : el)),
+          ...oldData.pages.slice(1),
+        ],
       }));
       reset();
     } catch (error) {

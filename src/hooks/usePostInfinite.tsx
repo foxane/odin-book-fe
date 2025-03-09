@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../utils/services";
 import { cancelAndGetPrev, modifyLike } from "../utils/helpers";
 
-const services = {
+export const services = {
   like: async (post: Post) =>
     await api.axios[post.isLiked ? "delete" : "post"](`/posts/${post.id}/like`),
 
