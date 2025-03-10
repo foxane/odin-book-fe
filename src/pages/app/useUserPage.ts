@@ -4,9 +4,9 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { api } from "../utils/services";
-import { DEFAULT_API_CURSOR_LIMIT, UserPageKeys } from "../utils/constants";
-import { cancelAndGetPrev } from "../utils/helpers";
+import { api } from "../../utils/services";
+import { DEFAULT_API_CURSOR_LIMIT, UserPageKeys } from "../../utils/constants";
+import { cancelAndGetPrev } from "../../utils/helpers";
 
 function useUserPage(userId: string, keys: UserPageKeys) {
   const client = useQueryClient();

@@ -6,7 +6,7 @@ import useAuth from "../../context/AuthContext";
 import { PencilIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import Img from "../../components/common/Img";
-import useUserPage from "../../hooks/useUserPage";
+import useUserPage from "./useUserPage";
 import { UserUpdateModal } from "../../components/user/UserUpdateModal";
 import { useState } from "react";
 import { createUserPageKey } from "../../utils/constants";

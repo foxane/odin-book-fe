@@ -1,13 +1,12 @@
-import { BellIcon, BotIcon, MenuIcon, MessageCircleIcon } from "lucide-react";
+import { BotIcon, MenuIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import NavBtn from "./NavBtn";
-import SearchForm from "../common/SearchForm";
 import { twMerge } from "tailwind-merge";
 
 function Navbar() {
-  const toggleDrawer = () => {
+  const toggleDrawer = (pos: "right" | "left") => {
     const drawerToggle = document.getElementById(
-      "main-drawer",
+      `${pos}-drawer`,
     ) as HTMLInputElement | null;
     if (drawerToggle) drawerToggle.checked = !drawerToggle.checked;
   };
@@ -15,12 +14,15 @@ function Navbar() {
   return (
     <header
       className={twMerge(
-        "bg-base-100/50 border-base-content/20 flex h-16 border-b backdrop-blur-lg", // Styles
-        "z-2 container sticky top-0", // Postitioning
+        "bg-base-100/50 border-base-content/20 flex h-16 border-b px-3 backdrop-blur-lg", // Styles
+        "z-2 sticky top-0", // Postitioning
       )}
     >
       <div className="navbar-start gap-1">
-        <NavBtn className="btn-square lg:hidden" onClick={toggleDrawer}>
+        <NavBtn
+          className="btn-square md:hidden"
+          onClick={() => toggleDrawer("left")}
+        >
           <MenuIcon />
         </NavBtn>
 
@@ -33,26 +35,13 @@ function Navbar() {
         </Link>
       </div>
 
-      <div className="md:navbar-center hidden">
-        <SearchForm />
-      </div>
-
-      <div className="navbar-end gap-1">
-        <NavBtn>
-          <MessageCircleIcon />
-        </NavBtn>
-
-        <NavBtn>
-          <BellIcon />
-        </NavBtn>
-
-        <label
-          htmlFor="right-drawer"
-          tabIndex={0}
-          className="btn btn-square btn-ghost lg:hidden"
+      <div className="navbar-end">
+        <NavBtn
+          className="btn-square lg:hidden"
+          onClick={() => toggleDrawer("right")}
         >
           <MenuIcon />
-        </label>
+        </NavBtn>
       </div>
     </header>
   );

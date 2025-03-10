@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import SearchForm from "../../components/common/SearchForm";
 import {
+  BellIcon,
   Github,
   HomeIcon,
   LogOutIcon,
+  MessageSquareIcon,
   MoonIcon,
   SunIcon,
-  UserIcon,
 } from "lucide-react";
 import useTheme from "../../context/ThemeContext";
 import useAuth from "../../context/AuthContext";
@@ -59,8 +60,8 @@ function Drawer({ children }: { children: React.ReactNode }) {
   });
 
   return (
-    <div className="drawer lg:drawer-open">
-      <input id="main-drawer" type="checkbox" className="drawer-toggle" />
+    <div className="drawer md:drawer-open">
+      <input id="left-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         {/* Right drawer */}
         <div className="drawer drawer-end lg:drawer-open">
@@ -92,16 +93,17 @@ function Drawer({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Left drawer */}
-      <div className="drawer-side z-3 lg:z-1 lg:top-16">
+      <div className="drawer-side z-3 md:z-1 md:top-16">
         <label
-          htmlFor="main-drawer"
+          htmlFor="left-drawer"
           aria-label="close sidebar"
           className="drawer-overlay"
         />
-        <div className="bg-base-100 flex h-full w-64 flex-col space-y-4 p-4 lg:h-[calc(100vh-3.5rem)]">
+        <div className="bg-base-100 flex h-full w-64 flex-col space-y-4 p-4 md:h-[calc(100vh-3.5rem)]">
           <SearchForm className="md:hidden" />
 
           <nav>
+            <h2 className="divider divider-start font-semibold">Navigations</h2>
             <ul className="menu w-full">
               <li>
                 <Link to={"/"}>
@@ -111,8 +113,14 @@ function Drawer({ children }: { children: React.ReactNode }) {
               </li>
               <li>
                 <Link to={"/"}>
-                  <UserIcon size={20} />
-                  Profile
+                  <BellIcon size={20} />
+                  Notifications
+                </Link>
+              </li>
+              <li>
+                <Link to={"/"}>
+                  <MessageSquareIcon size={20} />
+                  Messages
                 </Link>
               </li>
             </ul>

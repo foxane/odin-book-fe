@@ -9,21 +9,20 @@ interface Props {
 
 function UserList({ query, queryKey }: Props) {
   const { follow } = useUserInfinite(queryKey);
+  const users = query.data?.pages.flat() ?? [];
 
   return (
     <section className="space-y-2">
-      {query.data?.pages
-        .flatMap((page) => page)
-        .map((el) => (
-          <UserCard
-            user={el}
-            key={el.id}
-            follow={() => {
-              follow.mutate(el);
-              console.log("hi");
-            }}
-          />
-        ))}
+      {users.map((el) => (
+        <UserCard
+          user={el}
+          key={el.id}
+          follow={() => {
+            follow.mutate(el);
+            console.log("hi");
+          }}
+        />
+      ))}
     </section>
   );
 }

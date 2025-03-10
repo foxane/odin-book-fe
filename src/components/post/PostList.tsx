@@ -15,19 +15,19 @@ function PostList({ query, queryKey }: Props) {
   const [toDelete, setToDelete] = useState<Post | null>(null);
   const [toUpdate, setToUpdate] = useState<Post | null>(null);
 
+  const posts = query.data?.pages.flat() ?? [];
+
   return (
     <section className="space-y-4">
-      {query.data?.pages
-        .flatMap((page) => page)
-        .map((el) => (
-          <PostCard
-            post={el}
-            key={el.id}
-            delete={() => setToDelete(el)}
-            update={() => setToUpdate(el)}
-            like={() => likePost.mutate(el)}
-          />
-        ))}
+      {posts.map((el) => (
+        <PostCard
+          post={el}
+          key={el.id}
+          delete={() => setToDelete(el)}
+          update={() => setToUpdate(el)}
+          like={() => likePost.mutate(el)}
+        />
+      ))}
 
       {toUpdate && (
         <UpdateModal

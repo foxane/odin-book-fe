@@ -2,14 +2,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RouteParams } from "../../App";
 import PostCard from "../../components/post/PostCard";
 import PostSkeleton from "../../components/post/PostSkeleton";
-import CommentCard from "../../components/comment/CommentCard";
-import { useCommentQuery, usePostQuery } from "../../hooks/usePostPage";
-import { isComment } from "../../utils/helpers";
+import { useCommentQuery, usePostQuery } from "./usePostPage";
 import CommentForm from "../../components/comment/CommentForm";
 import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../../components/common/Modal";
-import useCommentInfinite from "../../hooks/useCommentInfnite";
 import usePostSingle from "../../hooks/usePostSingle";
+import CommentList from "../../components/comment/CommentList";
+import InfiniteScrollObserver from "../../components/common/InfiniteScrollObserver";
+import { BotIcon } from "lucide-react";
 
 function PostPage() {
   const postId = useParams<RouteParams>().postId!;
@@ -27,14 +27,12 @@ function PostPage() {
    * Mutations
    */
   const { deletePost, likePost, updatePost } = usePostSingle(postKey);
-  const { deleteComment, likeComment, updateComment } =
-    useCommentInfinite(commentKey);
 
   /**
    * Control modal visibility based this 2 state
    */
-  const [toUpdate, setToUpdate] = useState<Post | IComment | null>(null);
-  const [toDelete, setToDelete] = useState<Post | IComment | null>(null);
+  const [toUpdate, setToUpdate] = useState<Post | null>(null);
+  const [toDelete, setToDelete] = useState<Post | null>(null);
 
   if (!postQuery.data && postQuery.isError) {
     return <p>{postQuery.error.message}</p>;
@@ -54,31 +52,15 @@ function PostPage() {
       />
 
       <CommentForm postId={postId} />
-
-      <section className="space-y-2">
-        {commentQuery.data?.pages
-          .flat()
-          .map((el) => (
-            <CommentCard
-              comment={el}
-              key={el.id}
-              like={() => likeComment.mutate(el)}
-              delete={() => setToDelete(el)}
-              update={() => setToUpdate(el)}
-            />
-          ))}
-      </section>
+      <CommentList query={commentQuery} queryKey={commentKey} />
 
       {toDelete && (
         <DeleteModal
           data={toDelete}
           onClose={() => setToDelete(null)}
           submit={() => {
-            if (isComment(toDelete)) deleteComment.mutate(toDelete);
-            else {
-              deletePost.mutate(toDelete);
-              void navigate("/", { replace: true });
-            }
+            deletePost.mutate(toDelete);
+            void navigate("/", { replace: true });
           }}
         />
       )}
@@ -87,12 +69,18 @@ function PostPage() {
         <UpdateModal
           data={toUpdate}
           onClose={() => setToUpdate(null)}
-          submit={(data: IComment | Post) => {
-            if (isComment(data)) updateComment.mutate(data);
-            else updatePost.mutate(data);
-          }}
+          submit={(data: IComment | Post) => updatePost.mutate(data)}
         />
       )}
+
+      <InfiniteScrollObserver
+        query={commentQuery}
+        loadingComponent={
+          <div>
+            <BotIcon className="mx-auto animate-bounce" size={40} />
+          </div>
+        }
+      />
     </div>
   );
 }

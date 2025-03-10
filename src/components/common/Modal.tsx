@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
+import { isComment } from "../../utils/helpers";
 
 const Modal = forwardRef<
   HTMLDialogElement,
@@ -66,7 +67,7 @@ export function DeleteModal({ data, submit, onClose }: Props) {
 }
 
 interface UpdateProps extends Pick<Props, "data" | "onClose"> {
-  submit: (post: Post) => void;
+  submit: (post: Post | IComment) => void;
 }
 
 export function UpdateModal({ data, submit, onClose }: UpdateProps) {
@@ -85,7 +86,11 @@ export function UpdateModal({ data, submit, onClose }: UpdateProps) {
           className="btn btn-error"
           onClick={() => {
             onClose();
-            submit({ ...data, text });
+            if (isComment(data)) {
+              submit({ ...data, text, postId: data.postId });
+            } else {
+              submit({ ...data, text });
+            }
           }}
         >
           Save

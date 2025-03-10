@@ -3,8 +3,8 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { api } from "../utils/services";
-import { DEFAULT_API_CURSOR_LIMIT, QUERY_KEY } from "../utils/constants";
+import { api } from "../../utils/services";
+import { DEFAULT_API_CURSOR_LIMIT, QUERY_KEY } from "../../utils/constants";
 
 type QueryKey = string[];
 
@@ -32,9 +32,9 @@ export function useCommentQuery(queryKey: QueryKey) {
           `/posts/${queryKey[1]}/comments?cursor=${pageParam}`,
         )
       ).data,
-    getNextPageParam: (page) =>
-      page.length > DEFAULT_API_CURSOR_LIMIT
-        ? page.at(-1)!.id.toString()
-        : undefined,
+    getNextPageParam: (page) => {
+      if (page.length < DEFAULT_API_CURSOR_LIMIT) return undefined;
+      else return page.at(-1)?.id.toString();
+    },
   });
 }

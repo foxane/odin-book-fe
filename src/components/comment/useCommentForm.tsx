@@ -23,7 +23,7 @@ export default function useCommentForm(postId: string) {
 
     client.setQueryData(queryKey, (old: InfiniteComment | undefined) =>
       old
-        ? { ...old, pages: [[dummy, ...old.pages[0]], old.pages.slice(1)] }
+        ? { ...old, pages: [[dummy, ...old.pages[0]], ...old.pages.slice(1)] }
         : old,
     );
 
