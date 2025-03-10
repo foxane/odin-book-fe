@@ -19,7 +19,7 @@ const Modal = forwardRef<
 Modal.displayName = "Modal";
 export default Modal;
 
-const useModal = (onClose: () => void, data: unknown) => {
+export const useModal = (onClose: () => void, data: unknown) => {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     if (!ref.current) return;

@@ -3,8 +3,8 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { api } from "../../utils/services";
-import { DEFAULT_API_CURSOR_LIMIT, QUERY_KEY } from "../../utils/constants";
+import { api } from "../utils/services";
+import { DEFAULT_API_CURSOR_LIMIT, QUERY_KEY } from "../utils/constants";
 
 type QueryKey = string[];
 

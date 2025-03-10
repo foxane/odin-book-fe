@@ -13,14 +13,18 @@ interface User {
   id: number;
   name: string;
   email: string;
-  avatar?: string | null;
-  background?: string | null;
-  bio?: string | null;
+  avatar: string | null;
+  background: string | null;
+  bio: string | null;
   createdAt: string;
-  provider?: OAuth | null;
+  provider: OAuth | null;
   role: Role;
   lastSeen: string | null;
   isFollowed: boolean;
+  _count: {
+    follower: number;
+    following: number;
+  };
 }
 
 interface OAuth {

@@ -38,7 +38,6 @@ export default function useCommentForm(postId: string) {
           page.map((el) => (el.id === dummy.id ? data : el)),
         ),
       }));
-      console.log(client.getQueryData(queryKey));
     } catch (error) {
       console.log(error);
       alert("Error handler for creating comment is not set");

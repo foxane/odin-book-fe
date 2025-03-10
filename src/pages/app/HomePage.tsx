@@ -4,11 +4,8 @@ import {
   DEFAULT_API_CURSOR_LIMIT as LIMIT,
   QUERY_KEY,
 } from "../../utils/constants";
-import PostCard from "../../components/post/PostCard";
 import PostForm from "../../components/post/PostForm";
-import { DeleteModal, UpdateModal } from "../../components/common/Modal";
-import { useState } from "react";
-import usePostInfinite from "../../hooks/usePostInfinite";
+import PostList from "../../components/post/PostList";
 
 function HomePage() {
   const postQuery = useInfiniteQuery({
@@ -23,48 +20,10 @@ function HomePage() {
     },
   });
 
-  /**
-   * Mutation fns
-   */
-  const { likePost, deletePost, updatePost } = usePostInfinite(QUERY_KEY.posts);
-
-  /**
-   * Modal state
-   */
-  const [toDelete, setToDelete] = useState<Post | null>(null);
-  const [toUpdate, setToUpdate] = useState<Post | null>(null);
-
   return (
     <div className="space-y-6">
       <PostForm />
-
-      <section className="space-y-4">
-        {postQuery.data?.pages
-          .flat()
-          .map((el) => (
-            <PostCard
-              post={el}
-              key={el.id}
-              like={() => likePost.mutate(el)}
-              update={() => setToUpdate(el)}
-              delete={() => setToDelete(el)}
-            />
-          ))}
-      </section>
-
-      <DeleteModal
-        data={toDelete}
-        submit={() => deletePost.mutate(toDelete!)}
-        onClose={() => setToDelete(null)}
-      />
-
-      {toUpdate && (
-        <UpdateModal
-          data={toUpdate}
-          submit={(data) => updatePost.mutate(data)}
-          onClose={() => setToUpdate(null)}
-        />
-      )}
+      <PostList query={postQuery} queryKey={QUERY_KEY.posts} />
     </div>
   );
 }

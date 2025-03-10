@@ -3,7 +3,7 @@ import { RouteParams } from "../../App";
 import PostCard from "../../components/post/PostCard";
 import PostSkeleton from "../../components/post/PostSkeleton";
 import CommentCard from "../../components/comment/CommentCard";
-import { useCommentQuery, usePostQuery } from "./usePostPage";
+import { useCommentQuery, usePostQuery } from "../../hooks/usePostPage";
 import { isComment } from "../../utils/helpers";
 import CommentForm from "../../components/comment/CommentForm";
 import { useState } from "react";

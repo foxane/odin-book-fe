@@ -3,6 +3,7 @@ import { EllipsisIcon, HeartIcon, PenBoxIcon, Trash2Icon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import UserAvatar from "../user/UserAvatar";
 import { POST_STATUS_TEXT } from "../../utils/constants";
+import { Link } from "react-router-dom";
 
 interface Props {
   comment: IComment;
@@ -19,13 +20,16 @@ export default function CommentCard({ comment, ...actions }: Props) {
         comment.status && "animate-pulse",
       )}
     >
-      <div className="chat-image">
+      <Link to={`/user/${comment.user.id}`} className="chat-image">
         <UserAvatar user={comment.user} />
-      </div>
+      </Link>
 
       <div className="chat-header w-full items-center gap-3">
-        <p className="font-semibold">{comment.user.name}</p>
+        <Link to={`/user/${comment.user.id}`} className="font-semibold">
+          {comment.user.name}
+        </Link>
         <p>{formatDate(comment.createdAt)}</p>
+
         {comment.status ? (
           <p className="ms-auto text-sm">
             {POST_STATUS_TEXT[comment.status]}

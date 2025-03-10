@@ -9,3 +9,15 @@ export const POST_STATUS_TEXT = Object.freeze({
 export const QUERY_KEY = Object.freeze({
   posts: ["posts"],
 });
+
+export type UserPageKeys = Record<
+  "userKey" | "postKey" | "followerKey" | "followingKey",
+  unknown[]
+>;
+
+export const createUserPageKey = (userId: string): UserPageKeys => ({
+  userKey: ["user", userId],
+  postKey: ["posts", { userId }],
+  followerKey: ["follower", { userId }],
+  followingKey: ["following", { userId }],
+});

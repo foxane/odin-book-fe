@@ -11,6 +11,7 @@ import { formatDate } from "../../utils/helpers";
 import { POST_STATUS_TEXT } from "../../utils/constants";
 import { Link, useLocation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import Img from "../common/Img";
 
 interface Props {
   post: Post;
@@ -30,11 +31,14 @@ export default function PostCard({ post, ...actions }: Props) {
     >
       {/* Title Section */}
       <div className="flex items-center space-x-2">
-        <UserAvatar user={post.user} size="30" />
-        <div className="space-y-1">
+        <Link to={`/user/${post.user.id}`} className="p-0">
+          <UserAvatar user={post.user} />
+        </Link>
+        <Link to={`/user/${post.user.id}`}>
           <p className="text-sm font-semibold">{post.user.name}</p>
           <p className="text-xs opacity-80">{formatDate(post.createdAt)}</p>
-        </div>
+        </Link>
+
         {post.status ? (
           <p className="ms-auto text-sm">
             {POST_STATUS_TEXT[post.status]}
@@ -67,9 +71,9 @@ export default function PostCard({ post, ...actions }: Props) {
       {/* Content Section */}
       <div>
         <div dangerouslySetInnerHTML={{ __html: post.text }} className="py-2" />
-        {post.media.map((src) => (
-          <img src={src} key={src} loading="lazy" />
-        ))}
+        {post.media[0] && (
+          <Img src={post.media[0]} className="w-full rounded" />
+        )}
       </div>
 
       {/* Count Section */}

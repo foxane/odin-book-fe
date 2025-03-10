@@ -14,7 +14,7 @@ function UserAvatar({
         className={twMerge("avatar", !user.lastSeen && "")}
         size={size ?? "35"}
         name={user.name}
-        src={user.avatar ?? ""}
+        src={user.avatar ?? undefined}
         round
         maxInitials={2}
         textSizeRatio={2}
