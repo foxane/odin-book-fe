@@ -1,6 +1,7 @@
 import { UseInfiniteQueryResult } from "@tanstack/react-query";
 import UserCard from "./UserCard";
 import useUserInfinite, { InfiniteUser } from "../../hooks/useUserInfinite";
+import InfiniteScrollObserver from "../common/InfiniteScrollObserver";
 
 interface Props {
   query: UseInfiniteQueryResult<InfiniteUser>;
@@ -23,6 +24,8 @@ function UserList({ query, queryKey }: Props) {
           }}
         />
       ))}
+
+      <InfiniteScrollObserver query={query} />
     </section>
   );
 }

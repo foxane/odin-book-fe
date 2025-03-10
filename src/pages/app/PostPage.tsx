@@ -8,8 +8,6 @@ import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../../components/common/Modal";
 import usePostSingle from "../../hooks/usePostSingle";
 import CommentList from "../../components/comment/CommentList";
-import InfiniteScrollObserver from "../../components/common/InfiniteScrollObserver";
-import { BotIcon } from "lucide-react";
 
 function PostPage() {
   const postId = useParams<RouteParams>().postId!;
@@ -34,7 +32,7 @@ function PostPage() {
   const [toUpdate, setToUpdate] = useState<Post | null>(null);
   const [toDelete, setToDelete] = useState<Post | null>(null);
 
-  if (!postQuery.data && postQuery.isError) {
+  if (postQuery.isError) {
     return <p>{postQuery.error.message}</p>;
   }
 
@@ -73,14 +71,10 @@ function PostPage() {
         />
       )}
 
-      <InfiniteScrollObserver
-        query={commentQuery}
-        loadingComponent={
-          <div>
-            <BotIcon className="mx-auto animate-bounce" size={40} />
-          </div>
-        }
-      />
+      {commentQuery.isPending &&
+        Array(10)
+          .fill("")
+          .map((_, i) => <PostSkeleton key={i} />)}
     </div>
   );
 }

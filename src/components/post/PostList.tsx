@@ -3,6 +3,7 @@ import PostCard from "./PostCard";
 import usePostInfinite from "../../hooks/usePostInfinite";
 import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../common/Modal";
+import InfiniteScrollObserver from "../common/InfiniteScrollObserver";
 
 interface Props {
   query: UseInfiniteQueryResult<InfinitePost>;
@@ -44,6 +45,8 @@ function PostList({ query, queryKey }: Props) {
           submit={() => deletePost.mutate(toDelete)}
         />
       )}
+
+      <InfiniteScrollObserver query={query} />
     </section>
   );
 }

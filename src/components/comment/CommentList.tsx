@@ -3,6 +3,7 @@ import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../common/Modal";
 import useCommentInfinite from "../../hooks/useCommentInfnite";
 import CommentCard from "./CommentCard";
+import InfiniteScrollObserver from "../common/InfiniteScrollObserver";
 
 interface Props {
   query: UseInfiniteQueryResult<InfiniteComment>;
@@ -44,6 +45,8 @@ function CommentList({ query, queryKey }: Props) {
           submit={() => deleteComment.mutate(toDelete)}
         />
       )}
+
+      <InfiniteScrollObserver query={query} />
     </section>
   );
 }

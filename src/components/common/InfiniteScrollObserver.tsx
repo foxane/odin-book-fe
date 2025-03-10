@@ -1,4 +1,5 @@
 import { UseInfiniteQueryResult } from "@tanstack/react-query";
+import { BotIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
@@ -13,7 +14,12 @@ interface InfiniteScrollObserverProps<TData, TError> {
 
 function InfiniteScrollObserver<TData, TError>({
   query,
-  loadingComponent,
+  loadingComponent = (
+    <div>
+      <BotIcon className="mx-auto animate-bounce" size={40} />
+      <div className="divider h-5"></div>
+    </div>
+  ),
   className = "divider",
   rootMargin = "160px",
   threshold = 0,

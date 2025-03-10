@@ -7,8 +7,6 @@ import {
 import PostForm from "../../components/post/PostForm";
 import PostList from "../../components/post/PostList";
 import PostSkeleton from "../../components/post/PostSkeleton";
-import InfiniteScrollObserver from "../../components/common/InfiniteScrollObserver";
-import { BotIcon } from "lucide-react";
 
 function HomePage() {
   const postQuery = useInfiniteQuery({
@@ -32,15 +30,6 @@ function HomePage() {
         Array(10)
           .fill("")
           .map((_, i) => <PostSkeleton key={i} />)}
-
-      <InfiniteScrollObserver
-        query={postQuery}
-        loadingComponent={
-          <div>
-            <BotIcon className="mx-auto animate-bounce" size={40} />
-          </div>
-        }
-      />
     </div>
   );
 }
