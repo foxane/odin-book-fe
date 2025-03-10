@@ -32,12 +32,16 @@ export default function useCommentForm(postId: string) {
         `/posts/${postId}/comments`,
         payload,
       );
-      client.setQueryData(queryKey, (old: InfiniteComment) => ({
-        ...old,
-        pages: old.pages.map((page) =>
-          page.map((el) => (el.id === dummy.id ? data : el)),
-        ),
-      }));
+      client.setQueryData(queryKey, (old: InfiniteComment | undefined) =>
+        old
+          ? {
+              ...old,
+              pages: old.pages.map((page) =>
+                page.map((el) => (el.id === dummy.id ? data : el)),
+              ),
+            }
+          : old,
+      );
     } catch (error) {
       console.log(error);
       alert("Error handler for creating comment is not set");

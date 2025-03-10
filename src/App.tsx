@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import useTheme from "./context/ThemeContext";
 import PostPage from "./pages/app/PostPage";
 import UserPage from "./pages/app/UserPage";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export type RouteParams = Record<"postId" | "userId", string>;
 const router = createBrowserRouter([
@@ -35,6 +36,7 @@ function App() {
   return (
     <QueryClientProvider client={main}>
       <RouterProvider router={router} />
+      <ReactQueryDevtools client={main} />
     </QueryClientProvider>
   );
 }

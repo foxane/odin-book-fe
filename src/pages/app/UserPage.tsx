@@ -7,11 +7,11 @@ import { PencilIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import Img from "../../components/common/Img";
 import useUserPage from "../../hooks/useUserPage";
-import UserCard from "../../components/user/UserCard";
 import { UserUpdateModal } from "../../components/user/UserUpdateModal";
 import { useState } from "react";
 import { createUserPageKey } from "../../utils/constants";
 import PostList from "../../components/post/PostList";
+import UserList from "../../components/user/UserList";
 
 function UserPage() {
   const { userId } = useParams<RouteParams>();
@@ -107,7 +107,7 @@ function UserPage() {
           aria-label="Posts"
           defaultChecked
         />
-        <div className="tab-content mt-2">
+        <div className="tab-content mt-5">
           <PostList query={postQuery} queryKey={keys.postKey} />
         </div>
 
@@ -118,9 +118,7 @@ function UserPage() {
           aria-label="Followers"
         />
         <div className="tab-content mt-2">
-          {followerQuery.data?.pages
-            .flatMap((page) => page)
-            .map((el) => <UserCard key={el.id} user={el} />)}
+          <UserList query={followerQuery} queryKey={keys.followerKey} />
         </div>
 
         <input
@@ -130,9 +128,7 @@ function UserPage() {
           aria-label="Following"
         />
         <div className="tab-content mt-2">
-          {followingQuery.data?.pages
-            .flatMap((page) => page)
-            .map((el) => <UserCard key={el.id} user={el} />)}
+          <UserList query={followingQuery} queryKey={keys.followingKey} />
         </div>
       </div>
 

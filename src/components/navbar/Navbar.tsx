@@ -1,13 +1,8 @@
-import {
-  BellIcon,
-  BotIcon,
-  MenuIcon,
-  MessageCircleIcon,
-  UserIcon,
-} from "lucide-react";
+import { BellIcon, BotIcon, MenuIcon, MessageCircleIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import NavBtn from "./NavBtn";
 import SearchForm from "../common/SearchForm";
+import { twMerge } from "tailwind-merge";
 
 function Navbar() {
   const toggleDrawer = () => {
@@ -18,7 +13,12 @@ function Navbar() {
   };
 
   return (
-    <header className="bg-base-100/30 border-base-content/20 flex h-14 border-b backdrop-blur-lg">
+    <header
+      className={twMerge(
+        "bg-base-100/50 border-base-content/20 flex h-16 border-b backdrop-blur-lg", // Styles
+        "z-2 container sticky top-0", // Postitioning
+      )}
+    >
       <div className="navbar-start gap-1">
         <NavBtn className="btn-square lg:hidden" onClick={toggleDrawer}>
           <MenuIcon />
@@ -46,9 +46,13 @@ function Navbar() {
           <BellIcon />
         </NavBtn>
 
-        <NavBtn>
-          <UserIcon />
-        </NavBtn>
+        <label
+          htmlFor="right-drawer"
+          tabIndex={0}
+          className="btn btn-square btn-ghost lg:hidden"
+        >
+          <MenuIcon />
+        </label>
       </div>
     </header>
   );
