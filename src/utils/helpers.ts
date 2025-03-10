@@ -35,3 +35,22 @@ export const cancelAndGetPrev = async <T>(
 export function isComment(data: Post | IComment): data is IComment {
   return "postId" in data;
 }
+
+/**
+ * @param user User
+ * @param shallow true = only change isFollowed property
+ * @returns User
+ */
+export const modifyFollow = (user: User, shallow = false): User => {
+  if (shallow) {
+    return { ...user, isFollowed: !user.isFollowed };
+  }
+
+  const { _count, isFollowed } = user;
+  const updatedCount = {
+    ..._count,
+    follower: _count.follower + (isFollowed ? -1 : +1),
+  };
+
+  return { ...user, _count: updatedCount, isFollowed: !isFollowed };
+};

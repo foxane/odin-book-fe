@@ -6,20 +6,37 @@ import useAuth from "../../context/AuthContext";
 import { PencilIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import Img from "../../components/common/Img";
-import useUserPage from "./useUserPage";
+import {
+  useFollowerQuery,
+  useFollowingQuery,
+  useFollowMutation,
+  usePostQuery,
+} from "./useUserPage";
 import { UserUpdateModal } from "../../components/user/UserUpdateModal";
 import { useState } from "react";
 import { createUserPageKey } from "../../utils/constants";
 import PostList from "../../components/post/PostList";
 import UserList from "../../components/user/UserList";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../utils/services";
 
 function UserPage() {
   const { userId } = useParams<RouteParams>();
   const authUser = useAuth((s) => s.user);
   const keys = createUserPageKey(userId!);
 
-  const { userQuery, postQuery, followerQuery, followingQuery, followUser } =
-    useUserPage(userId!, keys);
+  const userQuery = useQuery({
+    throwOnError: true,
+    queryKey: keys.userKey,
+    queryFn: () =>
+      api.axios.get<User>(`/user/${userId}`).then((data) => data.data),
+  });
+
+  const postQuery = usePostQuery(keys);
+  const followerQuery = useFollowerQuery(keys);
+  const followingQuery = useFollowingQuery(keys);
+  const followUser = useFollowMutation(keys);
+
   const user = userQuery.data;
 
   const isOwner = userQuery.data?.id === authUser?.id;

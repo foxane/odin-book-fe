@@ -1,18 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../utils/services";
-import { cancelAndGetPrev } from "../utils/helpers";
+import { cancelAndGetPrev, modifyFollow } from "../utils/helpers";
 
 export type InfiniteUser = InfiniteData<User[]>;
-
-const modifyFollow = (user: User): User => {
-  const { _count, isFollowed } = user;
-  const updatedCount = {
-    ..._count,
-    follower: _count.follower + (isFollowed ? -1 : +1),
-  };
-
-  return { ...user, _count: updatedCount, isFollowed: !isFollowed };
-};
 
 function useUserInfinite(queryKey: unknown[]) {
   const client = useQueryClient();
@@ -31,7 +21,7 @@ function useUserInfinite(queryKey: unknown[]) {
         return {
           ...old,
           pages: old.pages.map((page) =>
-            page.map((el) => (el.id === user.id ? modifyFollow(el) : el)),
+            page.map((el) => (el.id === user.id ? modifyFollow(el, true) : el)),
           ),
         };
       });

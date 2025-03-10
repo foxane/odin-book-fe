@@ -10,10 +10,17 @@ export const QUERY_KEY = Object.freeze({
   posts: ["posts"],
 });
 
-export type UserPageKeys = Record<
-  "userKey" | "postKey" | "followerKey" | "followingKey",
-  unknown[]
->;
+// export type UserPageKeys = Record<
+//   "userKey" | "postKey" | "followerKey" | "followingKey",
+//   unknown[]
+// >;
+
+type Key = [string, { userId: string }];
+
+export interface UserPageKeys
+  extends Record<"postKey" | "followerKey" | "followingKey", Key> {
+  userKey: ["user", string];
+}
 
 export const createUserPageKey = (userId: string): UserPageKeys => ({
   userKey: ["user", userId],
