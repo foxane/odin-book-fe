@@ -10,10 +10,12 @@ interface InfiniteScrollObserverProps<TData, TError> {
   rootMargin?: string;
   threshold?: number;
   disabled?: boolean;
+  buttonMode?: boolean;
 }
 
 function InfiniteScrollObserver<TData, TError>({
   query,
+  buttonMode = false,
   loadingComponent = (
     <div>
       <BotIcon className="mx-auto animate-bounce" size={40} />
@@ -41,6 +43,20 @@ function InfiniteScrollObserver<TData, TError>({
   if (query.isFetchingNextPage && loadingComponent) {
     return <>{loadingComponent}</>;
   }
+
+  if (buttonMode)
+    return (
+      <div className="divider">
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            void query.fetchNextPage();
+          }}
+        >
+          Load More
+        </button>
+      </div>
+    );
 
   return <div ref={ref} className={className}></div>;
 }

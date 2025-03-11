@@ -10,6 +10,7 @@ import PostPage from "./pages/app/PostPage";
 import UserPage from "./pages/app/UserPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ErrorPage from "./pages/ErrorPage";
+import SearchPage from "./pages/app/SearchPage";
 
 export type RouteParams = Record<"postId" | "userId", string>;
 const router = createBrowserRouter([
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "/post/:postId", element: <PostPage /> },
       { path: "/user/:userId", element: <UserPage /> },
-      { path: "/error", element: <ErrorPage /> },
+      { path: "/search", element: <SearchPage /> },
       { path: "*", element: <ErrorPage text="Page not found" /> },
     ],
   },

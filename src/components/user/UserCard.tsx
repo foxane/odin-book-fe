@@ -16,7 +16,7 @@ function UserCard({ user, follow }: Props) {
   };
 
   return (
-    <div className="hover:bg-base-content/10 flex cursor-pointer items-center p-2 transition-colors">
+    <div className="hover:bg-base-content/10 flex cursor-pointer items-center px-2 py-1 transition-colors">
       <Link
         to={`/user/${user.id}`}
         className="flex items-center gap-2 truncate"

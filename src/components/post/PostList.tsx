@@ -4,13 +4,15 @@ import usePostInfinite from "../../hooks/usePostInfinite";
 import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../common/Modal";
 import InfiniteScrollObserver from "../common/InfiniteScrollObserver";
+import LoadingOrEmptyCard from "../common/LoadingOrEmptyCard";
 
 interface Props {
   query: UseInfiniteQueryResult<InfinitePost>;
   queryKey: unknown[];
+  buttonMode?: boolean;
 }
 
-function PostList({ query, queryKey }: Props) {
+function PostList({ query, queryKey, buttonMode }: Props) {
   const { deletePost, likePost, updatePost } = usePostInfinite(queryKey);
 
   const [toDelete, setToDelete] = useState<Post | null>(null);
@@ -46,7 +48,9 @@ function PostList({ query, queryKey }: Props) {
         />
       )}
 
-      <InfiniteScrollObserver query={query} />
+      {posts.length === 0 && <LoadingOrEmptyCard isLoading={query.isLoading} />}
+
+      <InfiniteScrollObserver query={query} buttonMode={buttonMode} />
     </section>
   );
 }
