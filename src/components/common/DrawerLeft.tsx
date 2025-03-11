@@ -1,23 +1,21 @@
 import { Link } from "react-router-dom";
-import SearchForm from "../../components/common/SearchForm";
 import {
   BellIcon,
+  BotIcon,
   Github,
   HomeIcon,
   LogOutIcon,
   MessageSquareIcon,
   MoonIcon,
+  SearchIcon,
   SunIcon,
 } from "lucide-react";
 import useTheme from "../../context/ThemeContext";
 import useAuth from "../../context/AuthContext";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import UserAvatar from "../../components/user/UserAvatar";
-import { api } from "../../utils/services";
-import { DEFAULT_API_CURSOR_LIMIT } from "../../utils/constants";
-import UserList from "../../components/user/UserList";
+import UserAvatar from "../user/UserAvatar";
+import { useQueryClient } from "@tanstack/react-query";
 
-function Drawer({ children }: { children: React.ReactNode }) {
+function DrawerLeft({ children }: { children: React.ReactNode }) {
   const client = useQueryClient();
 
   const user = useAuth((s) => s.user);
@@ -30,85 +28,37 @@ function Drawer({ children }: { children: React.ReactNode }) {
     logout();
     client.clear();
   };
-
-  const onlineQuery = useInfiniteQuery({
-    queryKey: ["users", "online"],
-    initialPageParam: "",
-    queryFn: async ({ pageParam }) => {
-      return (
-        await api.axios.get<User[]>(`/users?online=true&cursor=${pageParam}`)
-      ).data;
-    },
-    getNextPageParam: (page) => {
-      if (page.length < DEFAULT_API_CURSOR_LIMIT) return undefined;
-      else return page.at(-1)!.id.toString();
-    },
-  });
-
-  const offlineQuery = useInfiniteQuery({
-    queryKey: ["users", "offline"],
-    initialPageParam: "",
-    queryFn: async ({ pageParam }) => {
-      return (
-        await api.axios.get<User[]>(`/users?online=false&cursor=${pageParam}`)
-      ).data;
-    },
-    getNextPageParam: (page) => {
-      if (page.length < DEFAULT_API_CURSOR_LIMIT) return undefined;
-      else return page.at(-1)!.id.toString();
-    },
-  });
-
   return (
     <div className="drawer md:drawer-open">
       <input id="left-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
-        {/* Right drawer */}
-        <div className="drawer drawer-end lg:drawer-open">
-          <input id="right-drawer" type="checkbox" className="drawer-toggle" />
-          <div className="drawer-content">
-            {/* Page */}
-            {children}
-          </div>
-
-          <div className="drawer-side z-3 lg:z-1 lg:top-16">
-            <label htmlFor="right-drawer" className="drawer-overlay"></label>
-            <div className="bg-base-100 h-full w-64 space-y-5 p-2">
-              <section className="space-y-2">
-                <h3 className="divider font-semibold">Online users</h3>
-                <UserList query={onlineQuery} queryKey={["users", "online"]} />
-              </section>
-
-              <section className="space-y-2">
-                <h3 className="divider font-semibold">All users</h3>
-                <UserList
-                  query={offlineQuery}
-                  queryKey={["users", "offline"]}
-                />
-              </section>
-            </div>
-          </div>
-        </div>
-        {/* Right drawer */}
-      </div>
-
-      {/* Left drawer */}
-      <div className="drawer-side z-3 md:z-1 md:top-16">
+      <div className="drawer-content">{children}</div>
+      <div className="drawer-side z-3 md:z-1">
         <label
           htmlFor="left-drawer"
           aria-label="close sidebar"
           className="drawer-overlay"
         />
-        <div className="bg-base-100 flex h-full w-64 flex-col space-y-4 p-4 md:h-[calc(100vh-3.5rem)]">
-          <SearchForm className="md:hidden" />
+        <div className="bg-base-100 flex h-full w-64 flex-col space-y-4 p-4">
+          <Link to={"/"} className="inline-flex font-mono">
+            <BotIcon size={30} className="me-1" />
+            <h1 className="text-lg/loose font-bold">
+              {" "}
+              {import.meta.env.VITE_APP_NAME}
+            </h1>
+          </Link>
 
           <nav>
-            <h2 className="divider divider-start font-semibold">Navigations</h2>
             <ul className="menu w-full">
               <li>
                 <Link to={"/"}>
                   <HomeIcon size={20} />
                   Home
+                </Link>
+              </li>
+              <li>
+                <Link to={"/"}>
+                  <SearchIcon size={20} />
+                  Explore
                 </Link>
               </li>
               <li>
@@ -175,4 +125,4 @@ function Drawer({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default Drawer;
+export default DrawerLeft;

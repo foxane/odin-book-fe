@@ -15,7 +15,7 @@ function Navbar() {
     <header
       className={twMerge(
         "bg-base-100/50 border-base-content/20 flex h-16 border-b px-3 backdrop-blur-lg", // Styles
-        "z-2 sticky top-0", // Postitioning
+        "z-2 sticky top-0 md:hidden", // Postitioning
       )}
     >
       <div className="navbar-start gap-1">
