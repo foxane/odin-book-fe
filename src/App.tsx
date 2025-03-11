@@ -9,19 +9,24 @@ import useTheme from "./context/ThemeContext";
 import PostPage from "./pages/app/PostPage";
 import UserPage from "./pages/app/UserPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ErrorPage from "./pages/ErrorPage";
 
 export type RouteParams = Record<"postId" | "userId", string>;
 const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute page={<AppLayout />} />,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
       { path: "/post/:postId", element: <PostPage /> },
       { path: "/user/:userId", element: <UserPage /> },
+      { path: "/error", element: <ErrorPage /> },
+      { path: "*", element: <ErrorPage text="Page not found" /> },
     ],
   },
 
+  { path: "*", element: <ErrorPage text="Page not found" /> }, // 404 for not authentiicated users
   { path: "/auth", element: <AuthPage /> },
 ]);
 

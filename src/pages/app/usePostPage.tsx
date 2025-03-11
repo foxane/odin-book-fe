@@ -5,20 +5,28 @@ import {
 } from "@tanstack/react-query";
 import { api } from "../../utils/services";
 import { DEFAULT_API_CURSOR_LIMIT, QUERY_KEY } from "../../utils/constants";
+import { AxiosError } from "axios";
 
 type QueryKey = string[];
 
 export function usePostQuery(queryKey: QueryKey) {
   const client = useQueryClient();
   return useQuery({
+    retry: false,
     queryKey,
     queryFn: async () =>
       (await api.axios.get<Post>(`/posts/${queryKey[1]}`)).data,
+
     initialDataUpdatedAt: client.getQueryState(QUERY_KEY.posts)?.dataUpdatedAt,
     initialData: client
       .getQueryData<InfinitePost>(QUERY_KEY.posts)
       ?.pages.flatMap((page) => page)
       .find((post) => post.id === Number(queryKey[1])),
+
+    throwOnError: (error: AxiosError) => {
+      if (error.response && error.response.status === 404) return false;
+      else return true;
+    },
   });
 }
 

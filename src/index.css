@@ -7,3 +7,11 @@
 }
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+a.active {
+  background-color: color-mix(
+    in oklab,
+    var(--color-base-content) 5%,
+    transparent
+  );
+}

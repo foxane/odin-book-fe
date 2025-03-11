@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   BellIcon,
   BotIcon,
@@ -50,28 +50,28 @@ function DrawerLeft({ children }: { children: React.ReactNode }) {
           <nav>
             <ul className="menu w-full">
               <li>
-                <Link to={"/"}>
+                <NavLink to={"/"}>
                   <HomeIcon size={20} />
                   Home
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to={"/"}>
+                <NavLink to={"/search"}>
                   <SearchIcon size={20} />
                   Explore
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to={"/"}>
+                <NavLink to={"/notification"}>
                   <BellIcon size={20} />
                   Notifications
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to={"/"}>
+                <NavLink to={"/message"}>
                   <MessageSquareIcon size={20} />
                   Messages
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </nav>

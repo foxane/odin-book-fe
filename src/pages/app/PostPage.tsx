@@ -8,6 +8,7 @@ import { useState } from "react";
 import { DeleteModal, UpdateModal } from "../../components/common/Modal";
 import usePostSingle from "../../hooks/usePostSingle";
 import CommentList from "../../components/comment/CommentList";
+import ErrorPage from "../ErrorPage";
 
 function PostPage() {
   const postId = useParams<RouteParams>().postId!;
@@ -20,6 +21,7 @@ function PostPage() {
   const postQuery = usePostQuery(postKey);
   const commentKey = ["comments", postId];
   const commentQuery = useCommentQuery(commentKey);
+  const post = postQuery.data!;
 
   /**
    * Mutations
@@ -32,21 +34,23 @@ function PostPage() {
   const [toUpdate, setToUpdate] = useState<Post | null>(null);
   const [toDelete, setToDelete] = useState<Post | null>(null);
 
+  /**
+   * Handle errors
+   */
   if (postQuery.isError) {
-    return <p>{postQuery.error.message}</p>;
-  }
-
-  if (!postQuery.data) {
-    return <PostSkeleton />;
+    if (postQuery.error.response?.status === 404) {
+      return <ErrorPage text="Post not found" />;
+    }
+    return <ErrorPage />;
   }
 
   return (
     <div className="space-y-6">
       <PostCard
-        post={postQuery.data}
-        like={() => likePost.mutate(postQuery.data)}
-        delete={() => setToDelete(postQuery.data)}
-        update={() => setToUpdate(postQuery.data)}
+        post={post}
+        like={() => likePost.mutate(post)}
+        delete={() => setToDelete(post)}
+        update={() => setToUpdate(post)}
       />
 
       <CommentForm postId={postId} />

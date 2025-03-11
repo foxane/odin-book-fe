@@ -19,17 +19,24 @@ import PostList from "../../components/post/PostList";
 import UserList from "../../components/user/UserList";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../utils/services";
+import { AxiosError } from "axios";
+import ErrorPage from "../ErrorPage";
 
 function UserPage() {
   const { userId } = useParams<RouteParams>();
   const authUser = useAuth((s) => s.user);
   const keys = createUserPageKey(userId!);
 
+  // Main query
   const userQuery = useQuery({
-    throwOnError: true,
     queryKey: keys.userKey,
+    retry: false,
     queryFn: () =>
       api.axios.get<User>(`/user/${userId}`).then((data) => data.data),
+    throwOnError: (error: AxiosError) => {
+      if (error.response && error.response.status === 404) return false;
+      else return true;
+    },
   });
 
   const postQuery = usePostQuery(keys);
@@ -37,13 +44,22 @@ function UserPage() {
   const followingQuery = useFollowingQuery(keys);
   const followUser = useFollowMutation(keys);
 
-  const user = userQuery.data;
-
+  const user = userQuery.data!; // Non-null, when error occur, user wont be needed
   const isOwner = userQuery.data?.id === authUser?.id;
   const [updateModal, setUpdateModal] = useState(false);
 
-  if (userQuery.isPending) return <LoadingScreen />;
-  if (!user) return <p>{userQuery.error.message}</p>;
+  if (userQuery.isLoading) return <LoadingScreen />;
+
+  /**
+   * Handle errors
+   */
+  if (userQuery.isError) {
+    if (userQuery.error.response?.status === 404) {
+      return <ErrorPage text="User not found" />;
+    }
+    return <ErrorPage />;
+  }
+
   return (
     <div className="space-y-2">
       <div className="rounded pb-1">
@@ -83,7 +99,7 @@ function UserPage() {
               </button>
             ) : (
               <button
-                onClick={() => followUser.mutate(userQuery.data)}
+                onClick={() => followUser.mutate(user)}
                 className={twMerge(
                   "btn btn-primary btn-sm",
                   user.isFollowed && "btn-outline",
