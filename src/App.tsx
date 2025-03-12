@@ -12,8 +12,9 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ErrorPage from "./pages/ErrorPage";
 import SearchPage from "./pages/app/SearchPage";
 import NotifPage from "./pages/app/NotifPage";
+import ChatPage from "./pages/app/chat/ChatPage";
 
-export type RouteParams = Record<"postId" | "userId", string>;
+export type RouteParams = Record<"postId" | "userId" | "chatId", string>;
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: "/user/:userId", element: <UserPage /> },
       { path: "/search", element: <SearchPage /> },
       { path: "/notification", element: <NotifPage /> },
+      { path: "/chat", element: <ChatPage /> },
       { path: "*", element: <ErrorPage text="Page not found" /> },
     ],
   },

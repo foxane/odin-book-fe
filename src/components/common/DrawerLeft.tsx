@@ -16,10 +16,12 @@ import UserAvatar from "../user/UserAvatar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNotif } from "../../context/NotifContext";
 import { twMerge } from "tailwind-merge";
+import { useChat } from "../../context/ChatContext";
 
 function DrawerLeft({ children }: { children: React.ReactNode }) {
   const client = useQueryClient();
   const { unreadCount: unreadNotif, loading: notifLoading } = useNotif();
+  const { unreadCount: unreadChat } = useChat();
 
   const user = useAuth((s) => s.user);
   const logout = useAuth((s) => s.logout);
@@ -83,9 +85,17 @@ function DrawerLeft({ children }: { children: React.ReactNode }) {
                 </NavLink>
               </li>
               <li>
-                <NavLink to={"/message"}>
+                <NavLink to={"/chat"}>
                   <MessageSquareIcon size={20} />
                   Messages
+                  <span
+                    className={twMerge(
+                      "badge badge-sm",
+                      unreadChat > 0 && "badge-primary",
+                    )}
+                  >
+                    {unreadChat}
+                  </span>
                 </NavLink>
               </li>
             </ul>

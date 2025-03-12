@@ -17,8 +17,6 @@ function NotifPage() {
   return (
     <div className="space-y-2">
       <div className="card-title px-3 py-1">
-        <p>Notifications</p>
-
         <div className="ms-auto space-x-2">
           <button
             onClick={() => clear()}

@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 interface AuthStore {
   user: User | null;
-  socket: Socket | null;
+  socket: Socket<ServerToClientEvents, ClientToServerEvents> | null;
   login: (token: string, user?: User) => Promise<void>;
   logout: () => void;
   connected: boolean;
