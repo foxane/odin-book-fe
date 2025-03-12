@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
-import DummyComment from "./DummyComment";
+import DummyComment from "../../classes/Comment";
 import { cancelAndGetPrev } from "../../utils/helpers";
 import useAuth from "../../context/AuthContext";
 import { api } from "../../utils/services";

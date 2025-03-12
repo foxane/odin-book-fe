@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../context/AuthContext";
 import { SubmitHandler, useForm } from "react-hook-form";
-import DummyPost from "./DummyPost";
+import DummyPost from "../../classes/Post";
 import { api } from "../../utils/services";
 import { QUERY_KEY } from "../../utils/constants";
 

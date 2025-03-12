@@ -1,4 +1,4 @@
-import { PostPayload } from "./usePostForm";
+import { PostPayload } from "../components/post/usePostForm";
 
 export default class DummyPost implements Post {
   createdAt = new Date();
