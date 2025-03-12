@@ -14,9 +14,12 @@ import useTheme from "../../context/ThemeContext";
 import useAuth from "../../context/AuthContext";
 import UserAvatar from "../user/UserAvatar";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNotif } from "../../context/NotifContext";
+import { twMerge } from "tailwind-merge";
 
 function DrawerLeft({ children }: { children: React.ReactNode }) {
   const client = useQueryClient();
+  const { unreadCount: unreadNotif, loading: notifLoading } = useNotif();
 
   const user = useAuth((s) => s.user);
   const logout = useAuth((s) => s.logout);
@@ -65,6 +68,18 @@ function DrawerLeft({ children }: { children: React.ReactNode }) {
                 <NavLink to={"/notification"}>
                   <BellIcon size={20} />
                   Notifications
+                  <span
+                    className={twMerge(
+                      "badge badge-sm",
+                      unreadNotif > 0 && "badge-primary",
+                    )}
+                  >
+                    {notifLoading ? (
+                      <span className="loading loading-xs" />
+                    ) : (
+                      unreadNotif
+                    )}
+                  </span>
                 </NavLink>
               </li>
               <li>

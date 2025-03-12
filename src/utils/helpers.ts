@@ -54,3 +54,40 @@ export const modifyFollow = (user: User, shallow = false): User => {
 
   return { ...user, _count: updatedCount, isFollowed: !isFollowed };
 };
+
+export const getNotificationUrl = (notification: INotification) => {
+  const { type, actorId, postId } = notification;
+
+  switch (type) {
+    case "follower":
+      return `/user/${actorId}`;
+    case "post_from_followed":
+    case "post_liked":
+    case "post_commented":
+    case "comment_liked":
+      return postId ? `/post/${postId.toString()}` : "/post_not_found";
+
+    default:
+      return "/notif_type_not_found";
+  }
+};
+
+export const getNotifContent = (notif: INotification): string => {
+  const { type } = notif;
+
+  switch (type) {
+    case "post_from_followed":
+    case "post_liked":
+      return notif.post?.text ?? "";
+
+    case "post_commented":
+    case "comment_liked":
+      return notif.comment?.text ?? "";
+
+    case "follower":
+      return "";
+
+    default:
+      return "";
+  }
+};

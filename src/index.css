@@ -8,10 +8,20 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-a.active {
+@theme {
+  --color-hilit: color-mix(in oklab, var(--color-base-content) 5%, transparent);
+}
+
+/* a.active {
   background-color: color-mix(
     in oklab,
     var(--color-base-content) 5%,
     transparent
   );
+} */
+
+@layer {
+  a.active {
+    @apply bg-hilit;
+  }
 }

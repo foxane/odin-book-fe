@@ -28,3 +28,11 @@ export const createUserPageKey = (userId: string): UserPageKeys => ({
   followerKey: ["follower", { userId }],
   followingKey: ["following", { userId }],
 });
+
+export const NOTIFICATION_TEXT = {
+  follower: "started following you",
+  post_from_followed: "created a new post",
+  post_liked: "liked your post",
+  post_commented: "commented on your post",
+  comment_liked: "liked tour comment",
+};

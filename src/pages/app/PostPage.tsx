@@ -21,7 +21,7 @@ function PostPage() {
   const postQuery = usePostQuery(postKey);
   const commentKey = ["comments", postId];
   const commentQuery = useCommentQuery(commentKey);
-  const post = postQuery.data!;
+  const post = postQuery.data;
 
   /**
    * Mutations
@@ -43,6 +43,8 @@ function PostPage() {
     }
     return <ErrorPage />;
   }
+
+  if (!post) return <PostSkeleton />;
 
   return (
     <div className="space-y-6">

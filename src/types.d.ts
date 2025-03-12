@@ -74,3 +74,24 @@ interface IComment {
   isLiked: boolean;
   status?: "create" | "update" | "delete"; // frontend only
 }
+
+type NotifType =
+  | "follower"
+  | "post_from_followed"
+  | "post_liked"
+  | "post_commented"
+  | "comment_liked";
+
+interface INotification {
+  id: number;
+  isRead: boolean;
+  type: NotifType;
+  date: Date;
+  receiverId: string;
+  actorId: string;
+  actor: User;
+  post?: Post | null;
+  postId?: number | null;
+  comment?: IComment | null;
+  commentId?: number | null;
+}

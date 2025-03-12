@@ -24,12 +24,13 @@ function HomePage() {
   return (
     <div className="space-y-6">
       <PostForm />
-      <PostList query={postQuery} queryKey={QUERY_KEY.posts} />
 
       {postQuery.isPending &&
         Array(10)
           .fill("")
           .map((_, i) => <PostSkeleton key={i} />)}
+
+      <PostList query={postQuery} queryKey={QUERY_KEY.posts} />
     </div>
   );
 }
