@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { isComment } from "../../utils/helpers";
+import { addPTag, isComment, removePTag } from "../../utils/helpers";
+import { AlertOctagon, EditIcon } from "lucide-react";
 
 const Modal = forwardRef<
   HTMLDialogElement,
@@ -10,7 +11,7 @@ const Modal = forwardRef<
 >(({ children, onClose, ...props }, ref) => {
   return (
     <dialog className="modal" {...props} ref={ref} onCancel={onClose}>
-      <div className="modal-box">{children}</div>
+      <div className="modal-box card max-w-96 p-0">{children}</div>
       <form method="dialog" className="modal-backdrop">
         <button onClick={onClose}></button>
       </form>
@@ -20,6 +21,7 @@ const Modal = forwardRef<
 Modal.displayName = "Modal";
 export default Modal;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useModal = (onClose: () => void, data: unknown) => {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -35,7 +37,7 @@ export const useModal = (onClose: () => void, data: unknown) => {
 };
 
 interface Props {
-  data: Post | null;
+  data: Post | IComment | null;
   submit: () => void;
   onClose: () => void;
 }
@@ -44,23 +46,35 @@ export function DeleteModal({ data, submit, onClose }: Props) {
   const ref = useModal(onClose, data);
 
   if (!data) return null;
+
+  const resName = isComment(data) ? "comment" : "post";
   return (
     <Modal ref={ref} onClose={onClose}>
-      <div>
-        <h2 className="text-xl">Delete post?</h2>
+      <div className="card-body space-y-3">
+        <h2 className="card-title">
+          <AlertOctagon />
+          Delete post
+        </h2>
+
         <div>
-          <p>You are about to delete post:</p>
-          <div dangerouslySetInnerHTML={{ __html: data.text }} />
+          <p>Are you sure you wanted to delete this {resName}?</p>
+          <p>This action cannot be undone!</p>
         </div>
-        <button
-          className="btn btn-error"
-          onClick={() => {
-            onClose();
-            submit();
-          }}
-        >
-          Delete
-        </button>
+
+        <div className="card-actions justify-end">
+          <button onClick={onClose} className="btn">
+            Cancel
+          </button>
+          <button
+            onClick={() => {
+              onClose();
+              submit();
+            }}
+            className="btn btn-error"
+          >
+            Confirm
+          </button>
+        </div>
       </div>
     </Modal>
   );
@@ -72,29 +86,41 @@ interface UpdateProps extends Pick<Props, "data" | "onClose"> {
 
 export function UpdateModal({ data, submit, onClose }: UpdateProps) {
   const ref = useModal(onClose, data);
-  const [text, setText] = useState(data?.text ?? "");
+  const [text, setText] = useState(removePTag(data?.text));
 
   if (!data) return null;
+
+  const handleSubmit = () => {
+    onClose();
+    if (isComment(data)) {
+      submit({ ...data, text: addPTag(text), postId: data.postId });
+    } else {
+      submit({ ...data, text: addPTag(text) });
+    }
+  };
+
+  const resName = isComment(data) ? "comment" : "post";
   return (
     <Modal ref={ref} onClose={onClose}>
-      <div>
-        <h2 className="text-xl">Update</h2>
-        <div>
-          <textarea value={text} onChange={(e) => setText(e.target.value)} />
+      <div className="card-body">
+        <h2 className="card-title">
+          <EditIcon /> Edit {resName}
+        </h2>
+
+        <textarea
+          className="textarea w-full rounded"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+
+        <div className="card-actions justify-end">
+          <button className="btn" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={handleSubmit}>
+            Confirm
+          </button>
         </div>
-        <button
-          className="btn btn-error"
-          onClick={() => {
-            onClose();
-            if (isComment(data)) {
-              submit({ ...data, text, postId: data.postId });
-            } else {
-              submit({ ...data, text });
-            }
-          }}
-        >
-          Save
-        </button>
       </div>
     </Modal>
   );

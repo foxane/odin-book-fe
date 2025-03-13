@@ -95,3 +95,12 @@ export const getNotifContent = (notif: INotification): string => {
 
 export const getJoke = () =>
   JOKES[Math.floor(Math.random() * JOKES.length) + 1];
+
+export const addPTag = (s = "") =>
+  s
+    .split("\n")
+    .map((line) => `<p>${line}</p>`)
+    .join("");
+
+export const removePTag = (s = "") =>
+  s.replace(/<p>/g, "").replace(/<\/p>/g, "\n");
