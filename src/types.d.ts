@@ -57,6 +57,7 @@ interface InfiniteData<T> {
 
 type InfinitePost = InfiniteData<Post[]>;
 type InfiniteComment = InfiniteData<IComment[]>;
+type InfiniteUser = InfiniteData<User[]>;
 
 interface IComment {
   id: number;
@@ -170,4 +171,6 @@ interface ServerToClientEvents {
   newMessage: (m: Message) => void;
   newChat: (c: ChatSummary) => void;
   newNotification: (notif: INotification) => void;
+  userConnected: (user: Partial<User>) => void;
+  userDisconnected: (user: Partial<User>) => void;
 }

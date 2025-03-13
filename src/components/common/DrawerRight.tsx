@@ -1,13 +1,18 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../utils/services";
 import { DEFAULT_API_CURSOR_LIMIT } from "../../utils/constants";
 import UserList from "../user/UserList";
+import { useEffect } from "react";
+import useAuth from "../../context/AuthContext";
 
 export default function DrawerRight({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const socket = useAuth((s) => s.socket);
+  const client = useQueryClient();
+
   const onlineQuery = useInfiniteQuery({
     queryKey: ["users", "online"],
     initialPageParam: "",
@@ -35,6 +40,106 @@ export default function DrawerRight({
       else return page.at(-1)!.id.toString();
     },
   });
+
+  /**
+   * Handle user connect
+   */
+  useEffect(() => {
+    if (!socket) return;
+    const handleUserConnected = (user: Partial<User>) => {
+      /**
+       * Remove from offline data if exist
+       */
+      client.setQueryData(
+        ["users", "offline"],
+        (old: InfiniteUser | undefined) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) =>
+              page.filter((u) => u.id !== user.id),
+            ),
+          };
+        },
+      );
+
+      /**
+       * Add to online data if not exist
+       */
+      const exist = onlineQuery.data?.pages
+        .flat()
+        .find((u) => u.id === user.id);
+      if (exist) return;
+
+      client.setQueryData(
+        ["users", "online"],
+        (old: InfiniteUser | undefined) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: [[user as User, ...old.pages[0], ...old.pages.slice(1)]],
+          };
+        },
+      );
+    };
+
+    socket.on("userConnected", handleUserConnected);
+
+    return () => {
+      socket.off("userConnected", handleUserConnected);
+    };
+  }, [client, onlineQuery.data?.pages, socket]);
+
+  /**
+   * Handle user disconnect
+   * Basically the same as user connected, but reversed querykey
+   */
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleUserDisconnect = (user: Partial<User>) => {
+      /**
+       * Remove from online data if exist
+       */
+      client.setQueryData(
+        ["users", "online"],
+        (old: InfiniteUser | undefined) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) =>
+              page.filter((u) => u.id !== user.id),
+            ),
+          };
+        },
+      );
+
+      /**
+       * Add to offline data if not exist
+       */
+      const exist = onlineQuery.data?.pages
+        .flat()
+        .find((u) => u.id === user.id);
+      if (exist) return;
+
+      client.setQueryData(
+        ["users", "offline"],
+        (old: InfiniteUser | undefined) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: [[user as User, ...old.pages[0], ...old.pages.slice(1)]],
+          };
+        },
+      );
+    };
+
+    socket.on("userDisconnected", handleUserDisconnect);
+
+    return () => {
+      socket.off("userDisconnected", handleUserDisconnect);
+    };
+  }, [client, onlineQuery.data?.pages, socket]);
 
   return (
     <div className="drawer md:drawer-open">

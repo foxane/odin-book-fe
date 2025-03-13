@@ -22,6 +22,7 @@ import { AxiosError } from "axios";
 import ErrorPage from "../ErrorPage";
 import UserPageSkeleton from "../../components/user/UserPageSkeleton";
 import ChatButton from "../../components/user/ChatButton";
+import { formatDate } from "../../utils/helpers";
 
 function UserPage() {
   const { userId } = useParams<RouteParams>();
@@ -72,11 +73,22 @@ function UserPage() {
         {/* User info */}
         <div className="mt-2 grid grid-cols-[auto_1fr_auto] items-center gap-x-2 px-2">
           <div className="relative row-span-2 flex">
-            <UserAvatar user={user} />
+            <UserAvatar user={user} size="50" />
           </div>
 
           <div className="flex items-center gap-3">
             <p className="font-semibold">{user.name}</p>
+            <div>
+              {user.lastSeen === null ? (
+                <span className="badge badge-success badge-sm font-semibold">
+                  Online
+                </span>
+              ) : (
+                <span className="validator-hint italic opacity-80">
+                  last seen {formatDate(user.lastSeen)}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="col-start-2 row-start-2 flex gap-2 text-xs">

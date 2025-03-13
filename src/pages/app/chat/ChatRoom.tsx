@@ -7,8 +7,9 @@ import { useChat } from "../../../context/ChatContext";
 import { api } from "../../../utils/services";
 import MessageDummy from "../../../classes/Message";
 import ChatBubble from "./ChatBubble";
-import UserAvatar from "../../../components/user/UserAvatar";
 import LoadingOrEmptyCard from "../../../components/common/LoadingOrEmptyCard";
+import { formatDate } from "../../../utils/helpers";
+import Avatar from "react-avatar";
 
 const updateCache = (oldData: Message[] | undefined, newMsg: Message) => {
   if (!oldData) return [newMsg];
@@ -81,6 +82,17 @@ function MessageRoom({ chat, close }: Props) {
     };
   }, [chat.id, socket, markChatAsRead]);
 
+  /**
+   * Try to check if user online from cache
+   * Then use lastSeen from ChatSummary if not found
+   */
+  const lastSeen =
+    client
+      .getQueryData<InfiniteUser>(["users", "online"])
+      ?.pages.flat()
+      .find((u) => u.id === chat.otherUser.id)?.lastSeen ??
+    chat.otherUser.lastSeen;
+
   return (
     <div className="flex h-[calc(100vh-5rem)] grow flex-col md:h-[calc(100vh-2rem)]">
       {/* Header */}
@@ -89,9 +101,22 @@ function MessageRoom({ chat, close }: Props) {
           <ArrowLeft />
         </button>
 
-        <UserAvatar user={chat.otherUser} />
+        <Avatar
+          name={chat.otherUser.name}
+          src={chat.otherUser.avatar ?? ""}
+          size="40"
+          className="avatar"
+          round
+        />
 
-        <p className="text-md font-semibold">{chat.otherUser.name}</p>
+        <div className="flex flex-col">
+          <p className="font-semibold">{chat.otherUser.name}</p>
+          {lastSeen === null ? (
+            <span className="text-sm">online</span>
+          ) : (
+            <p className="validator-hint opacity-80">{formatDate(lastSeen)}</p>
+          )}
+        </div>
       </div>
 
       {/* Chat list */}
