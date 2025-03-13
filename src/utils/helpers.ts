@@ -1,5 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { format, formatDistanceToNow } from "date-fns";
+import JOKES from "../assets/jokes.json";
 
 export const formatDate = (t: Date | string): string => {
   const time = new Date(t);
@@ -91,3 +92,6 @@ export const getNotifContent = (notif: INotification): string => {
       return "";
   }
 };
+
+export const getJoke = () =>
+  JOKES[Math.floor(Math.random() * JOKES.length) + 1];

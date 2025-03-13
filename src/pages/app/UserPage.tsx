@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { RouteParams } from "../../App";
-import LoadingScreen from "../../components/common/LoadingScreen";
 import UserAvatar from "../../components/user/UserAvatar";
 import useAuth from "../../context/AuthContext";
 import { PencilIcon } from "lucide-react";
@@ -21,6 +20,8 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../utils/services";
 import { AxiosError } from "axios";
 import ErrorPage from "../ErrorPage";
+import UserPageSkeleton from "../../components/user/UserPageSkeleton";
+import ChatButton from "../../components/user/ChatButton";
 
 function UserPage() {
   const { userId } = useParams<RouteParams>();
@@ -48,7 +49,7 @@ function UserPage() {
   const isOwner = userQuery.data?.id === authUser?.id;
   const [updateModal, setUpdateModal] = useState(false);
 
-  if (userQuery.isLoading) return <LoadingScreen />;
+  if (userQuery.isLoading) return <UserPageSkeleton />;
 
   /**
    * Handle errors
@@ -126,8 +127,7 @@ function UserPage() {
 
       {!isOwner && (
         <div className="flex justify-end">
-          chatbtn here
-          {/* <ChatButton targetId={user.id} /> */}
+          <ChatButton targetId={user.id} />
         </div>
       )}
 

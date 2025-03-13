@@ -17,7 +17,7 @@ function AuthPage() {
    * Redirect when user is authenticated or token exist
    */
   const [params] = useSearchParams();
-  if (user || localStorage.getItem("token")) {
+  if (user) {
     const redirectTarget = params.get("r") ?? "/";
     return <Navigate to={redirectTarget} replace />;
   }
