@@ -11,7 +11,7 @@ const Modal = forwardRef<
 >(({ children, onClose, ...props }, ref) => {
   return (
     <dialog className="modal" {...props} ref={ref} onCancel={onClose}>
-      <div className="modal-box card max-w-96 p-0">{children}</div>
+      <div className="modal-box card p-0">{children}</div>
       <form method="dialog" className="modal-backdrop">
         <button onClick={onClose}></button>
       </form>

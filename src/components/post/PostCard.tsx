@@ -70,7 +70,10 @@ export default function PostCard({ post, ...actions }: Props) {
 
       {/* Content Section */}
       <div>
-        <div dangerouslySetInnerHTML={{ __html: post.text }} className="py-2" />
+        <div
+          dangerouslySetInnerHTML={{ __html: post.text }}
+          className="break-all py-2"
+        />
         {post.media[0] && (
           <Img src={post.media[0]} className="w-full rounded" />
         )}
