@@ -13,6 +13,7 @@ import ErrorPage from "./pages/ErrorPage";
 import SearchPage from "./pages/app/SearchPage";
 import NotifPage from "./pages/app/NotifPage";
 import ChatPage from "./pages/app/chat/ChatPage";
+import { AuthPageProvider } from "./pages/auth/useAuthPage";
 
 export type RouteParams = Record<"postId" | "userId" | "chatId", string>;
 const router = createBrowserRouter([
@@ -32,7 +33,15 @@ const router = createBrowserRouter([
   },
 
   { path: "*", element: <ErrorPage text="Page not found" /> }, // 404 for not authentiicated users
-  { path: "/auth", element: <AuthPage /> },
+
+  {
+    path: "/auth",
+    element: (
+      <AuthPageProvider>
+        <AuthPage />
+      </AuthPageProvider>
+    ),
+  },
 ]);
 
 const main = new QueryClient();
