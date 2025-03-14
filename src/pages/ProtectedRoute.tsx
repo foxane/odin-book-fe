@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import useAuth from "../context/AuthContext";
 import LoadingScreen from "../components/common/LoadingScreen";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { authErrorHandler } from "../utils/authHelper";
 
 function ProtectedRoute({ page }: { page: React.ReactNode }) {
   const user = useAuth((s) => s.user);
@@ -20,15 +19,12 @@ function ProtectedRoute({ page }: { page: React.ReactNode }) {
    */
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) return void navigate(redirectUrl, { replace: true });
+    if (!token) return setLoading(false);
 
     login(token)
       .catch((error: unknown) => {
         localStorage.removeItem("token");
-        void navigate(redirectUrl, {
-          replace: true,
-          state: authErrorHandler(error),
-        });
+        console.log(error);
       })
       .finally(() => setLoading(false));
   }, [login, navigate, redirectUrl]);
