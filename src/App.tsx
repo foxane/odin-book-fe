@@ -14,6 +14,8 @@ import SearchPage from "./pages/app/SearchPage";
 import NotifPage from "./pages/app/NotifPage";
 import ChatPage from "./pages/app/chat/ChatPage";
 import { AuthPageProvider } from "./pages/auth/useAuthPage";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 export type RouteParams = Record<"postId" | "userId" | "chatId", string>;
 const router = createBrowserRouter([
@@ -56,6 +58,8 @@ function App() {
     <QueryClientProvider client={main}>
       <RouterProvider router={router} />
       <ReactQueryDevtools client={main} />
+      <SpeedInsights />
+      <Analytics />
     </QueryClientProvider>
   );
 }
