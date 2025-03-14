@@ -1,9 +1,11 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../utils/services";
 import { DEFAULT_API_CURSOR_LIMIT } from "../../utils/constants";
-import UserList from "../user/UserList";
 import { useEffect } from "react";
 import useAuth from "../../context/AuthContext";
+import UserCard from "../user/UserCard";
+import UserSkeleton from "../user/UserSkeleton";
+import useUserInfinite from "../../hooks/useUserInfinite";
 
 export default function DrawerRight({
   children,
@@ -117,7 +119,7 @@ export default function DrawerRight({
       /**
        * Add to offline data if not exist
        */
-      const exist = onlineQuery.data?.pages
+      const exist = offlineQuery.data?.pages
         .flat()
         .find((u) => u.id === user.id);
       if (exist) return;
@@ -139,7 +141,12 @@ export default function DrawerRight({
     return () => {
       socket.off("userDisconnected", handleUserDisconnect);
     };
-  }, [client, onlineQuery.data?.pages, socket]);
+  }, [client, offlineQuery.data?.pages, socket]);
+
+  const onlines = onlineQuery.data?.pages.flat() ?? [];
+  const offlines = offlineQuery.data?.pages.flat() ?? [];
+  const { follow: onlineFollow } = useUserInfinite(["users", "online"]);
+  const { follow: offlineFollow } = useUserInfinite(["users", "offline"]);
 
   return (
     <div className="drawer md:drawer-open">
@@ -157,15 +164,46 @@ export default function DrawerRight({
             <div className="bg-base-100 h-full w-64 space-y-5 p-2">
               <section className="space-y-2">
                 <h3 className="divider font-semibold">Online users</h3>
-                <UserList query={onlineQuery} queryKey={["users", "online"]} />
+                <section className="space-y-1">
+                  {onlines.map((el) => (
+                    <UserCard
+                      user={el}
+                      key={el.id}
+                      follow={() => {
+                        onlineFollow.mutate(el);
+                        console.log("hi");
+                      }}
+                    />
+                  ))}
+
+                  {onlines.length === 0 &&
+                    onlineQuery.isPending &&
+                    Array(3)
+                      .fill("")
+                      .map((_, i) => <UserSkeleton key={i} />)}
+                </section>
               </section>
 
               <section className="space-y-2">
                 <h3 className="divider font-semibold">All users</h3>
-                <UserList
-                  query={offlineQuery}
-                  queryKey={["users", "offline"]}
-                />
+                <section className="space-y-1">
+                  {offlines.map((el) => (
+                    <UserCard
+                      user={el}
+                      key={el.id}
+                      follow={() => {
+                        offlineFollow.mutate(el);
+                        console.log("hi");
+                      }}
+                    />
+                  ))}
+
+                  {offlines.length === 0 &&
+                    offlineQuery.isPending &&
+                    Array(3)
+                      .fill("")
+                      .map((_, i) => <UserSkeleton key={i} />)}
+                </section>
               </section>
             </div>
           </div>
