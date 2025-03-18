@@ -26,10 +26,14 @@ export default function usePostForm() {
      */
     const prevData = client.getQueryData<InfinitePost>(QUERY_KEY.posts);
     const dummyPost = new DummyPost(data, user);
-    client.setQueryData(QUERY_KEY.posts, (oldData: InfinitePost) => ({
-      ...oldData,
-      pages: [[dummyPost, ...oldData.pages[0]], ...oldData.pages.slice(1)],
-    }));
+    client.setQueryData(QUERY_KEY.posts, (old: InfinitePost | undefined) =>
+      !old
+        ? old
+        : {
+            ...old,
+            pages: [[dummyPost, ...old.pages[0]], ...old.pages.slice(1)],
+          },
+    );
 
     try {
       const { data: post } = await api.axios.post<Post>("/posts", payload);
@@ -38,15 +42,20 @@ export default function usePostForm() {
       /**
        * Change dummy to actual data
        */
-      client.setQueryData(QUERY_KEY.posts, (oldData: InfinitePost) => ({
-        ...oldData,
-        pages: [
-          oldData.pages[0].map((el) => (el.id === dummyPost.id ? post : el)),
-          ...oldData.pages.slice(1),
-        ],
-      }));
+      client.setQueryData(QUERY_KEY.posts, (old: InfinitePost | undefined) =>
+        !old
+          ? old
+          : {
+              ...old,
+              pages: [
+                old.pages[0].map((el) => (el.id === dummyPost.id ? post : el)),
+                ...old.pages.slice(1),
+              ],
+            },
+      );
       reset();
     } catch (error) {
+      alert("Failed to create post!");
       console.log(error);
       client.setQueryData(QUERY_KEY.posts, prevData);
     }

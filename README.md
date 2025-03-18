@@ -2,18 +2,6 @@
 
 A simple crud react app
 
-## Screenshots
-
-- Desktop home page
-
-  ![alt text](images/desktop-home.png)
-
-- Mobile
-
-  ![alt text](images/mobile-home.png)
-  ![alt text](images/mobile-side.png)
-  ![alt text](images/mobile-chat.png)
-
 ## Running locally
 
 - You need backend running, source are here: https://github.com/foxane/odin-book
@@ -29,3 +17,15 @@ For node:
 - Remove bun.lock
 - Run `npm i --force` or edit `package.json` and change react to v18
 - `npm run dev`
+
+## Screenshots
+
+- Desktop home page
+
+  ![alt text](images/desktop-home.png)
+
+- Mobile
+
+  ![alt text](images/mobile-home.png)
+  ![alt text](images/mobile-side.png)
+  ![alt text](images/mobile-chat.png)
