@@ -16,6 +16,7 @@ import ChatPage from "./pages/app/chat/ChatPage";
 import { AuthPageProvider } from "./pages/auth/useAuthPage";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { ToastContainer } from "react-toastify";
 
 export type RouteParams = Record<"postId" | "userId" | "chatId", string>;
 const router = createBrowserRouter([
@@ -60,6 +61,15 @@ function App() {
       <ReactQueryDevtools client={main} />
       <SpeedInsights />
       <Analytics />
+      <ToastContainer
+        theme="dark"
+        position="bottom-right"
+        toastStyle={{
+          cursor: "pointer",
+          backgroundColor: "var(--color-base-300)",
+          color: "var(--color-base-content)",
+        }}
+      />
     </QueryClientProvider>
   );
 }

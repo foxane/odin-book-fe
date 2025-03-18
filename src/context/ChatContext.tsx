@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect } from "react";
 import { api } from "../utils/services";
 import useAuth from "./AuthContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 /**
  * Quick documentation sir!
@@ -50,6 +51,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const user = useAuth((s) => s.user)!;
   const socket = useAuth((s) => s.socket)!;
   const client = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: chatList = [] } = useQuery({
     queryKey: ["chats"],
@@ -107,7 +109,13 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
           return oldMessages ? [newMessage, ...oldMessages] : [newMessage];
         });
 
-        alert("New message");
+        const t = toast(<MessageToast msg={newMessage} />, {
+          onClick: () => {
+            markChatAsRead(newMessage.chatId!);
+            toast.dismiss(t);
+            void navigate(`/chat?c=${newMessage.chatId!}`);
+          },
+        });
       }
 
       /**
@@ -132,7 +140,7 @@ const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
-  }, [socket, user, client, markChatAsRead]);
+  }, [socket, user, client, markChatAsRead, navigate]);
 
   /**
    * Other user open a chat room.
@@ -166,3 +174,26 @@ const useChat = () => useContext(ChatContext);
 
 // eslint-disable-next-line react-refresh/only-export-components
 export { ChatContext, ChatProvider, useChat };
+
+import Avatar from "react-avatar";
+import { useNavigate } from "react-router-dom";
+
+function MessageToast({ msg }: { msg: Message }) {
+  return (
+    <div className="grid grid-cols-[auto_1fr] items-center gap-x-2 gap-y-1 hover:cursor-pointer">
+      <Avatar
+        round
+        className="avatar row-span-2"
+        name={msg.user.name}
+        src={msg.user.avatar ?? ""}
+        size="30"
+      />
+      <p className="text-sm">
+        <span className="font-bold">{msg.user.name}</span> sent you a message
+      </p>
+      <div className="inline-flex truncate text-xs italic opacity-80">
+        <p className="truncate">{msg.text}</p>
+      </div>
+    </div>
+  );
+}

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../utils/services";
 import { cancelAndGetPrev, modifyLike } from "../utils/helpers";
+import { toast } from "react-toastify";
 
 const services = {
   like: async (c: IComment) =>
@@ -50,11 +51,9 @@ const updater = {
   }),
 };
 
-const handlerError = () => {
-  /*
-   * TODO
-   */
-  alert("Error handler for optimistic update is not set!!!");
+const handlerError = (error: Error) => {
+  console.log(error);
+  toast.error(error.message);
 };
 
 export default function useCommentInfinite(queryKey: unknown[]) {
@@ -76,8 +75,8 @@ export default function useCommentInfinite(queryKey: unknown[]) {
       );
       return { prevData };
     },
-    onError: (_, __, context) => {
-      handlerError();
+    onError: (error, _comment, context) => {
+      handlerError(error);
       return context?.prevData && revert(context.prevData);
     },
   });
@@ -97,8 +96,8 @@ export default function useCommentInfinite(queryKey: unknown[]) {
       );
       return { prevData };
     },
-    onError: (_, __, context) => {
-      handlerError();
+    onError: (error, _comment, context) => {
+      handlerError(error);
       return context?.prevData && revert(context.prevData);
     },
     onSettled: (_, __, comment) => {
@@ -123,8 +122,8 @@ export default function useCommentInfinite(queryKey: unknown[]) {
       );
       return { prevData };
     },
-    onError: (_, __, context) => {
-      handlerError();
+    onError: (error, _comment, context) => {
+      handlerError(error);
       return context?.prevData && revert(context.prevData);
     },
     onSettled: (_, __, comment) => {

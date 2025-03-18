@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import DummyPost from "../../classes/Post";
 import { api } from "../../utils/services";
 import { QUERY_KEY } from "../../utils/constants";
+import { toast } from "react-toastify";
 
 export interface PostPayload {
   text: string;
@@ -55,7 +56,7 @@ export default function usePostForm() {
       );
       reset();
     } catch (error) {
-      alert("Failed to create post!");
+      toast.error("Failed to create post!");
       console.log(error);
       client.setQueryData(QUERY_KEY.posts, prevData);
     }

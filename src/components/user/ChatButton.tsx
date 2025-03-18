@@ -3,6 +3,7 @@ import useAuth from "../../context/AuthContext";
 import { useState } from "react";
 import { useChat } from "../../context/ChatContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function ChatButton({ targetId }: { targetId: number }) {
   const socket = useAuth((s) => s.socket)!;
@@ -19,7 +20,7 @@ function ChatButton({ targetId }: { targetId: number }) {
       const newChat = await socket.emitWithAck("createChat", targetId);
       void navigate(`/chat?c=${newChat.id}`);
     } catch (error) {
-      alert("Failed to create chat room");
+      toast.error("Failed to create chat room");
       console.log(error);
     } finally {
       setLoading(false);

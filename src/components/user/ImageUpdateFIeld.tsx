@@ -7,6 +7,7 @@ import useAuth from "../../context/AuthContext";
 import { AuthResponse } from "../../utils/authHelper";
 import Img from "../common/Img";
 import Avatar from "react-avatar";
+import { toast } from "react-toastify";
 
 interface Props {
   user: User;
@@ -24,7 +25,7 @@ function ImageUpdateField({ user }: Props) {
 
   const handleSubmit = async (field: "avatar" | "background", file: File) => {
     if (file.size > 1024 * 1024 * 10) {
-      alert("Image is too big! Maximum allowed are 10MB");
+      toast.error("Image is too big! Maximum allowed are 10MB");
       field === "avatar" ? setAvatar(null) : setBg(null);
       return;
     }

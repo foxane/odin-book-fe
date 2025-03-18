@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../utils/services";
 import { cancelAndGetPrev, modifyLike } from "../utils/helpers";
+import { toast } from "react-toastify";
 
 export const services = {
   like: async (post: Post) =>
@@ -54,11 +55,9 @@ const updater = {
   }),
 };
 
-const handlerError = () => {
-  /*
-   * TODO
-   */
-  alert("Error handler for optimistic update is not set!!!");
+const handlerError = (error: Error) => {
+  console.log(error);
+  toast.error(error.message);
 };
 
 const usePostInfinite = (queryKey: unknown[]) => {
@@ -78,8 +77,8 @@ const usePostInfinite = (queryKey: unknown[]) => {
       return { prev };
     },
 
-    onError: (_, __, context) => {
-      handlerError();
+    onError: (error, _post, context) => {
+      handlerError(error);
       return context?.prev && revert(context.prev);
     },
   });
@@ -97,8 +96,8 @@ const usePostInfinite = (queryKey: unknown[]) => {
       return { prev };
     },
 
-    onError: (_, __, context) => {
-      handlerError();
+    onError: (error, _post, context) => {
+      handlerError(error);
       return context?.prev && revert(context.prev);
     },
 
@@ -122,8 +121,8 @@ const usePostInfinite = (queryKey: unknown[]) => {
       return { prev };
     },
 
-    onError: (_, __, context) => {
-      handlerError();
+    onError: (error, _post, context) => {
+      handlerError(error);
       return context?.prev && revert(context.prev);
     },
 

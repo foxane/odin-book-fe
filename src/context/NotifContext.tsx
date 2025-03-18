@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { getNotificationUrl } from "../utils/helpers";
 import { NOTIFICATION_TEXT } from "../utils/constants";
 import { api } from "../utils/services";
+import { toast } from "react-toastify";
 
 interface INotifContext {
   notification: INotification[];
@@ -81,8 +82,12 @@ const NotifProvider = ({ children }: { children: React.ReactNode }) => {
       const url = getNotificationUrl(notif);
 
       setNotification((prev) => [notif, ...prev]);
-
-      alert(`New notification! text: ${text}, url: ${url}`);
+      const t = toast(text, {
+        onClick: () => {
+          void navigate(url);
+          toast.dismiss(t);
+        },
+      });
     };
 
     socket.on("newNotification", handleNewNotification);

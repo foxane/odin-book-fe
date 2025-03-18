@@ -4,6 +4,7 @@ import DummyComment from "../../classes/Comment";
 import { addPTag, cancelAndGetPrev } from "../../utils/helpers";
 import useAuth from "../../context/AuthContext";
 import { api } from "../../utils/services";
+import { toast } from "react-toastify";
 
 export interface CommentPayload {
   text: string;
@@ -46,7 +47,7 @@ export default function useCommentForm(postId: string) {
       );
     } catch (error) {
       console.log(error);
-      alert("Error handler for creating comment is not set");
+      toast.error("Create comment failed!");
       client.setQueryData(queryKey, prevData);
       setValue("text", payload.text);
     }
