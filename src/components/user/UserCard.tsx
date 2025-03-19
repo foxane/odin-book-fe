@@ -2,6 +2,7 @@ import UserAvatar from "./UserAvatar";
 import useAuth from "../../context/AuthContext";
 import { twMerge } from "tailwind-merge";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "../../utils/helpers";
 
 interface Props {
   user: User;
@@ -18,8 +19,11 @@ function UserCard({ user, follow }: Props) {
 
   return (
     <div
+      data-tip={
+        user.lastSeen ? `Last seen ${formatDate(user.lastSeen)}` : "Online"
+      }
       onClick={() => navigate(`/user/${user.id}`)}
-      className="hover:bg-base-content/10 flex cursor-pointer items-center px-2 py-1 transition-colors"
+      className="hover:bg-base-content/10 tooltip flex cursor-pointer items-center px-2 py-1 transition-colors"
     >
       <div className="flex items-center gap-2 truncate">
         <UserAvatar user={user} size="30" />

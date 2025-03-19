@@ -2,6 +2,17 @@ import { CheckCircleIcon, ImagePlusIcon } from "lucide-react";
 import ImagePreview from "./ImagePreview";
 import usePostForm from "./usePostForm";
 import useAutoResize from "../../hooks/useAutoResize";
+import { toast } from "react-toastify";
+import { useState } from "react";
+
+/**
+ * Counter for clicking poll button
+ */
+const pollClickWarning = [
+  "That was placeholder button",
+  "As I said earlier, nothing will happen",
+  "Kay..",
+];
 
 function PostForm() {
   const { formState, handleSubmit, register, resetField, watch } =
@@ -18,6 +29,8 @@ function PostForm() {
       value: 300,
     },
   });
+
+  const [pollClickCount, setCount] = useState(0);
 
   const textRef = useAutoResize(watch("text"));
 
@@ -84,16 +97,20 @@ function PostForm() {
           </button>
         </div>
 
-        <button
-          type="button"
-          className="btn btn-sm"
-          onClick={() => {
-            console.log("Open poll form");
-          }}
-        >
-          <CheckCircleIcon size={20} />
-          Create Poll
-        </button>
+        {pollClickCount < 3 && (
+          <button
+            type="button"
+            className="btn btn-sm"
+            onClick={() => {
+              toast.info(pollClickWarning[pollClickCount]);
+              setCount(pollClickCount + 1);
+              console.log(pollClickCount);
+            }}
+          >
+            <CheckCircleIcon size={20} />
+            Create Poll
+          </button>
+        )}
 
         <button
           disabled={isSubmitting}

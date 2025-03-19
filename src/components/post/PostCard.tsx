@@ -12,6 +12,7 @@ import { POST_STATUS_TEXT } from "../../utils/constants";
 import { Link, useLocation } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import Img from "../common/Img";
+import useAuth from "../../context/AuthContext";
 
 interface Props {
   post: Post;
@@ -21,7 +22,17 @@ interface Props {
 }
 
 export default function PostCard({ post, ...actions }: Props) {
+  const currentUser = useAuth((s) => s.user)!;
   const location = useLocation();
+
+  /**
+   * Disabling post mutation like delete, edit, etc.
+   *
+   * Will be extended when granular authrization needed
+   */
+  const disableAction =
+    currentUser.id !== post.userId || currentUser.role === "GUEST";
+
   return (
     <div
       className={twMerge(
@@ -39,6 +50,7 @@ export default function PostCard({ post, ...actions }: Props) {
           <p className="text-xs opacity-80">{formatDate(post.createdAt)}</p>
         </Link>
 
+        {/* Dropdown section */}
         {post.status ? (
           <p className="ms-auto text-sm">
             {POST_STATUS_TEXT[post.status]}
@@ -53,13 +65,13 @@ export default function PostCard({ post, ...actions }: Props) {
               className="dropdown-content menu menu-sm bg-base-200 rounded-box z-1 border-base-content/10 w-40 space-y-1 border shadow-md"
               tabIndex={0}
             >
-              <li>
-                <button onClick={actions.update}>
+              <li className={twMerge(disableAction && "menu-disabled")}>
+                <button disabled={disableAction} onClick={actions.update}>
                   <PenBoxIcon size={20} /> Edit
                 </button>
               </li>
-              <li>
-                <button onClick={actions.delete}>
+              <li className={twMerge(disableAction && "menu-disabled")}>
+                <button disabled={disableAction} onClick={actions.delete}>
                   <Trash2Icon size={20} /> Delete
                 </button>
               </li>

@@ -2,6 +2,8 @@ import { formatDate } from "../../utils/helpers";
 import { EllipsisIcon, HeartIcon, PenBoxIcon, Trash2Icon } from "lucide-react";
 import UserAvatar from "../user/UserAvatar";
 import { POST_STATUS_TEXT } from "../../utils/constants";
+import useAuth from "../../context/AuthContext";
+import { twMerge } from "tailwind-merge";
 
 interface Props {
   comment: IComment;
@@ -11,6 +13,11 @@ interface Props {
 }
 
 export default function CommentCard({ comment, ...actions }: Props) {
+  const currentUser = useAuth((s) => s.user)!;
+
+  const disableAction =
+    currentUser.id !== comment.userId || currentUser.role === "GUEST";
+
   return (
     <div className="mx-2 flex gap-x-3">
       <UserAvatar user={comment.user} />
@@ -42,6 +49,7 @@ export default function CommentCard({ comment, ...actions }: Props) {
       </div>
 
       <CommentDropdown
+        disabled={disableAction}
         deleteComment={actions.delete}
         update={actions.update}
         status={comment.status}
@@ -54,7 +62,9 @@ function CommentDropdown({
   status,
   update,
   deleteComment,
+  disabled,
 }: {
+  disabled: boolean;
   status?: "create" | "update" | "delete";
   update: () => void;
   deleteComment: () => void;
@@ -76,13 +86,13 @@ function CommentDropdown({
         className="dropdown-content menu menu-sm bg-base-200 rounded-box z-1 border-base-content/10 w-40 space-y-1 border shadow-md"
         tabIndex={0}
       >
-        <li>
-          <button onClick={update}>
+        <li className={twMerge(disabled && "menu-disabled")}>
+          <button onClick={update} disabled={disabled}>
             <PenBoxIcon size={20} /> Edit
           </button>
         </li>
-        <li>
-          <button onClick={deleteComment}>
+        <li className={twMerge(disabled && "menu-disabled")}>
+          <button onClick={deleteComment} disabled={disabled}>
             <Trash2Icon size={20} /> Delete
           </button>
         </li>
