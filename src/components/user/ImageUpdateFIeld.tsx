@@ -16,6 +16,7 @@ interface Props {
 function ImageUpdateField({ user }: Props) {
   const client = useQueryClient();
   const login = useAuth((s) => s.login);
+  const [loading, setLoading] = useState(false);
 
   const [bg, setBg] = useState<File | null>(null);
   const bgPreview = bg && URL.createObjectURL(bg);
@@ -33,6 +34,8 @@ function ImageUpdateField({ user }: Props) {
     const formData = new FormData();
     formData.append(field, file);
 
+    setLoading(true);
+    const loadingToast = toast.loading(`Updating ${field}...`);
     try {
       const { data } = await api.axios.patch<AuthResponse>(
         `/users/${user.id}/${field}`,
@@ -46,7 +49,13 @@ function ImageUpdateField({ user }: Props) {
       }));
       void login(data.token, data.user);
     } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : `Failed to update ${field}`,
+      );
       console.log(error);
+    } finally {
+      setLoading(false);
+      toast.dismiss(loadingToast);
     }
   };
 
@@ -60,6 +69,7 @@ function ImageUpdateField({ user }: Props) {
           {bg && (
             <>
               <button
+                disabled={loading}
                 onClick={() => void handleSubmit("background", bg)}
                 data-tip="Save background"
                 className="tooltip tooltip-left btn btn-square btn-sm btn-primary flex items-center"
@@ -68,6 +78,7 @@ function ImageUpdateField({ user }: Props) {
               </button>
 
               <button
+                disabled={loading}
                 onClick={() => setBg(null)}
                 data-tip="Cancel"
                 className="tooltip tooltip-left btn btn-square btn-sm btn-error flex items-center"
@@ -126,6 +137,7 @@ function ImageUpdateField({ user }: Props) {
           {avatar && (
             <>
               <button
+                disabled={loading}
                 onClick={() => void handleSubmit("avatar", avatar)}
                 data-tip="Save avatar"
                 className="tooltip tooltip-left btn btn-square btn-sm btn-primary flex items-center"
@@ -134,6 +146,7 @@ function ImageUpdateField({ user }: Props) {
               </button>
 
               <button
+                disabled={loading}
                 onClick={() => setAvatar(null)}
                 data-tip="Cancel"
                 className="tooltip tooltip-left btn btn-square btn-sm btn-error flex items-center"
