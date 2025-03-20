@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import useAuth from "../context/AuthContext";
 import LoadingScreen from "../components/common/LoadingScreen";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 function ProtectedRoute({ page }: { page: React.ReactNode }) {
   const user = useAuth((s) => s.user);
   const login = useAuth((s) => s.login);
 
-  const navigate = useNavigate();
   const location = useLocation();
   const currentUrl = encodeURIComponent(location.pathname + location.search);
   const redirectUrl = currentUrl !== "%2F" ? `/auth?r=${currentUrl}` : "/auth";
@@ -27,7 +26,7 @@ function ProtectedRoute({ page }: { page: React.ReactNode }) {
         console.log(error);
       })
       .finally(() => setLoading(false));
-  }, [login, navigate, redirectUrl]);
+  }, [login, redirectUrl]);
 
   /**
    * Render loading on initial load
